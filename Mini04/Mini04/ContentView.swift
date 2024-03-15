@@ -6,54 +6,102 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @StateObject private var VM = ApresentacoesViewModel()
+    @State var pastaName: String = ""
+    @State var tempoDesejado: Int = 0
+    let tempos = [5,10,15]
+    @State var objetivo: String = ""
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        NavigationStack {
+
+            VStack {
+                TextField(text: $pastaName) {
+                    Text("Nome da pasta")
+                }
+                Picker("selecione", selection: $tempoDesejado) {
+                    ForEach(tempos, id: \.self) { tempo in
+                        Text(String(tempo))
                     }
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
+
+                TextField(text: $objetivo) {
+                    Text("Objetivo")
                 }
             }
-        } detail: {
-            Text("Select an item")
+            .padding()
+            
+            Button("Criar pasta") {
+                let pasta = PastaModel(nome: pastaName, data: Date(), tempoDesejado: tempoDesejado, objetivoApresentacao: objetivo)
+                VM.apresentacoes.pastas.append(pasta)
+            }
+            
+            if !VM.apresentacoes.pastas.isEmpty {
+                ForEach(VM.apresentacoes.pastas) { pasta in
+                    NavigationLink(pasta.nome, destination:
+                                    PastaView(VM: VM,
+                                              nome: pasta.nome,
+                                              data: pasta.data,
+                                              tempoDesejado: pasta.tempoDesejado,
+                                              objetivo: pasta.objetivoApresentacao,
+                                              pasta: pasta))
+                    
+                }
+            }
         }
+        
     }
+}
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
 
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+struct PastaView: View {
+    @ObservedObject var VM: ApresentacoesViewModel
+
+    var nome: String
+    var data: Date
+    var tempoDesejado: Int
+    var objetivo: String
+    @State var pasta: PastaModel
+
+    
+    var body: some View {
+        VStack {
+            Text("NOME: \(nome)")
+            Text("data: \(data)")
+            Text("tempoDesejado: \(tempoDesejado)")
+            Text("objetivo: \(objetivo)")
+            
+            Button("Criar treino") {
+                var treino = TreinoModel(data: Date(), pasta: pasta)
+                pasta.treinos.append(treino)
+            }
+            if !pasta.treinos.isEmpty {
+                ForEach(pasta.treinos) { treino in
+                    NavigationLink(treino.nome, destination:
+                                    TreinoView(pasta: pasta, treino: treino))
+                }
             }
         }
     }
 }
 
+struct TreinoView: View {
+    var pasta: PastaModel
+    var treino: TreinoModel
+    
+    var body: some View {
+        Text("PERTENCO A PASTA \(pasta.nome)")
+    }
+}
+
+class ApresentacoesViewModel: ObservableObject {
+    @Published var apresentacoes = Apresentacoes(pastas: [])
+}
+
+
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
 }

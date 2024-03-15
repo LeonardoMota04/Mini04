@@ -25,8 +25,9 @@ struct Mini04App: App {
 
     var body: some Scene {
         WindowGroup {
+            //SwiftDataView()
             ContentView()
         }
-        .modelContainer(sharedModelContainer)
+        //.modelContainer(sharedModelContainer)
     }
 }
