@@ -20,11 +20,13 @@ class CameraViewController: NSViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+//        setupAndStartCaptureSession()
     }
 
     override func viewDidAppear() {
         super.viewDidAppear()
-        checkPermissions()
+        //permissao da camera nao é necessária no macOS 🤷‍♂️
+        
         setupAndStartCaptureSession()
     }
 
@@ -52,13 +54,17 @@ class CameraViewController: NSViewController {
     }
 
     func setupInputs() {
+        // solution insiped Jim Fisher's post: https://jameshfisher.com/2020/07/31/devicesfor-was-deprecated-in-macos-1015-use-avcapturedevicediscoverysession-instead/
         let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .front)
+        // **********************************
+        
+        // discoverySession retorna um array de devices, eu pego o primeiro.
         if let device = discoverySession.devices.first {
             cameraDevice = device
         } else {
             fatalError("No front camera available")
         }
-
+        
         guard let videoInput = try? AVCaptureDeviceInput(device: cameraDevice) else {
             fatalError("Could not create input device from camera")
         }
@@ -106,27 +112,4 @@ struct CameraViewRepresentable: NSViewControllerRepresentable {
     func updateNSViewController(_ nsViewController: CameraViewController, context: Context) {}
 
     typealias NSViewControllerType = CameraViewController
-}
-
-/// MARK: - authorization
-extension CameraViewController {
-    //MARK: - Permissions
-    func checkPermissions() {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case.authorized:
-//            configureSession()
-            return
-        case.notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { (status) in
-                if status {
-//                    self.configureSession()
-                }
-            }
-        case.denied:
-//            self.alert.toggle()
-            return
-        default:
-            return
-        }
-    }
 }
