@@ -18,6 +18,8 @@
 		370E91E12BA8AFC400D39C27 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E02BA8AFC400D39C27 /* CameraPreview.swift */; };
 		370E91E32BA8B78300D39C27 /* HUDCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E22BA8B78300D39C27 /* HUDCameraView.swift */; };
 		370E91E52BA8B82D00D39C27 /* FinalPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E42BA8B82D00D39C27 /* FinalPreview.swift */; };
+		370E91EA2BA8C43B00D39C27 /* HandGestureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E92BA8C43B00D39C27 /* HandGestureController.swift */; };
+		370E91EC2BA8C46400D39C27 /* HandPose1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 370E91EB2BA8C46400D39C27 /* HandPose1.mlmodel */; };
 		377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +37,8 @@
 		370E91E02BA8AFC400D39C27 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		370E91E22BA8B78300D39C27 /* HUDCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDCameraView.swift; sourceTree = "<group>"; };
 		370E91E42BA8B82D00D39C27 /* FinalPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalPreview.swift; sourceTree = "<group>"; };
+		370E91E92BA8C43B00D39C27 /* HandGestureController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandGestureController.swift; sourceTree = "<group>"; };
+		370E91EB2BA8C46400D39C27 /* HandPose1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandPose1.mlmodel; sourceTree = "<group>"; };
 		377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingVideoView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -92,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */,
+				370E91E92BA8C43B00D39C27 /* HandGestureController.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -112,6 +117,7 @@
 		370E91E82BA8C14B00D39C27 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				370E91EB2BA8C46400D39C27 /* HandPose1.mlmodel */,
 				263D73FC2BA791F3002190F4 /* Models.swift */,
 			);
 			path = Model;
@@ -187,6 +193,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				370E91EA2BA8C43B00D39C27 /* HandGestureController.swift in Sources */,
 				370E91E32BA8B78300D39C27 /* HUDCameraView.swift in Sources */,
 				370E91E52BA8B82D00D39C27 /* FinalPreview.swift in Sources */,
 				263D73E82BA4C56F002190F4 /* SwiftDataView.swift in Sources */,
@@ -198,6 +205,7 @@
 				263D73F72BA4C865002190F4 /* ContentView.swift in Sources */,
 				263D73E62BA4C56F002190F4 /* Mini04App.swift in Sources */,
 				263D73FD2BA791F3002190F4 /* Models.swift in Sources */,
+				370E91EC2BA8C46400D39C27 /* HandPose1.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

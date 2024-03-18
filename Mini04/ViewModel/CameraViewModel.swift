@@ -17,12 +17,27 @@ class CameraViewModel: NSObject, ObservableObject {
     
     var previewLayer =  AVCaptureVideoPreviewLayer()
     @Published var videoFileOutput = AVCaptureMovieFileOutput()
+    @Published var videoDataOutput = AVCaptureVideoDataOutput()
     @Published var audioOutput = AVCaptureAudioDataOutput()
     @Published var captureSession =  AVCaptureSession()
 
     @Published var isRecording = false
+    
+    @Published var handPoseModelController: HandGestureController?
+    @Published var detectedGestureModel1: String = ""
+    @Published var detectedGestureModel2: String = ""
 
     var urltemp: URL?
+    
+    override init() {
+        super.init()
+        self.handPoseModelController = HandGestureController()
+        self.handPoseModelController?.onResultModel1Changed = { [weak self] resultModel in
+            DispatchQueue.main.async {
+                self?.detectedGestureModel1 = resultModel
+            }
+        }
+    }
     
     // MARK: - Start/Stop Session
 
@@ -70,7 +85,13 @@ class CameraViewModel: NSObject, ObservableObject {
         if captureSession.canAddOutput(videoFileOutput) {
             captureSession.addOutput(videoFileOutput)
         }
+        
+        if captureSession.canAddOutput(videoDataOutput) {
+            captureSession.addOutput(videoDataOutput)
+        }
+        
 
+        self.videoDataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
 
         captureSession.commitConfiguration()
     }
@@ -142,6 +163,14 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     
 }
 
+extension CameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
+    
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        handPoseModelController?.performHandPoseRequest(sampleBuffer: sampleBuffer)
+        
+    }
+}
+
 
 struct CameraRepresentable: NSViewRepresentable {
     @EnvironmentObject var camVM: CameraViewModel
@@ -165,4 +194,6 @@ struct CameraRepresentable: NSViewRepresentable {
         // Atualizações de visualização, se necessário
     }
 }
+
+
 
