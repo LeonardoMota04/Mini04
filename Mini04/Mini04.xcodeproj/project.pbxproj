@@ -13,7 +13,7 @@
 		263D73EC2BA4C571002190F4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EB2BA4C571002190F4 /* Assets.xcassets */; };
 		263D73EF2BA4C571002190F4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EE2BA4C571002190F4 /* Preview Assets.xcassets */; };
 		263D73F72BA4C865002190F4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73F62BA4C865002190F4 /* ContentView.swift */; };
-		263D73F92BA4C9F6002190F4 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73F82BA4C9F6002190F4 /* Models.swift */; };
+		263D73FD2BA791F3002190F4 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73FC2BA791F3002190F4 /* Models.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +25,7 @@
 		263D73EE2BA4C571002190F4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		263D73F02BA4C571002190F4 /* Mini04.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Mini04.entitlements; sourceTree = "<group>"; };
 		263D73F62BA4C865002190F4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		263D73F82BA4C9F6002190F4 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		263D73FC2BA791F3002190F4 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,14 +58,14 @@
 		263D73E42BA4C56F002190F4 /* Mini04 */ = {
 			isa = PBXGroup;
 			children = (
-				263D73E52BA4C56F002190F4 /* Mini04App.swift */,
-				263D73F82BA4C9F6002190F4 /* Models.swift */,
 				263D73E72BA4C56F002190F4 /* SwiftDataView.swift */,
-				263D73F62BA4C865002190F4 /* ContentView.swift */,
 				263D73E92BA4C56F002190F4 /* Item.swift */,
 				263D73EB2BA4C571002190F4 /* Assets.xcassets */,
 				263D73F02BA4C571002190F4 /* Mini04.entitlements */,
 				263D73ED2BA4C571002190F4 /* Preview Content */,
+				263D73E52BA4C56F002190F4 /* Mini04App.swift */,
+				263D73F62BA4C865002190F4 /* ContentView.swift */,
+				263D73FC2BA791F3002190F4 /* Models.swift */,
 			);
 			path = Mini04;
 			sourceTree = "<group>";
@@ -152,7 +152,7 @@
 				263D73EA2BA4C56F002190F4 /* Item.swift in Sources */,
 				263D73F72BA4C865002190F4 /* ContentView.swift in Sources */,
 				263D73E62BA4C56F002190F4 /* Mini04App.swift in Sources */,
-				263D73F92BA4C9F6002190F4 /* Models.swift in Sources */,
+				263D73FD2BA791F3002190F4 /* Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,13 +7,18 @@
 
 import SwiftUI
 
+// MARK: - CONTENT VIEW
 struct ContentView: View {
-    @StateObject private var VM = ApresentacoesViewModel()
+    // VM
+    @StateObject private var presentationVM = ApresentacaoViewModel(apresentacao: ApresentacaoModel())
+    @State private var folderViewModels: [UUID: FoldersViewModel] = [:]
+
+    // VARIAVEIS
     @State var pastaName: String = ""
     @State var tempoDesejado: Int = 0
-    let tempos = [5,10,15]
     @State var objetivo: String = ""
-    
+    let tempos = [5,10,15]
+        
     var body: some View {
         NavigationStack {
 
@@ -34,71 +39,65 @@ struct ContentView: View {
             .padding()
             
             Button("Criar pasta") {
-                let pasta = PastaModel(nome: pastaName, data: Date(), tempoDesejado: tempoDesejado, objetivoApresentacao: objetivo)
-                VM.apresentacoes.pastas.append(pasta)
+                let newFolder = PastaModel(nome: pastaName,
+                                       tempoDesejado: tempoDesejado,
+                                       objetivoApresentacao: objetivo)
+                presentationVM.apresentacao.folders.append(newFolder)
+                folderViewModels[newFolder.id] = FoldersViewModel(folder: newFolder)
             }
-            
-            if !VM.apresentacoes.pastas.isEmpty {
-                ForEach(VM.apresentacoes.pastas) { pasta in
-                    NavigationLink(pasta.nome, destination:
-                                    PastaView(VM: VM,
-                                              nome: pasta.nome,
-                                              data: pasta.data,
-                                              tempoDesejado: pasta.tempoDesejado,
-                                              objetivo: pasta.objetivoApresentacao,
-                                              pasta: pasta))
-                    
+           
+            List(presentationVM.apresentacao.folders) { folder in
+                NavigationLink(folder.nome) {
+                    PastaView(folderVM: folderViewModels[folder.id]!)
                 }
             }
+           
         }
-        
     }
 }
 
-
+// MARK: - Pasta View
 struct PastaView: View {
-    @ObservedObject var VM: ApresentacoesViewModel
-
-    var nome: String
-    var data: Date
-    var tempoDesejado: Int
-    var objetivo: String
-    @State var pasta: PastaModel
-
+    @ObservedObject var folderVM: FoldersViewModel
     
     var body: some View {
         VStack {
-            Text("NOME: \(nome)")
-            Text("data: \(data)")
-            Text("tempoDesejado: \(tempoDesejado)")
-            Text("objetivo: \(objetivo)")
+            Text("NOME: \(folderVM.folder.nome)")
+            Text("data: \(folderVM.folder.data)")
+            Text("tempoDesejado: \(folderVM.folder.tempoDesejado)")
+            Text("objetivo: \(folderVM.folder.objetivoApresentacao)")
             
             Button("Criar treino") {
-                var treino = TreinoModel(data: Date(), pasta: pasta)
-                pasta.treinos.append(treino)
+                let newTraining = TreinoModel(name: folderVM.folder.nome)
+                folderVM.folder.treinos.append(newTraining)
             }
-            if !pasta.treinos.isEmpty {
-                ForEach(pasta.treinos) { treino in
-                    NavigationLink(treino.nome, destination:
-                                    TreinoView(pasta: pasta, treino: treino))
+            
+            ForEach(folderVM.folder.treinos) { treino in
+                NavigationLink {
+                    TreinoView(trainingVM: TreinoViewModel(treino: treino), folder: folderVM.folder)
+                } label: {
+                    Text(treino.nome)
                 }
             }
         }
     }
 }
 
+// MARK: - Treino View
 struct TreinoView: View {
-    var pasta: PastaModel
-    var treino: TreinoModel
+    @ObservedObject var trainingVM: TreinoViewModel
+    var folder: PastaModel
     
     var body: some View {
-        Text("PERTENCO A PASTA \(pasta.nome)")
+        VStack {
+            Text("Pertenço à pasta: \(folder.nome)")
+            Text("NOME: \(trainingVM.treino.nome)")
+            Text("Data: \(trainingVM.treino.data)")
+        }
     }
 }
 
-class ApresentacoesViewModel: ObservableObject {
-    @Published var apresentacoes = Apresentacoes(pastas: [])
-}
+
 
 
 #Preview {

@@ -1,61 +1,78 @@
 //
-//  Models.swift
+//  FolderModel.swift
 //  Mini04
 //
-//  Created by Leonardo Mota on 15/03/24.
+//  Created by Leonardo Mota on 17/03/24.
 //
 
 import Foundation
-import SwiftUI
-
-struct Apresentacoes {
-    var pastas: [PastaModel]
-}
-
-struct PastaModel: Identifiable {
-    var id: UUID = UUID()
-    var nome: String
-    var data: Date
-    var tempoDesejado: Int
-    var treinos: [TreinoModel]
-    var objetivoApresentacao: String // ENUM????
-    
-    init(nome: String, data: Date, tempoDesejado: Int, objetivoApresentacao: String) {
-        self.nome = nome
-        self.data = data
-        self.tempoDesejado = tempoDesejado
-        self.objetivoApresentacao = objetivoApresentacao
-        self.treinos = []
+// MARK: - APRESENTACOES
+    // MODEL
+    struct ApresentacaoModel {
+        var folders: [PastaModel] = []
     }
-}
-
-struct TreinoModel: Identifiable {
-    var id = UUID()
-    // feedback
-    var data: Date
-    var nome: String
-    //var video: VideoModel
-    var pasta: PastaModel? //pasta pertencente
-    
-    init(data: Date, pasta: PastaModel) {
-        // Nome dos treinos originais da pasta
-        var nomes: String = ""
-        for i in 0 ..< pasta.treinos.count {
-            nomes = "Treino \(i+1)"
-        }
+    // VIEW MODEL
+    class ApresentacaoViewModel: ObservableObject {
+        @Published var apresentacao: ApresentacaoModel
         
-        self.data = Date()
-        self.nome = "\(pasta.nome) - \(nomes)"
-        //self.video = video
-        self.pasta = pasta
+        init(apresentacao: ApresentacaoModel) {
+            self.apresentacao = apresentacao
+        }
     }
-    
-    mutating func editarNome(novoNome: String) {
-        self.nome = novoNome
+
+// MARK: - PASTAS
+    // MODEL
+    struct PastaModel: Identifiable {
+        var id: UUID = UUID()
+        var nome: String = ""
+        var data: Date = Date()
+        var tempoDesejado: Int = 0
+        var objetivoApresentacao: String = "" // ENUM????
+        var treinos: [TreinoModel] = []
+        
+        init(nome: String, tempoDesejado: Int, objetivoApresentacao: String) {
+            self.nome = nome
+            self.tempoDesejado = tempoDesejado
+            self.objetivoApresentacao = objetivoApresentacao
+            self.treinos = []
+        }
     }
-}
 
+    // VIEW MODEL
+    class FoldersViewModel: ObservableObject {
+        @Published var folder: PastaModel
+        
+        init(folder: PastaModel) {
+            self.folder = folder
+        }
+    }
 
+// MARK: - TREINOS
+    // MODEL
+    struct TreinoModel: Identifiable {
+        var id = UUID()
+        var data: Date = Date()
+        var nome: String
+        /// feedback
+        /// var video: VideoModel
+
+        init(name: String){//, pasta: PastaModel) {
+            //self.nome = "\(pasta.nome) - \(pasta.treinos.count + 1)"
+            self.nome = "\(name) - treino"
+            //self.pasta = pasta
+            ///self.video = video
+        }
+    }
+
+    // VIEWMODEL
+    class TreinoViewModel: ObservableObject {
+        @Published var treino: TreinoModel
+        init(treino: TreinoModel) {
+            self.treino = treino
+        }
+    }
+
+// MARK: - VIDEOS
 struct VideoModel: Identifiable, Hashable {
     var id = UUID()
     var videoURL: URL
@@ -67,4 +84,3 @@ struct VideoModel: Identifiable, Hashable {
         self.script = script
     }
 }
-

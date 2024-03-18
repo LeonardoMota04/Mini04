@@ -23,6 +23,7 @@ struct Mini04App: App {
         }
     }()
 
+    
     var body: some Scene {
         WindowGroup {
             //SwiftDataView()
