@@ -190,6 +190,7 @@ struct TreinoView: View {
             Text("Pertenço à pasta: \(folder.nome)")
             Text("NOME: \(trainingVM.treino.nome)")
             Text("Data: \(trainingVM.treino.data)")
+            RecordingVideoView()
         }
     }
 }
