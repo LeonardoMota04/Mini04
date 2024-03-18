@@ -25,12 +25,14 @@ struct Mini04App: App {
         }
     }()
 
+    
     var body: some Scene {
         WindowGroup {
+            //SwiftDataView()
             ContentView()
                 .environmentObject(camVM)
 
         }
-        .modelContainer(sharedModelContainer)
+        //.modelContainer(sharedModelContainer)
     }
 }
