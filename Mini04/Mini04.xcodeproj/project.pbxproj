@@ -14,6 +14,7 @@
 		263D73EF2BA4C571002190F4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EE2BA4C571002190F4 /* Preview Assets.xcassets */; };
 		263D73F72BA4C865002190F4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73F62BA4C865002190F4 /* ContentView.swift */; };
 		263D73FD2BA791F3002190F4 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73FC2BA791F3002190F4 /* Models.swift */; };
+		263D74092BA87C53002190F4 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D74082BA87C53002190F4 /* SpeechManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		263D73F02BA4C571002190F4 /* Mini04.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Mini04.entitlements; sourceTree = "<group>"; };
 		263D73F62BA4C865002190F4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		263D73FC2BA791F3002190F4 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		263D74082BA87C53002190F4 /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				263D73E52BA4C56F002190F4 /* Mini04App.swift */,
 				263D73F62BA4C865002190F4 /* ContentView.swift */,
 				263D73FC2BA791F3002190F4 /* Models.swift */,
+				263D74082BA87C53002190F4 /* SpeechManager.swift */,
 			);
 			path = Mini04;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				263D73E82BA4C56F002190F4 /* SwiftDataView.swift in Sources */,
+				263D74092BA87C53002190F4 /* SpeechManager.swift in Sources */,
 				263D73EA2BA4C56F002190F4 /* Item.swift in Sources */,
 				263D73F72BA4C865002190F4 /* ContentView.swift in Sources */,
 				263D73E62BA4C56F002190F4 /* Mini04App.swift in Sources */,
@@ -292,6 +296,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -320,6 +326,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
