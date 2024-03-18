@@ -34,8 +34,7 @@ struct ContentView: View {
                 }
             }
         } detail: {
-                CameraViewRepresentable()
-
+            RecordingVideoView()
 
         }
         .navigationTitle("Home")
