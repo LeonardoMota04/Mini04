@@ -11,7 +11,7 @@ struct RecordingVideoView: View {
     var body: some View {
         GeometryReader { reader in
             VStack {
-                CameraViewRepresentable()
+                CameraPreview()
 //                    
                 HUDCameraView()
                     .frame(maxWidth: reader.size.width)
@@ -22,7 +22,7 @@ struct RecordingVideoView: View {
 }
 
 struct HUDCameraView: View {
-    @EnvironmentObject var cameraVC: CameraViewController
+    @EnvironmentObject var cameraVC: CameraViewModel
     @State private var isRecording = false
 
     var body: some View {
