@@ -146,8 +146,8 @@ struct PastaView: View {
                                 folderVM.folder.treinos.append(newTraining)
             }
             ForEach(folderVM.folder.treinos) { treino in
-                NavigationLink(destination: TreinoView(trainingVM: TreinoViewModel(treino: treino), folder: folderVM.folder)) {
-                    Text(treino.nome)
+                NavigationLink(treino.nome) {
+                    TreinoView(trainingVM: TreinoViewModel(treino: treino), folder: folderVM.folder)
                 }
             }
             
