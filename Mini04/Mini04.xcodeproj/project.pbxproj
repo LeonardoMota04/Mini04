@@ -14,6 +14,8 @@
 		263D73EF2BA4C571002190F4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EE2BA4C571002190F4 /* Preview Assets.xcassets */; };
 		370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */; };
 		370E91E12BA8AFC400D39C27 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E02BA8AFC400D39C27 /* CameraPreview.swift */; };
+		370E91E32BA8B78300D39C27 /* HUDCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E22BA8B78300D39C27 /* HUDCameraView.swift */; };
+		370E91E52BA8B82D00D39C27 /* FinalPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E42BA8B82D00D39C27 /* FinalPreview.swift */; };
 		377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +29,8 @@
 		263D73F02BA4C571002190F4 /* Mini04.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Mini04.entitlements; sourceTree = "<group>"; };
 		370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		370E91E02BA8AFC400D39C27 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+		370E91E22BA8B78300D39C27 /* HUDCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDCameraView.swift; sourceTree = "<group>"; };
+		370E91E42BA8B82D00D39C27 /* FinalPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalPreview.swift; sourceTree = "<group>"; };
 		377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingVideoView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -65,6 +69,8 @@
 				263D73E52BA4C56F002190F4 /* Mini04App.swift */,
 				263D73E72BA4C56F002190F4 /* ContentView.swift */,
 				377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */,
+				370E91E22BA8B78300D39C27 /* HUDCameraView.swift */,
+				370E91E42BA8B82D00D39C27 /* FinalPreview.swift */,
 				263D73E92BA4C56F002190F4 /* Item.swift */,
 				263D73EB2BA4C571002190F4 /* Assets.xcassets */,
 				263D73F02BA4C571002190F4 /* Mini04.entitlements */,
@@ -151,6 +157,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				370E91E32BA8B78300D39C27 /* HUDCameraView.swift in Sources */,
+				370E91E52BA8B82D00D39C27 /* FinalPreview.swift in Sources */,
 				263D73E82BA4C56F002190F4 /* ContentView.swift in Sources */,
 				370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */,
 				377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */,

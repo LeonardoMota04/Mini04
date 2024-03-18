@@ -8,42 +8,27 @@
 import SwiftUI
 
 struct RecordingVideoView: View {
+    @EnvironmentObject var camVM: CameraViewModel
+    @State var isPreviewShowing = false
     var body: some View {
         GeometryReader { reader in
             VStack {
                 CameraPreview()
 //                    
-                HUDCameraView()
+                HUDCameraView(isPreviewShowing: $isPreviewShowing)
                     .frame(maxWidth: reader.size.width)
                     .frame(height: reader.size.height*0.1)
             }
+            
         }
-    }
-}
-
-struct HUDCameraView: View {
-    @EnvironmentObject var cameraVC: CameraViewModel
-    @State private var isRecording = false
-
-    var body: some View {
-        VStack {
-            Button {
-                if !isRecording {
-                    cameraVC.startRecording()
-                    isRecording.toggle()
-                } else {
-                    cameraVC.stopRecording()
-                    isRecording.toggle()
-                }
-            } label: {
-                ZStack {
-                    Circle()
-                        .foregroundStyle(isRecording ? .gray : .red)
-                }
+        .overlay(content: {
+            if let url = camVM.urltemp, isPreviewShowing {
+                FinalPreview(url: url)
+                    .transition(.move(edge: .trailing))
             }
-            .buttonStyle(.borderless)
-        }
-        .padding(4)
+        })
+        .animation(.easeInOut, value: isPreviewShowing)
+
     }
 }
 
