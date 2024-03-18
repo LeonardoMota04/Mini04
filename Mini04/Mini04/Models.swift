@@ -6,11 +6,13 @@
 //
 
 import Foundation
+
 // MARK: - APRESENTACOES
     // MODEL
     struct ApresentacaoModel {
         var folders: [PastaModel] = []
     }
+
     // VIEW MODEL
     class ApresentacaoViewModel: ObservableObject {
         @Published var apresentacao: ApresentacaoModel
@@ -58,7 +60,7 @@ import Foundation
 
         init(name: String){//, pasta: PastaModel) {
             //self.nome = "\(pasta.nome) - \(pasta.treinos.count + 1)"
-            self.nome = "\(name) - treino"
+            self.nome = name
             //self.pasta = pasta
             ///self.video = video
         }
