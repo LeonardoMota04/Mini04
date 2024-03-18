@@ -12,6 +12,7 @@ struct RecordingVideoView: View {
         GeometryReader { reader in
             VStack {
                 CameraViewRepresentable()
+//                    
                 HUDCameraView()
                     .frame(maxWidth: reader.size.width)
                     .frame(height: reader.size.height*0.1)
@@ -20,14 +21,10 @@ struct RecordingVideoView: View {
     }
 }
 
-#Preview {
-    RecordingVideoView()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-}
-
 struct HUDCameraView: View {
     @EnvironmentObject var cameraVC: CameraViewController
-    @State var isRecording = false
+    @State private var isRecording = false
+
     var body: some View {
         VStack {
             Button {
@@ -38,27 +35,20 @@ struct HUDCameraView: View {
                     cameraVC.stopRecording()
                     isRecording.toggle()
                 }
-                
             } label: {
                 ZStack {
-                    if isRecording {
-                        Circle()
-                            .foregroundStyle(.red)
-
-                    }else {
-                        Circle()
-                            .foregroundStyle(.gray)
-
-                    }
                     Circle()
                         .foregroundStyle(isRecording ? .gray : .red)
                 }
             }
             .buttonStyle(.borderless)
-            
         }
-        .background(Color.clear)
         .padding(4)
-        
     }
 }
+
+#Preview {
+    RecordingVideoView()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+}
+

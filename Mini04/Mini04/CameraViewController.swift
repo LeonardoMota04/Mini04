@@ -108,6 +108,7 @@ class CameraViewController: NSViewController, ObservableObject {
     func setupOutput() {
         videoOutput = AVCaptureVideoDataOutput()
         let videoQueue = DispatchQueue(label: "videoQueue", qos: .userInteractive)
+        
         videoOutput.setSampleBufferDelegate(self, queue: videoQueue)
         if captureSession.canAddOutput(videoOutput) {
             captureSession.addOutput(videoOutput)
