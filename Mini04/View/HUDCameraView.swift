@@ -21,7 +21,6 @@ struct HUDCameraView: View {
                 Spacer()
                 Button {
                     isPreviewShowing.toggle()
-                    
                 }label: {
                     Text("preview")
                 }
