@@ -7,31 +7,6 @@
 
 import SwiftUI
 
-
-//    var body: some View {
-//        NavigationSplitView {
-//            List {
-//                ForEach(items) { item in
-//                    NavigationLink {
-//                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-//                    } label: {
-//                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-//                    }
-//                }
-//                .onDelete(perform: deleteItems)
-//            }
-//            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-//            .toolbar {
-//                ToolbarItem {
-//                    Button(action: addItem) {
-//                        Label("Add Item", systemImage: "plus")
-//                    }
-//                }
-//            }
-//        } detail: {
-//            Text("Select an item")
-//        }
-//    }
 // MARK: - CONTENT VIEW
 struct ContentView: View {
     @StateObject private var presentationVM = ApresentacaoViewModel(apresentacao: ApresentacaoModel())
@@ -41,7 +16,7 @@ struct ContentView: View {
     @State var pastaName: String = ""
     @State var tempoDesejado: Int = 0
     @State var objetivo: String = ""
-       let tempos = [5,10,15]
+    let tempos = [5,10,15]
     var body: some View {
 
         NavigationSplitView {
@@ -65,8 +40,10 @@ struct ContentView: View {
                         }
                     }
                 }
+                
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 200)
+            
         } detail: {
             // MESMA COISA AQUI
             if presentationVM.apresentacao.folders.isEmpty {
@@ -121,45 +98,6 @@ struct ContentView: View {
 }
 
 
-
-// MARK: - Pasta View
-struct PastaView: View {
-    @ObservedObject var folderVM: FoldersViewModel
-    @State private var isModalPresented = true // Modal sempre será apresentado ao entrar na view
-
-    var body: some View {
-        VStack {
-            Text("NOME: \(folderVM.folder.nome)")
-            Text("Data: \(folderVM.folder.data)")
-            Text("Tempo Desejado: \(folderVM.folder.tempoDesejado)")
-            Text("Objetivo: \(folderVM.folder.objetivoApresentacao)")
-            
-            Spacer()
-            
-            if folderVM.folder.treinos.isEmpty {
-                Text("Adicione um treino para começar")
-            }
-            
-            Spacer()
-            
-            Button("Criar treino") {
-                let newTraining = TreinoModel(name: "\(folderVM.folder.nome) - Treino \(folderVM.folder.treinos.count + 1)")
-                                folderVM.folder.treinos.append(newTraining)
-            }
-            ForEach(folderVM.folder.treinos) { treino in
-                NavigationLink(treino.nome) {
-                    TreinoView(trainingVM: TreinoViewModel(treino: treino), folder: folderVM.folder)
-                }
-            }
-            
-        }
-        .padding()
-        .sheet(isPresented: $isModalPresented) {
-            ModalView(isModalPresented: $isModalPresented)
-        }
-    }
-}
-
 struct ModalView: View {
     @Binding var isModalPresented: Bool
     var body: some View {
@@ -178,24 +116,6 @@ struct ModalView: View {
         }
     }
 }
-
-
-// MARK: - Treino View
-struct TreinoView: View {
-    @ObservedObject var trainingVM: TreinoViewModel
-    var folder: PastaModel
-    
-    var body: some View {
-        VStack {
-            Text("Pertenço à pasta: \(folder.nome)")
-            Text("NOME: \(trainingVM.treino.nome)")
-            Text("Data: \(trainingVM.treino.data)")
-            RecordingVideoView()
-        }
-    }
-}
-
-
 
 
 #Preview {

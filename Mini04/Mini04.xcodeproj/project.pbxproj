@@ -13,13 +13,21 @@
 		263D73EC2BA4C571002190F4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EB2BA4C571002190F4 /* Assets.xcassets */; };
 		263D73EF2BA4C571002190F4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EE2BA4C571002190F4 /* Preview Assets.xcassets */; };
 		263D73F72BA4C865002190F4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73F62BA4C865002190F4 /* ContentView.swift */; };
-		263D73FD2BA791F3002190F4 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73FC2BA791F3002190F4 /* Models.swift */; };
 		370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */; };
 		370E91E12BA8AFC400D39C27 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E02BA8AFC400D39C27 /* CameraPreview.swift */; };
 		370E91E32BA8B78300D39C27 /* HUDCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E22BA8B78300D39C27 /* HUDCameraView.swift */; };
 		370E91E52BA8B82D00D39C27 /* FinalPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E42BA8B82D00D39C27 /* FinalPreview.swift */; };
 		370E91EA2BA8C43B00D39C27 /* HandGestureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E92BA8C43B00D39C27 /* HandGestureController.swift */; };
 		370E91EC2BA8C46400D39C27 /* HandPose1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 370E91EB2BA8C46400D39C27 /* HandPose1.mlmodel */; };
+		370E91EE2BA8D78100D39C27 /* ApresentacaoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91ED2BA8D78100D39C27 /* ApresentacaoModel.swift */; };
+		370E91F02BA8D79600D39C27 /* PastaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91EF2BA8D79600D39C27 /* PastaModel.swift */; };
+		370E91F22BA8D7AD00D39C27 /* FoldersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91F12BA8D7AD00D39C27 /* FoldersViewModel.swift */; };
+		370E91F42BA8D7BA00D39C27 /* TreinoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91F32BA8D7BA00D39C27 /* TreinoModel.swift */; };
+		370E91F62BA8D7D200D39C27 /* TreinoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91F52BA8D7D200D39C27 /* TreinoViewModel.swift */; };
+		370E91F82BA8D7E200D39C27 /* VideoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91F72BA8D7E200D39C27 /* VideoModel.swift */; };
+		370E91FA2BA8D86D00D39C27 /* PastaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91F92BA8D86D00D39C27 /* PastaView.swift */; };
+		370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */; };
+		370E91FE2BA8D9F200D39C27 /* ApresentacaoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */; };
 		377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */; };
 /* End PBXBuildFile section */
 
@@ -32,13 +40,21 @@
 		263D73EE2BA4C571002190F4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		263D73F02BA4C571002190F4 /* Mini04.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Mini04.entitlements; sourceTree = "<group>"; };
 		263D73F62BA4C865002190F4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		263D73FC2BA791F3002190F4 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		370E91E02BA8AFC400D39C27 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		370E91E22BA8B78300D39C27 /* HUDCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDCameraView.swift; sourceTree = "<group>"; };
 		370E91E42BA8B82D00D39C27 /* FinalPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalPreview.swift; sourceTree = "<group>"; };
 		370E91E92BA8C43B00D39C27 /* HandGestureController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandGestureController.swift; sourceTree = "<group>"; };
 		370E91EB2BA8C46400D39C27 /* HandPose1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandPose1.mlmodel; sourceTree = "<group>"; };
+		370E91ED2BA8D78100D39C27 /* ApresentacaoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApresentacaoModel.swift; sourceTree = "<group>"; };
+		370E91EF2BA8D79600D39C27 /* PastaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastaModel.swift; sourceTree = "<group>"; };
+		370E91F12BA8D7AD00D39C27 /* FoldersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldersViewModel.swift; sourceTree = "<group>"; };
+		370E91F32BA8D7BA00D39C27 /* TreinoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreinoModel.swift; sourceTree = "<group>"; };
+		370E91F52BA8D7D200D39C27 /* TreinoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreinoViewModel.swift; sourceTree = "<group>"; };
+		370E91F72BA8D7E200D39C27 /* VideoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoModel.swift; sourceTree = "<group>"; };
+		370E91F92BA8D86D00D39C27 /* PastaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastaView.swift; sourceTree = "<group>"; };
+		370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreinoView.swift; sourceTree = "<group>"; };
+		370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApresentacaoViewModel.swift; sourceTree = "<group>"; };
 		377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingVideoView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -95,8 +111,11 @@
 		370E91E62BA8C13B00D39C27 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				370E91F52BA8D7D200D39C27 /* TreinoViewModel.swift */,
+				370E91F12BA8D7AD00D39C27 /* FoldersViewModel.swift */,
 				370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */,
 				370E91E92BA8C43B00D39C27 /* HandGestureController.swift */,
+				370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -105,11 +124,13 @@
 			isa = PBXGroup;
 			children = (
 				263D73F62BA4C865002190F4 /* ContentView.swift */,
+				370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */,
 				370E91E42BA8B82D00D39C27 /* FinalPreview.swift */,
 				370E91E02BA8AFC400D39C27 /* CameraPreview.swift */,
 				370E91E22BA8B78300D39C27 /* HUDCameraView.swift */,
 				263D73E72BA4C56F002190F4 /* SwiftDataView.swift */,
 				377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */,
+				370E91F92BA8D86D00D39C27 /* PastaView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -118,7 +139,10 @@
 			isa = PBXGroup;
 			children = (
 				370E91EB2BA8C46400D39C27 /* HandPose1.mlmodel */,
-				263D73FC2BA791F3002190F4 /* Models.swift */,
+				370E91F72BA8D7E200D39C27 /* VideoModel.swift */,
+				370E91F32BA8D7BA00D39C27 /* TreinoModel.swift */,
+				370E91EF2BA8D79600D39C27 /* PastaModel.swift */,
+				370E91ED2BA8D78100D39C27 /* ApresentacaoModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -196,15 +220,23 @@
 				370E91EA2BA8C43B00D39C27 /* HandGestureController.swift in Sources */,
 				370E91E32BA8B78300D39C27 /* HUDCameraView.swift in Sources */,
 				370E91E52BA8B82D00D39C27 /* FinalPreview.swift in Sources */,
+				370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */,
+				370E91F62BA8D7D200D39C27 /* TreinoViewModel.swift in Sources */,
 				263D73E82BA4C56F002190F4 /* SwiftDataView.swift in Sources */,
+				370E91FA2BA8D86D00D39C27 /* PastaView.swift in Sources */,
+				370E91F42BA8D7BA00D39C27 /* TreinoModel.swift in Sources */,
 				370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */,
+				370E91EE2BA8D78100D39C27 /* ApresentacaoModel.swift in Sources */,
 				377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */,
 				370E91E12BA8AFC400D39C27 /* CameraPreview.swift in Sources */,
 				263D73E82BA4C56F002190F4 /* SwiftDataView.swift in Sources */,
+				370E91F82BA8D7E200D39C27 /* VideoModel.swift in Sources */,
 				263D73EA2BA4C56F002190F4 /* Item.swift in Sources */,
 				263D73F72BA4C865002190F4 /* ContentView.swift in Sources */,
 				263D73E62BA4C56F002190F4 /* Mini04App.swift in Sources */,
-				263D73FD2BA791F3002190F4 /* Models.swift in Sources */,
+				370E91FE2BA8D9F200D39C27 /* ApresentacaoViewModel.swift in Sources */,
+				370E91F22BA8D7AD00D39C27 /* FoldersViewModel.swift in Sources */,
+				370E91F02BA8D79600D39C27 /* PastaModel.swift in Sources */,
 				370E91EC2BA8C46400D39C27 /* HandPose1.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
