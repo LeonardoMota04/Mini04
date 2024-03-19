@@ -13,6 +13,8 @@
 		263D73EC2BA4C571002190F4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EB2BA4C571002190F4 /* Assets.xcassets */; };
 		263D73EF2BA4C571002190F4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EE2BA4C571002190F4 /* Preview Assets.xcassets */; };
 		263D73F72BA4C865002190F4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73F62BA4C865002190F4 /* ContentView.swift */; };
+		263D740E2BAA2C57002190F4 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 263D740D2BAA2C57002190F4 /* SwiftSoup */; };
+		263D74102BAA2CD3002190F4 /* WebScraping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D740F2BAA2CD3002190F4 /* WebScraping.swift */; };
 		370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */; };
 		370E91E12BA8AFC400D39C27 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E02BA8AFC400D39C27 /* CameraPreview.swift */; };
 		370E91E32BA8B78300D39C27 /* HUDCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E22BA8B78300D39C27 /* HUDCameraView.swift */; };
@@ -57,6 +59,7 @@
 		263D73EE2BA4C571002190F4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		263D73F02BA4C571002190F4 /* Mini04.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Mini04.entitlements; sourceTree = "<group>"; };
 		263D73F62BA4C865002190F4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		263D740F2BAA2CD3002190F4 /* WebScraping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebScraping.swift; sourceTree = "<group>"; };
 		370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		370E91E02BA8AFC400D39C27 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		370E91E22BA8B78300D39C27 /* HUDCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDCameraView.swift; sourceTree = "<group>"; };
@@ -88,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				263D740E2BAA2C57002190F4 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,6 +171,7 @@
 				377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */,
 				370E91F92BA8D86D00D39C27 /* PastaView.swift */,
 				F196321D2BA9C3C80086D159 /* ChatView.swift */,
+				263D740F2BAA2CD3002190F4 /* WebScraping.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -179,7 +184,6 @@
 				370E91F32BA8D7BA00D39C27 /* TreinoModel.swift */,
 				370E91EF2BA8D79600D39C27 /* PastaModel.swift */,
 				370E91ED2BA8D78100D39C27 /* ApresentacaoModel.swift */,
-				263D73FC2BA791F3002190F4 /* Models.swift */,
 				F19632152BA8DE130086D159 /* ChatGPTModels.swift */,
 				F19632172BA8DE5A0086D159 /* OpenAIService.swift */,
 				F19632192BA8E1670086D159 /* Constants.swift */,
@@ -212,6 +216,9 @@
 			dependencies = (
 			);
 			name = Mini04;
+			packageProductDependencies = (
+				263D740D2BAA2C57002190F4 /* SwiftSoup */,
+			);
 			productName = Mini04;
 			productReference = 263D73E22BA4C56F002190F4 /* Mini04.app */;
 			productType = "com.apple.product-type.application";
@@ -262,6 +269,9 @@
 				Base,
 			);
 			mainGroup = 263D73D92BA4C56F002190F4;
+			packageReferences = (
+				263D740C2BAA2C57002190F4 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+			);
 			productRefGroup = 263D73E32BA4C56F002190F4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -321,6 +331,7 @@
 				263D73E62BA4C56F002190F4 /* Mini04App.swift in Sources */,
 				370E91FE2BA8D9F200D39C27 /* ApresentacaoViewModel.swift in Sources */,
 				370E91F22BA8D7AD00D39C27 /* FoldersViewModel.swift in Sources */,
+				263D74102BAA2CD3002190F4 /* WebScraping.swift in Sources */,
 				370E91F02BA8D79600D39C27 /* PastaModel.swift in Sources */,
 				370E91EC2BA8C46400D39C27 /* HandPose1.mlmodel in Sources */,
 			);
@@ -474,7 +485,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 99Z68J6579;
+				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -505,7 +516,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 99Z68J6579;
+				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -532,7 +543,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 99Z68J6579;
+				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.1;
 				MARKETING_VERSION = 1.0;
@@ -550,7 +561,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 99Z68J6579;
+				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.1;
 				MARKETING_VERSION = 1.0;
@@ -593,6 +604,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		263D740C2BAA2C57002190F4 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		263D740D2BAA2C57002190F4 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 263D740C2BAA2C57002190F4 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 263D73DA2BA4C56F002190F4 /* Project object */;
 }
