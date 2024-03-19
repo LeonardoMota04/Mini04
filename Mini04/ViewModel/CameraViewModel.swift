@@ -166,7 +166,8 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
 extension CameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        handPoseModelController?.performHandPoseRequest(sampleBuffer: sampleBuffer)
+        //handPoseModelController?.performHandPoseRequest(sampleBuffer: sampleBuffer)
+        handPoseModelController?.performHandPoseRequestShort(sampleBuffer: sampleBuffer)
         
     }
 }
