@@ -21,6 +21,7 @@ struct RecordingVideoView: View {
             }
             
         }
+        
         .overlay(content: {
             if let url = camVM.urltemp, isPreviewShowing {
                 FinalPreview(url: url)
