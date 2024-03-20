@@ -24,10 +24,27 @@ class CameraViewModel: NSObject, ObservableObject {
     @Published var isRecording = false
     
     @Published var handPoseModelController: HandGestureController?
-    @Published var detectedGestureModel1: String = ""
-    @Published var detectedGestureModel2: String = ""
+    @Published var detectedGestureModel1: String = "" {
+          // Quando detectar a mudanca de valor (uma mao na tela) ele chama a funcao de topicos
+          didSet {
+              self.createTopics(handPoseResult: detectedGestureModel1)
+          }
+      }
 
-    var urltemp: URL?
+      var urltemp: URL?
+      
+      // Speech To Text
+      var speechManager = SpeechManager()
+      @Published var speechText: String = ""
+      @Published var speechTopicText: String = ""
+      var auxSpeech: String = ""
+      // Cria o temporizador e o current time para saber qual o tempo atual na hora de marcar os topicos
+      var timer: Timer?
+      @Published var currentTime: TimeInterval = 0
+      var topicTime: [TimeInterval] = []
+      
+      // Video Player
+      var videoPlayer: AVPlayer?
     
     override init() {
         super.init()
@@ -129,6 +146,42 @@ class CameraViewModel: NSObject, ObservableObject {
         captureSession.addInput(cameraInput)
     }
 
+    // função para colocar o // no scrpit e criar topico
+        func createTopics(handPoseResult: String) {
+            if handPoseResult == "0" {
+                if speechTopicText.isEmpty {
+                    speechTopicText = speechText + " //"
+                    auxSpeech = speechText
+                    // adicionando o tempo do topico
+                    self.topicTime.append(self.currentTime)
+                   
+                }  else {
+                    // caso o texto nao seja o mesmo para evitar repeticoes
+                    if auxSpeech != speechText {
+                        let newSpeechText = substractionString(speechText, auxSpeech)
+                        // adiciona as novas palavras e atualiza o texto atual na variavel auxiliar
+                        speechTopicText += " //" + (newSpeechText ?? "")
+                        auxSpeech = speechText
+                        // adicionando o tempo do topico
+                        self.topicTime.append(self.currentTime)
+                       
+                    }
+                }
+            }
+        }
+        
+        func substractionString(_ strA: String, _ strB: String) -> String? {
+            // percorre os caracteres até o count da string comparada
+            if strA.count > strB.count {
+                let index = strA.index(strA.startIndex, offsetBy: strB.count)
+                return String(strA[index...])
+            } else if strB.count > strA.count {
+                let index = strB.index(strB.startIndex, offsetBy: strA.count)
+                return String(strB[index...])
+            } else {
+                return nil // or handle the case where both strings have equal lengths
+            }
+        }
 }
 
 /// MARK: VIDEO RECORDING
@@ -144,22 +197,53 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     }
     
     func startRecording() {
-        isRecording = true
-        print("começou a gravar")
-        let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
-        videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
-    }
-    
-    func stopRecording() {
-        isRecording = false
-        guard videoFileOutput.isRecording else {
-            print("Nenhuma gravação em andamento.")
-            return
-        }
-        
-        videoFileOutput.stopRecording()
-    }
-
+          isRecording = true
+          print("começou a gravar")
+          let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
+          videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
+          
+          // Inciando o SpeechToText
+          do {
+            try self.speechManager.startRecording { text, error in
+                // verificando se o script falado nao esta vazio
+                guard let text = text else {
+                    print("String SpeechToText vazia/nil")
+                    return
+                }
+                self.speechText = text
+                print(text)
+              }
+          } catch {
+              print(error)
+          }
+          
+          // iniciando o timer para saber o momento de cada topico
+          timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { time in
+              self.currentTime += 1
+          })
+      }
+      
+      func stopRecording() {
+          isRecording = false
+          guard videoFileOutput.isRecording else {
+              print("Nenhuma gravação em andamento.")
+              return
+          }
+          
+          videoFileOutput.stopRecording()
+          print("Speech Normal: \(speechText)")
+          print("Speech Topicos: " + speechTopicText)
+          
+          // parando o timer e reiniciando ele
+          timer?.invalidate()
+          timer = nil
+          currentTime = 0
+      }
+      
+      func seekPlayerVideo(topic: Int){
+          let targetTime = CMTime(value: CMTimeValue(topicTime[topic]), timescale: 1)
+          videoPlayer?.seek(to: targetTime)
+      }
     
 }
 

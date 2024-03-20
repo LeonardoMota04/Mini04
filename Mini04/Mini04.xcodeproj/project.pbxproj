@@ -29,6 +29,7 @@
 		370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */; };
 		370E91FE2BA8D9F200D39C27 /* ApresentacaoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */; };
 		377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */; };
+		BA8571092BAB4FE6000FF83B /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8571082BAB4FE6000FF83B /* SpeechManager.swift */; };
 		F19632162BA8DE130086D159 /* ChatGPTModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19632152BA8DE130086D159 /* ChatGPTModels.swift */; };
 		F19632182BA8DE5A0086D159 /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19632172BA8DE5A0086D159 /* OpenAIService.swift */; };
 		F196321A2BA8E1670086D159 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19632192BA8E1670086D159 /* Constants.swift */; };
@@ -73,6 +74,7 @@
 		370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreinoView.swift; sourceTree = "<group>"; };
 		370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApresentacaoViewModel.swift; sourceTree = "<group>"; };
 		377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingVideoView.swift; sourceTree = "<group>"; };
+		BA8571082BAB4FE6000FF83B /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
 		F19632152BA8DE130086D159 /* ChatGPTModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGPTModels.swift; sourceTree = "<group>"; };
 		F19632172BA8DE5A0086D159 /* OpenAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIService.swift; sourceTree = "<group>"; };
 		F19632192BA8E1670086D159 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				370E91E92BA8C43B00D39C27 /* HandGestureController.swift */,
 				370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */,
 				F196321B2BA9C3810086D159 /* ChatViewModel.swift */,
+				BA8571082BAB4FE6000FF83B /* SpeechManager.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -179,7 +182,6 @@
 				370E91F32BA8D7BA00D39C27 /* TreinoModel.swift */,
 				370E91EF2BA8D79600D39C27 /* PastaModel.swift */,
 				370E91ED2BA8D78100D39C27 /* ApresentacaoModel.swift */,
-				263D73FC2BA791F3002190F4 /* Models.swift */,
 				F19632152BA8DE130086D159 /* ChatGPTModels.swift */,
 				F19632172BA8DE5A0086D159 /* OpenAIService.swift */,
 				F19632192BA8E1670086D159 /* Constants.swift */,
@@ -309,6 +311,7 @@
 				370E91F42BA8D7BA00D39C27 /* TreinoModel.swift in Sources */,
 				370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */,
 				370E91EE2BA8D78100D39C27 /* ApresentacaoModel.swift in Sources */,
+				BA8571092BAB4FE6000FF83B /* SpeechManager.swift in Sources */,
 				F196321C2BA9C3810086D159 /* ChatViewModel.swift in Sources */,
 				370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */,
 				F196321A2BA8E1670086D159 /* Constants.swift in Sources */,
@@ -474,14 +477,15 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 99Z68J6579;
+				DEVELOPMENT_TEAM = 3A253HAV36;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = "$(PRODUCT_BUNDLE_IDENTIFIER)";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = com.leonardo.Mini04;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = 1.0;
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -505,14 +509,15 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 99Z68J6579;
+				DEVELOPMENT_TEAM = 3A253HAV36;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = "$(PRODUCT_BUNDLE_IDENTIFIER)";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = com.leonardo.Mini04;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = 1.0;
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
