@@ -194,6 +194,10 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
         print("nome do arquivo: \(outputFileURL)")
         
         self.urltemp = outputFileURL
+            // passando url par o player local
+        if let url = urltemp {
+            self.videoPlayer = AVPlayer(url: url)
+        }
     }
     
     func startRecording() {
