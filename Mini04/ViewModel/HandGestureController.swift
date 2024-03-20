@@ -21,6 +21,14 @@ class HandGestureController: ObservableObject {
             self.onResultModel1Changed?(self.resulHandPoseModel)
         }
     }
+    
+    @Published var isHandIdentified: Bool = false {
+        didSet {
+            self.onHandIdentificationChanged?(self.isHandIdentified)
+        }
+    }
+    var onHandIdentificationChanged: ((Bool) -> Void)?
+    
     var onResultModel1Changed: ((String) -> Void)?
 
     
