@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct TreinoView: View {
     @ObservedObject var trainingVM: TreinoViewModel
-    var folder: PastaModel
     
     var body: some View {
         VStack {
-            Text("Pertenço à pasta: \(folder.nome)")
+            VideoPlayer(player: AVPlayer(url: trainingVM.treino.video!.videoURL))
+            Text("Pertenço à pasta: \(trainingVM.treino.nome)")
             Text("NOME: \(trainingVM.treino.nome)")
             Text("Data: \(trainingVM.treino.data)")
         }
