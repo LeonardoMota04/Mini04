@@ -24,21 +24,24 @@ struct PastaView: View {
                 if folderVM.folder.treinos.isEmpty {
                     Text("Adicione um treino para começar")
                 }
-                
                 Spacer()
+            
+                // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
                 NavigationLink {
-                    RecordingVideoView()
+                    RecordingVideoView(folderVM: folderVM)
                 } label: {
                     Text("Novo Treino")
                 }
 
-//                Button("Criar treino") {
+                
+//                NavigationLink("Criar treino") {
 //                    let newTraining = TreinoModel(name: "\(folderVM.folder.nome) - Treino \(folderVM.folder.treinos.count + 1)")
-//                    folderVM.folder.treinos.append(newTraining)
+//                    TreinoView(trainingVM: TreinoViewModel(treino: newTraining), folder: folderVM.folder)
 //                }
+                
                 ForEach(folderVM.folder.treinos) { treino in
                     NavigationLink(treino.nome) {
-                        TreinoView(trainingVM: TreinoViewModel(treino: treino), folder: folderVM.folder)
+                        TreinoView(trainingVM: TreinoViewModel(treino: treino))
                     }
                 }
                 

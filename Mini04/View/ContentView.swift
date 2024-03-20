@@ -9,9 +9,9 @@ import SwiftUI
 
 // MARK: - CONTENT VIEW
 struct ContentView: View {
-    @StateObject private var presentationVM = ApresentacaoViewModel(apresentacao: ApresentacaoModel())
+    @StateObject private var presentationVM = ApresentacaoViewModel()
+
     @State private var isModalPresented = false
-    @State private var folderViewModels: [UUID: FoldersViewModel] = [:]
     
     @State var pastaName: String = ""
     @State var tempoDesejado: Int = 0
@@ -35,7 +35,7 @@ struct ContentView: View {
                     List {
                         ForEach(presentationVM.apresentacao.folders) { folder in
                             NavigationLink(folder.nome) {
-                                PastaView(folderVM: folderViewModels[folder.id]!)
+                                PastaView(folderVM: presentationVM.foldersViewModels[folder.id]!)
                             }
                         }
                     }
@@ -56,7 +56,9 @@ struct ContentView: View {
                 List {
                     ForEach(presentationVM.apresentacao.folders) { folder in
                         NavigationLink(folder.nome) {
-                            PastaView(folderVM: folderViewModels[folder.id]!)
+                            //PastaView(folderVM: presentationVM.foldersViewModel)
+                            PastaView(folderVM: FoldersViewModel(folder: folder))
+
                         }
                     }
                 }
@@ -76,11 +78,8 @@ struct ContentView: View {
                     .padding()
                 Spacer()
                 Button("Criar pasta") {
-                    let newFolder = PastaModel(nome: pastaName,
-                                               tempoDesejado: tempoDesejado,
-                                               objetivoApresentacao: objetivo)
-                    presentationVM.apresentacao.folders.append(newFolder)
-                    folderViewModels[newFolder.id] = FoldersViewModel(folder: newFolder)
+                    presentationVM.createNewFolder(name: pastaName, pretendedTime: tempoDesejado, presentationGoal: objetivo)
+                    //folderViewModels[newFolder.id] = FoldersViewModel(folder: newFolder)
                     isModalPresented.toggle()
                 }
                 .padding()

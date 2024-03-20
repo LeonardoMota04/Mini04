@@ -10,6 +10,7 @@ import SwiftUI
 
 struct HUDCameraView: View {
     @EnvironmentObject var cameraVC: CameraViewModel
+    @ObservedObject var folderVM: FoldersViewModel // pasta que estamos gravando
     @State private var isRecording = false
     @Binding var isPreviewShowing: Bool
     @State var isSaveButtonDisabled = true
@@ -23,7 +24,7 @@ struct HUDCameraView: View {
                     Button {
                         isPreviewShowing.toggle()
                         
-                    }label: {
+                    } label: {
                         Text("save")
                     }
                     .disabled(isSaveButtonDisabled)
@@ -33,7 +34,17 @@ struct HUDCameraView: View {
                         cameraVC.startRecording()
                         isRecording.toggle()
                     } else {
-                        cameraVC.stopRecording()
+                        cameraVC.stopRecording() // para de gravar video
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            if let videoURL = cameraVC.urltemp {
+                                folderVM.createNewTraining(videoURL: videoURL) // cria novo treino com o URL do vídeo
+                                isRecording.toggle()
+                                isSaveButtonDisabled.toggle()
+                            } else {
+                                print("URL do vídeo é nil.")
+                            }
+                        }
                         isRecording.toggle()
                         isSaveButtonDisabled.toggle()
                     }
@@ -52,6 +63,6 @@ struct HUDCameraView: View {
 }
 
 
-#Preview {
-    HUDCameraView(isPreviewShowing: .constant(false))
-}
+//#Preview {
+//    HUDCameraView(isPreviewShowing: .constant(false))
+//}

@@ -12,9 +12,9 @@ struct TreinoModel: Identifiable {
     var data: Date = Date()
     var nome: String
     /// feedback
-    var video: VideoModel
+    var video: VideoModel?
 
-    init(name: String, video: VideoModel){//, pasta: PastaModel) {
+    init(name: String, video: VideoModel? = nil){
         //self.nome = "\(pasta.nome) - \(pasta.treinos.count + 1)"
         self.nome = name
         //self.pasta = pasta
