@@ -11,6 +11,7 @@ import SwiftData
 @main
 struct Mini04App: App {
     @StateObject var camVM = CameraViewModel()
+    @State private var folderViewModels: [UUID: FoldersViewModel] = [:] // instanciando viewmodel das pastas
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -29,9 +30,8 @@ struct Mini04App: App {
     var body: some Scene {
         WindowGroup {
 //            SwiftDataView()
-          ContentView()
+            ContentView()
 //            RecordingVideoView()
-            //ChatView()
                 .environmentObject(camVM)
 
         }
