@@ -29,8 +29,9 @@ struct Mini04App: App {
     var body: some Scene {
         WindowGroup {
 //            SwiftDataView()
-            ContentView()
-//            RecordingVideoView()
+//            ContentView()
+//            ContentViewaaaaa()
+            RecordingVideoView()
                 .environmentObject(camVM)
 
         }

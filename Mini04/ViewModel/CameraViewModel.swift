@@ -8,6 +8,7 @@
 import SwiftUI
 import AVFoundation
 import AppKit
+import Vision
 
 class CameraViewModel: NSObject, ObservableObject {
     var cameraDevice: AVCaptureDevice!
@@ -184,8 +185,11 @@ struct CameraRepresentable: NSViewRepresentable {
             self.camVM.previewLayer = AVCaptureVideoPreviewLayer(session: self.camVM.captureSession)
             self.camVM.previewLayer.frame = view.bounds
             self.camVM.previewLayer.videoGravity = .resizeAspect
+            self.camVM.previewLayer.connection?.automaticallyAdjustsVideoMirroring = false
+            self.camVM.previewLayer.connection?.isVideoMirrored = true // Espelhando horizontalmente
             view.layer?.addSublayer(self.camVM.previewLayer)
         }
+
 
         return view
     }
@@ -194,6 +198,75 @@ struct CameraRepresentable: NSViewRepresentable {
         // Atualizações de visualização, se necessário
     }
 }
+
+struct CameraOverlayView: View {
+    @EnvironmentObject var camVM: CameraViewModel
+    let size: CGSize
+    
+    @State private var previousPosition: CGPoint = .zero
+    @State private var previousSize: CGFloat = 0.0
+    
+    var body: some View {
+        ZStack {
+            if let observationsBuffer = self.camVM.handPoseModelController?.observationsBuffer.last,
+               let allPoints = try? self.camVM.handPoseModelController?.processPoints(from: observationsBuffer) {
+                
+                let averageDistance = calculateAverageDistance(allPoints: allPoints)
+                
+                let averageX = allPoints.reduce(0, { $0 + $1.location.x }) / CGFloat(allPoints.count)
+                let averageY = allPoints.reduce(0, { $0 + $1.location.y }) / CGFloat(allPoints.count)
+
+                Circle()
+                    .stroke(lineWidth: averageDistance * size.width / 10)
+                    .foregroundColor(.red)
+                    .frame(width: averageDistance * size.width * 2, height: averageDistance * size.height * 2)
+                    .position(x: averageX * size.width, y: averageY * size.height)
+                    .onAppear {
+                        previousPosition = CGPoint(x: averageX * size.width, y: averageY * size.height)
+                        previousSize = averageDistance * size.width
+                    }
+                    .onChange(of: averageX)  { oldx, newX in
+                        withAnimation {
+                            previousPosition.x = newX * size.width
+                        }
+                    }
+                    .onChange(of: averageY) { oldY, newY in
+                        withAnimation {
+                            previousPosition.y = newY * size.height
+                        }
+                    }
+                    .onChange(of: averageDistance){ oldDistance, newDistance in
+                        withAnimation {
+                            previousSize = newDistance * size.width
+                        }
+                    }
+                    .animation(.easeInOut, value: 0.3) // Adjust duration as needed
+            }
+        }
+    }
+    
+    func calculateAverageDistance(allPoints: [VNRecognizedPoint]) -> CGFloat {
+        var distances: [CGFloat] = []
+        
+        for point1 in allPoints {
+            for point2 in allPoints {
+                let distance = sqrt(pow(point1.location.x - point2.location.x, 2) + pow(point1.location.y - point2.location.y, 2))
+                distances.append(distance)
+            }
+        }
+        
+        return distances.reduce(0.0, +) / CGFloat(distances.count)
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 
