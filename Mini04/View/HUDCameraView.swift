@@ -38,8 +38,9 @@ struct HUDCameraView: View {
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             if let videoURL = cameraVC.urltemp {
-                                folderVM.createNewTraining(videoURL: videoURL) // cria novo treino com o URL do vídeo
-                                cameraVC.isRecording.toggle()
+
+                                folderVM.createNewTraining(videoURL: videoURL, videoScript: cameraVC.auxSpeech, videoTopics: [cameraVC.speechTopicText], videoTime: cameraVC.videoTime, topicDurationTime: cameraVC.videoTopicDuration) // cria novo treino com o URL do vídeo
+                                isRecording.toggle()
                                 isSaveButtonDisabled.toggle()
                             } else {
                                 print("URL do vídeo é nil.")
