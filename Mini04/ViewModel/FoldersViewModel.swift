@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 class FoldersViewModel: ObservableObject {
     // MARK: - Modelo
@@ -21,9 +22,14 @@ class FoldersViewModel: ObservableObject {
     
     // MARK: - Métodos
     // Criar treino
-    func createNewTraining(videoURL: URL) {
-        let newTraining = TreinoModel(name: "\(folder.nome) - Treino \(folder.treinos.count + 1)", video: VideoModel(videoURL: videoURL))
+    func createNewTraining(videoURL: URL, videoScript: String, videoTopics: [String], videoTime: TimeInterval, topicDurationTime: [TimeInterval]) {
+        let newTraining = TreinoModel(name: "\(folder.nome) - Treino \(folder.treinos.count + 1)", video: VideoModel(videoURL: videoURL, script: videoScript, topics: videoTopics, time: videoTime, topicDuration: topicDurationTime))
         folder.treinos.append(newTraining)
     }
+    
+
+
+ 
+
     
 }
