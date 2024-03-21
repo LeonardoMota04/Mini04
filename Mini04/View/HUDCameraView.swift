@@ -30,14 +30,15 @@ struct HUDCameraView: View {
                     .disabled(isSaveButtonDisabled)
                 }
                 Button {
-                    if !isRecording {
+                    if !cameraVC.isRecording {
                         cameraVC.startRecording()
-                        isRecording.toggle()
+//                        cameraVC.isRecording.toggle()
                     } else {
                         cameraVC.stopRecording() // para de gravar video
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             if let videoURL = cameraVC.urltemp {
+
                                 folderVM.createNewTraining(videoURL: videoURL, videoScript: cameraVC.auxSpeech, videoTopics: [cameraVC.speechTopicText], videoTime: cameraVC.videoTime, topicDurationTime: cameraVC.videoTopicDuration) // cria novo treino com o URL do vídeo
                                 isRecording.toggle()
                                 isSaveButtonDisabled.toggle()
@@ -45,13 +46,13 @@ struct HUDCameraView: View {
                                 print("URL do vídeo é nil.")
                             }
                         }
-                        isRecording.toggle()
+                        cameraVC.isRecording.toggle()
                         isSaveButtonDisabled.toggle()
                     }
                 } label: {
                     ZStack {
                         Circle()
-                            .foregroundStyle(isRecording ? .gray : .red)
+                            .foregroundStyle(cameraVC.isRecording ? .gray : .red)
                     }
                 }
                 .buttonStyle(.borderless)

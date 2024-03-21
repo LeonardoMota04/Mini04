@@ -34,6 +34,10 @@ class CameraViewModel: NSObject, ObservableObject {
     
     var urltemp: URL?
     
+
+    // Número da contagem
+    @Published var countdownNumber: Int = 3
+    
     // Speech To Text
     var speechManager = SpeechManager()
     @Published var speechText: String = ""
@@ -45,6 +49,7 @@ class CameraViewModel: NSObject, ObservableObject {
     var topicTime: [TimeInterval] = []
     @Published var videoTime: TimeInterval = 0
     @Published var videoTopicDuration: [TimeInterval] = []
+
     
     // Video Player
     var videoPlayer: AVPlayer?
@@ -65,7 +70,7 @@ class CameraViewModel: NSObject, ObservableObject {
         guard !captureSession.isRunning else {
             return
         }
-        
+
         DispatchQueue.global().async {
             self.captureSession.startRunning()
             print("sessão iniciada")
@@ -158,7 +163,6 @@ class CameraViewModel: NSObject, ObservableObject {
                     auxSpeech = speechText
                     // adicionando o tempo do topico
                     self.topicTime.append(self.currentTime)
-                    
                 }  else {
                     // caso o texto nao seja o mesmo para evitar repeticoes
                     if auxSpeech != speechText {
@@ -189,7 +193,7 @@ class CameraViewModel: NSObject, ObservableObject {
     }
 }
 
-/// MARK: VIDEO RECORDING
+// MARK: - VIDEO RECORDING
 extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let error = error {
@@ -207,32 +211,51 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
         }
     }
     
-    func startRecording() {
-        DispatchQueue.main.async { [self] in
-            isRecording = true
-            print("começou a gravar")
-            let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
-            videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
-            // reiniciando as varieis para pegar o texto
-            deinitVariables()
-            do {
-                try self.speechManager.startRecording { text, error in
-                    // verificando se o script falado nao esta vazio
-                    guard let text = text else {
-                        print("String SpeechToText vazia/nil")
-                        return
-                    }
-                    self.speechText = text
-                    print(text)
-                }
-            } catch {
-                print(error)
+    func startRecording() {        
+        // Contagem antes de iniciar a gravar
+        var countdown = 3
+        // Timer para contagem regressiva de 3 segundos
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
+            if countdown > 0 {
+                print(countdown)
+                countdown -= 1
+                
+                // altera o número do countdown, que será exibido na View
+                countdownNumber = countdown
+                
+            } else {
+                
+                isRecording = true
+              // reiniciando as variaveis
+                  deinitVariables()
+                print("começou a gravar")
+                let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
+                videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
+                
+                
+                timer.invalidate()
             }
-            // iniciando o timer para saber o momento de cada topico
-            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { time in
-                self.currentTime += 1
-            })
         }
+        
+        // Inciando o SpeechToText
+        do {
+            try self.speechManager.startRecording { text, error in
+                // verificando se o script falado nao esta vazio
+                guard let text = text else {
+                    print("String SpeechToText vazia/nil")
+                    return
+                }
+                self.speechText = text
+                print(text)
+            }
+        } catch {
+            print(error)
+        }
+        
+        // iniciando o timer para saber o momento de cada topico
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { time in
+            self.currentTime += 1
+        })
     }
     
     func stopRecording() {
@@ -240,6 +263,7 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
         // variavel para armazenar o scrip (quando da stop ele deixa a string "" e fica impossivel salva-la)
         auxSpeech = speechText
         speechManager.stopRecording()
+
         guard videoFileOutput.isRecording else {
             print("Nenhuma gravação em andamento.")
             return
@@ -254,10 +278,11 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
         currentTime = 0
     }
     
+
     func getURLVideo(url: URL) {
         self.videoPlayer = AVPlayer(url: url)
     }
-    
+
     func seekPlayerVideo(topic: Int){
         let targetTime = CMTime(value: CMTimeValue(topicTime[topic]), timescale: 1)
         videoPlayer?.seek(to: targetTime)
@@ -304,6 +329,7 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
             }
         }
     }
+
     
     func deinitVariables() {
         // reinciando as variaveis para conseguir limpar os dados
