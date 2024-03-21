@@ -11,11 +11,11 @@ import SwiftData
 @main
 struct Mini04App: App {
     @StateObject var camVM = CameraViewModel()
-    @State private var folderViewModels: [UUID: FoldersViewModel] = [:] // instanciando viewmodel das pastas
 
-    var sharedModelContainer: ModelContainer = {
+    var modelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            PastaModel.self,
+            ApresentacaoModel.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -35,6 +35,7 @@ struct Mini04App: App {
                 .environmentObject(camVM)
 
         }
+        .modelContainer(modelContainer)
         //.modelContainer(sharedModelContainer)
     }
 }

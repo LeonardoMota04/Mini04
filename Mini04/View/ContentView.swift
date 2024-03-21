@@ -6,25 +6,33 @@
 //
 
 import SwiftUI
+import SwiftData
 
 // MARK: - CONTENT VIEW
 struct ContentView: View {
+    // PERSISTENCIA
+    @Environment(\.modelContext) private var modelContext
+    @Query private var folders: [PastaModel] // read de pastas
+    
+    // VM
     @StateObject private var presentationVM = ApresentacaoViewModel()
-
     @State private var isModalPresented = false
     
+    // CRIAR PASTA (modularizar)
     @State var pastaName: String = ""
     @State var tempoDesejado: Int = 0
     @State var objetivo: String = ""
     let tempos = [5,10,15]
+    
+    
+    
     var body: some View {
 
         NavigationSplitView {
             NavigationLink("Minhas Apresentações") {
                 // MESMA COISA AQUI
                 if presentationVM.apresentacao.folders.isEmpty {
-                    Text("Adicione uma apresentação para começar")
-                        .padding()
+                    ContentUnavailableView("Adicione sua primeira pasta.", systemImage: "folder.badge.questionmark")
                     Button("Criar pasta") {
                         isModalPresented.toggle()
                     }
@@ -33,11 +41,25 @@ struct ContentView: View {
                         isModalPresented.toggle()
                     }
                     List {
-                        ForEach(presentationVM.apresentacao.folders) { folder in
-                            NavigationLink(folder.nome) {
-                                PastaView(folderVM: presentationVM.foldersViewModels[folder.id]!)
+                        // exibir todas as pastas
+                        ForEach(folders) { folder in
+                            // pastas + apagar
+                            HStack {
+                                NavigationLink(folder.nome) {
+                                    PastaView(folderVM: FoldersViewModel(folder: folder))
+                                    //PastaView(folderVM: presentationVM.foldersViewModels[folder.id]!)
+                                }
+                                Button("Apagar \(folder.nome)") {
+                                    presentationVM.deleteFolder(folder)
+                                }
                             }
+                            
                         }
+//                        ForEach(presentationVM.apresentacao.folders) { folder in
+//                            NavigationLink(folder.nome) {
+//                                PastaView(folderVM: presentationVM.foldersViewModels[folder.id]!)
+//                            }
+//                        }
                     }
                 }
                 
@@ -47,22 +69,31 @@ struct ContentView: View {
         } detail: {
             // MESMA COISA AQUI
             if presentationVM.apresentacao.folders.isEmpty {
-                Text("Adicione uma apresentação para começar")
-                    .padding()
+                ContentUnavailableView("Adicione sua primeira pasta.", systemImage: "folder.badge.questionmark")
                 Button("Criar pasta") {
                     isModalPresented.toggle()
                 }
             } else {
                 List {
-                    ForEach(presentationVM.apresentacao.folders) { folder in
+//                    ForEach(presentationVM.apresentacao.folders) { folder in
+//                        NavigationLink(folder.nome) {
+//                            //PastaView(folderVM: presentationVM.foldersViewModel)
+//                            PastaView(folderVM: FoldersViewModel(folder: folder))
+//
+//                        }
+//                    }
+                    ForEach(folders) { folder in
                         NavigationLink(folder.nome) {
-                            //PastaView(folderVM: presentationVM.foldersViewModel)
                             PastaView(folderVM: FoldersViewModel(folder: folder))
-
+                            //PastaView(folderVM: presentationVM.foldersViewModels[folder.id]!)
                         }
                     }
                 }
             }
+        }
+        .onAppear {
+            presentationVM.modelContext = modelContext
+            presentationVM.fetchFolders()
         }
         .sheet(isPresented: $isModalPresented) {
             VStack {
@@ -79,7 +110,6 @@ struct ContentView: View {
                 Spacer()
                 Button("Criar pasta") {
                     presentationVM.createNewFolder(name: pastaName, pretendedTime: tempoDesejado, presentationGoal: objetivo)
-                    //folderViewModels[newFolder.id] = FoldersViewModel(folder: newFolder)
                     isModalPresented.toggle()
                 }
                 .padding()
@@ -93,9 +123,14 @@ struct ContentView: View {
             }
             
         }
+        
     }
 }
 
+//extension ContentView {
+//    @Observable
+//    class
+//}
 
 struct ModalView: View {
     @Binding var isModalPresented: Bool

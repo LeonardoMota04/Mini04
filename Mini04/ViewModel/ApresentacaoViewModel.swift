@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 
 /*
  ApresentacaoViewModel CONTEM:
@@ -14,30 +15,79 @@ import Foundation
  - método de criar pasta
  */
 
+@Observable
 class ApresentacaoViewModel: ObservableObject {
     // Modelo
-    @Published var apresentacao: ApresentacaoModel
-    
-    // Pasta
-    @Published var foldersViewModels: [UUID: FoldersViewModel] = [:]
+    var apresentacao: ApresentacaoModel
+    var modelContext: ModelContext?
 
+    // Pasta
+    //var foldersViewModels: [UUID: FoldersViewModel] = [:]
     
-    init(apresentacao: ApresentacaoModel = ApresentacaoModel()) {
+    init(apresentacao: ApresentacaoModel = ApresentacaoModel(), modelContext: ModelContext? = nil) {
         self.apresentacao = apresentacao
+        self.modelContext = modelContext
+        fetchFolders()
+    }
+    
+
+    func fetchFolders() {
+        guard let modelContext = modelContext else { return }
+        do {
+            let fetchDescriptor = FetchDescriptor<PastaModel>(
+                sortBy: [SortDescriptor(\PastaModel.nome)]
+            )
+            apresentacao.folders = try modelContext.fetch(fetchDescriptor)
+            // imprimir resultados recuperados
+            print("Pastas recuperadas:")
+            for folder in apresentacao.folders {
+                print("- Nome: \(folder.nome)")
+                print("- Treinos: \(folder.treinos)")
+                print("- Objetivo: \(folder.objetivoApresentacao)")
+                print("- Data: \(folder.data)")
+                print("\n\n\n\n\n\n\n\n")
+            }
+        } catch {
+            print("Fetch failed: \(error)")
+        }
     }
     
     // métodos
-    /// CRIAR PASTA
+    // CRIAR PASTA
     func createNewFolder(name: String, pretendedTime: Int, presentationGoal: String) {
+        guard let modelContext = modelContext else { return }
+        
+        // cria nova pasta
         let newFolder = PastaModel(nome: name, tempoDesejado: pretendedTime, objetivoApresentacao: presentationGoal)
-        apresentacao.folders.append(newFolder)
         
         // FoldersViewModel com a nova pasta
-        if foldersViewModels[newFolder.id] == nil {
-            let newFolderViewModel = FoldersViewModel(folder: newFolder)
-            foldersViewModels[newFolder.id] = newFolderViewModel
+//        if foldersViewModels[newFolder.id] == nil {
+//            let newFolderViewModel = FoldersViewModel(folder: newFolder)
+//            foldersViewModels[newFolder.id] = newFolderViewModel
+//        }
+//        
+        do {
+            modelContext.insert(newFolder)
+            try modelContext.save()
+            apresentacao.folders.append(newFolder)
+        } catch {
+            print("Não conseguiu criar e salvar a pasta. \(error)")
         }
-        //let newFolderViewModel = FoldersViewModel(folder: newFolder)
-        //self.foldersViewModels.append(newFolderViewModel)
+    }
+    
+    func deleteFolder(_ folder: PastaModel) {
+        guard let modelContext = modelContext else { return }
+        
+        // remove a pasta do array folders
+        if let index = apresentacao.folders.firstIndex(of: folder) {
+            apresentacao.folders.remove(at: index)
+            modelContext.delete(folder)
+            
+            do {
+                try modelContext.save()
+            } catch {
+                print("Falha ao salvar após a exclusão da pasta. \(error)")
+            }
+        }
     }
 }

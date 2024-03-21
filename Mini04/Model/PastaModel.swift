@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import SwiftData
 
-struct PastaModel: Identifiable {
+@Model
+class PastaModel: Identifiable {
     var id: UUID = UUID()
     var nome: String = ""
     var data: Date = Date()

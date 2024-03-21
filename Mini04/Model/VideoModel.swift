@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import SwiftData
 
-struct VideoModel: Identifiable, Hashable {
+@Model
+class VideoModel: Identifiable, Hashable {
     var id = UUID()
     var videoURL: URL
 //    var script: String

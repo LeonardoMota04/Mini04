@@ -128,10 +128,11 @@
 			isa = PBXGroup;
 			children = (
 				263D73E92BA4C56F002190F4 /* Item.swift */,
+				263D73E52BA4C56F002190F4 /* Mini04App.swift */,
+				263D73E72BA4C56F002190F4 /* SwiftDataView.swift */,
 				263D73EB2BA4C571002190F4 /* Assets.xcassets */,
 				263D73F02BA4C571002190F4 /* Mini04.entitlements */,
 				263D73ED2BA4C571002190F4 /* Preview Content */,
-				263D73E52BA4C56F002190F4 /* Mini04App.swift */,
 			);
 			path = Mini04;
 			sourceTree = "<group>";
@@ -166,7 +167,6 @@
 				370E91E42BA8B82D00D39C27 /* FinalPreview.swift */,
 				370E91E02BA8AFC400D39C27 /* CameraPreview.swift */,
 				370E91E22BA8B78300D39C27 /* HUDCameraView.swift */,
-				263D73E72BA4C56F002190F4 /* SwiftDataView.swift */,
 				377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */,
 				370E91F92BA8D86D00D39C27 /* PastaView.swift */,
 				F196321D2BA9C3C80086D159 /* ChatView.swift */,
@@ -477,7 +477,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-
 				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -510,9 +509,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-
 				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
-
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
