@@ -186,6 +186,8 @@ class CameraViewModel: NSObject, ObservableObject {
             return nil // or handle the case where both strings have equal lengths
         }
     }
+    
+    
 }
 
 /// MARK: VIDEO RECORDING
