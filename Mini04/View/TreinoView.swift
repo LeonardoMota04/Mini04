@@ -10,7 +10,7 @@ import AVKit
 
 struct TreinoView: View {
     @ObservedObject var trainingVM: TreinoViewModel
-    
+ 
     var body: some View {
         VStack {
             VideoPlayer(player: AVPlayer(url: trainingVM.treino.video!.videoURL))

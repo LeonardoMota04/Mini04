@@ -110,7 +110,6 @@ struct ContentView: View {
         .onAppear {
             presentationVM.modelContext = modelContext
             presentationVM.fetchFolders()
-            presentationVM.bro()
         }
         .sheet(isPresented: $isModalPresented) {
             VStack {

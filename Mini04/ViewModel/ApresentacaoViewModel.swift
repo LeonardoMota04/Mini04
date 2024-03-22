@@ -8,13 +8,6 @@
 import Foundation
 import SwiftData
 
-/*
- ApresentacaoViewModel CONTEM:
- - Modelo ApresentacaoModel
- - ViewModel das pastas
- - método de criar pasta
- */
-
 @Observable
 class ApresentacaoViewModel: ObservableObject {
     // MARK: - Modelo
@@ -33,12 +26,7 @@ class ApresentacaoViewModel: ObservableObject {
     }
     
     // MARK: - CRUD
-    func bro() {
-        for folder in apresentacao.folders {
-            let folderViewModel = FoldersViewModel(folder: folder)
-            foldersViewModels[folder.id] = folderViewModel
-        }
-    }
+    
     // CREATE
     func createNewFolder(name: String, pretendedTime: Int, presentationGoal: String) {
         guard let modelContext = modelContext else { return }
@@ -71,6 +59,10 @@ class ApresentacaoViewModel: ObservableObject {
                 sortBy: [SortDescriptor(\PastaModel.nome)]
             )
             apresentacao.folders = try modelContext.fetch(fetchDescriptor)
+            for folder in apresentacao.folders {
+                let folderViewModel = FoldersViewModel(folder: folder)
+                foldersViewModels[folder.id] = folderViewModel
+            }
             // imprimir resultados recuperados
             print("Pastas recuperadas:")
             for folder in apresentacao.folders {

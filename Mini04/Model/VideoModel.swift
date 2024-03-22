@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class VideoModel: Identifiable, Hashable {
+class VideoModel: Identifiable {
     var id = UUID()
     var videoURL: URL
 //    var script: String
