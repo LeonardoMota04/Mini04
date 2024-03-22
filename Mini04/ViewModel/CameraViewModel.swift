@@ -11,6 +11,16 @@ import AppKit
 import Vision
 
 class CameraViewModel: NSObject, ObservableObject {
+    
+    // MARK: INSTANCIAR O CHAT VIEW MODEL AQUI PARA USAR A FUNÇÃO sendMessage(content: ) COM O CONTENT SENDO O speechText.
+    // MARK: PROBLEMA: NÃO SE PODE INSTANCIAR UM @StateObject SEM SER EM UMA VIEW - ERRO ROXO
+    // MARK: O PROMPT DEVE SER ENVIADO AO FINALIZAR A PRIMEIRA GRAVAÇÃO - TRIAGEM
+    // MARK: NÃO ENVIAR O PROMPT SEMPRE QUE GRAVAR UM TREINO, SOMENTE APÓS O PRIMEIRO (TRIAGEM)
+    
+    // MARK: ONDE EXIBIR A RESPOSTA DO GPT (PARA TESTES) ????
+    
+    @StateObject var vm = ChatViewModel()
+    
     var cameraDevice: AVCaptureDevice!
     var cameraInput: AVCaptureInput!
     var micDevice: AVCaptureDevice!
@@ -70,7 +80,7 @@ class CameraViewModel: NSObject, ObservableObject {
         guard !captureSession.isRunning else {
             return
         }
-
+        
         DispatchQueue.global().async {
             self.captureSession.startRunning()
             print("sessão iniciada")
@@ -215,6 +225,7 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     func startRecording() {
         isRecording.toggle()
 
+
         // Contagem antes de iniciar a gravar
         var countdown = 3
         // Timer para contagem regressiva de 3 segundos
@@ -251,6 +262,7 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
                 }
                 self.speechText = text
                 print(text)
+
             }
         } catch {
             print(error)

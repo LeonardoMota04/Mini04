@@ -27,6 +27,7 @@ struct CameraPreview : View {
         
         .onAppear {
             cameraVC.startSession()
+            
         }
         .onDisappear {
             cameraVC.stopSession()
