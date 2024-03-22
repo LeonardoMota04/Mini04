@@ -6,9 +6,15 @@
 //
 
 import Foundation
+import SwiftData
 
-struct ApresentacaoModel {
+@Model
+class ApresentacaoModel {
     var folders: [PastaModel] = []
+    
+    init(folders: [PastaModel] = []) {
+        self.folders = folders
+    }
 }
 
 

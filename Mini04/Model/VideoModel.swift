@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import SwiftData
 import AVFoundation
 
-struct VideoModel: Identifiable, Hashable {
+@Model
+class VideoModel: Identifiable {
     var id = UUID()
     var videoURL: URL
     var script: String
