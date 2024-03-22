@@ -32,35 +32,28 @@ struct HUDCameraView: View {
                     }
                 }
                 .buttonStyle(.borderless)
-                .overlay {
-                    if isTreinoViewPresented {
-                        TreinoView(trainingVM: TreinoViewModel(treino: newTraining!))
-                            .background(Color.white) // Opcional: adicione um fundo branco para a TreinoView
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .edgesIgnoringSafeArea(.all)
-                            .onAppear {
-                                // Aqui, definimos a variável showTreinoViewOverlay como true para exibir o overlay na PastaView
-                                showTreinoViewOverlay = true
-                            }
-                    }
-                }
             }
             
         }
         .padding(4)
-        .onChange(of: cameraVC.urltemp) { oldvalue, newValue in
-            if let newVideoURL = newValue {
-                folderVM.createNewTraining(videoURL: newVideoURL)
-                if let lastTraining = folderVM.folder.treinos.last {
-                    newTraining = lastTraining
-                    isTreinoViewPresented = true // Exibir a TreinoView
-
-                    // Fechar a HUDCameraView e seu overlay
-                    presentationMode.wrappedValue.dismiss()
-                }
-            } else {
+        .onChange(of: cameraVC.urltemp) { oldValue, newValue in
+            guard let newVideoURL = newValue else {
                 print("URL do vídeo é nil.")
+                return
+            }
+
+            folderVM.createNewTraining(videoURL: newVideoURL, videoScript: cameraVC.auxSpeech, videoTopics: [cameraVC.speechTopicText], videoTime: cameraVC.videoTime, topicDurationTime: cameraVC.videoTopicDuration) // Cria um novo treino com o URL do vídeo
+
+            if let lastTraining = folderVM.folder.treinos.last {
+                // Define o novo treino e exibe a TreinoView
+                newTraining = lastTraining
+                isTreinoViewPresented = true
+
+                // Fecha a HUDCameraView e seu overlay
+                presentationMode.wrappedValue.dismiss()
+                showTreinoViewOverlay = true // Ativa o overlay na PastaView com a nova TreinoView
             }
         }
+
     }
 }

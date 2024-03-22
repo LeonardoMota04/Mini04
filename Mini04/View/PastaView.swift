@@ -42,23 +42,7 @@ struct PastaView: View {
                 } label: {
                     Text("Novo Treino")
                 }
-//                NavigationLink("Criar treino") {
-//                    let newTraining = TreinoModel(name: "\(folderVM.folder.nome) - Treino \(folderVM.folder.treinos.count + 1)")
-//                    TreinoView(trainingVM: TreinoViewModel(treino: newTraining), folder: folderVM.folder)
-//                }
-                
-                // exibe todos os treinos
-//                ForEach(trainings) { training in
-//                    // treinos + apagar
-//                    HStack {
-//                        NavigationLink(training.nome) {
-//                            TreinoView(trainingVM: TreinoViewModel(treino: training))
-//                        }
-//                        Button("Apagar \(training.nome)") {
-//                            folderVM.deleteTraining(training)
-//                        }
-//                    }
-//                }
+
                 Divider()
                 ForEach(folderVM.folder.treinos) { training in
                     // treinos + apagar
@@ -72,33 +56,22 @@ struct PastaView: View {
                     }
                 }
             }
+            .overlay(content: {
+                if showTreinoViewOverlay {
+                    TreinoView(trainingVM: TreinoViewModel(treino: folderVM.folder.treinos.last!))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .edgesIgnoringSafeArea(.all)
+                        .onDisappear {
+                            showTreinoViewOverlay = false
+                        }
+                }
+            })
         }
         .padding()
         .onAppear {
             folderVM.modelContext = modelContext
         }
-        .sheet(isPresented: $isModalPresented) {
-            ModalView(isModalPresented: $isModalPresented)
-        }
-        .sheet(isPresented: $showTreinoViewOverlay) {
-            TreinoView(trainingVM: TreinoViewModel(treino: folderVM.folder.treinos.last!))
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .edgesIgnoringSafeArea(.all)
-                .onDisappear {
-                    showTreinoViewOverlay = false
-                }
-        }.presentationDetents([.fraction(1.0)])
 
-//        .overlay(content: {
-//            if showTreinoViewOverlay {
-//                TreinoView(trainingVM: TreinoViewModel(treino: folderVM.folder.treinos.last!))
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                    .edgesIgnoringSafeArea(.all)
-//                    .onDisappear {
-//                        showTreinoViewOverlay = false
-//                    }
-//            }
-//        })
         
     }
 }
