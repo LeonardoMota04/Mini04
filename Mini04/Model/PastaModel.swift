@@ -21,6 +21,5 @@ class PastaModel: Identifiable {
         self.nome = nome
         self.tempoDesejado = tempoDesejado
         self.objetivoApresentacao = objetivoApresentacao
-        self.treinos = []
     }
 }

@@ -10,21 +10,19 @@ import SwiftData
 
 // MARK: - CONTENT VIEW
 struct ContentView: View {
-    // PERSISTENCIA
-    @Environment(\.modelContext) private var modelContext
-    @Query private var folders: [PastaModel] // read de pastas
-    
     // VM
     @StateObject private var presentationVM = ApresentacaoViewModel()
     @State private var isModalPresented = false
+    
+    // PERSISTENCIA
+    @Environment(\.modelContext) private var modelContext
+    @Query var folders: [PastaModel]
     
     // CRIAR PASTA (modularizar)
     @State var pastaName: String = ""
     @State var tempoDesejado: Int = 0
     @State var objetivo: String = ""
     let tempos = [5,10,15]
-    
-    
     
     var body: some View {
 
@@ -41,19 +39,38 @@ struct ContentView: View {
                         isModalPresented.toggle()
                     }
                     List {
+//                        ForEach(presentationVM.apresentacao.folders.indices, id: \.self) { index in
+//                            NavigationLink(presentationVM.apresentacao.folders[index].nome) {
+//                                PastaView(folderVM: FoldersViewModel(folder: presentationVM.apresentacao.folders[index]))
+//                            }
+//                        }
+//                        ForEach(presentationVM.apresentacao.folders) { folder in
+//                            NavigationLink(folder.nome) {
+//                                if let folderVM = presentationVM.foldersViewModels[folder.id] {
+//                                    PastaView(folderVM: folderVM)
+//                                } else {
+//                                    // Caso a instância de FoldersViewModel para a pasta não exista
+//                                    Text("ViewModel não encontrada para esta pasta")
+//                                }
+//                            }
+//                        }
+
+                        Divider()
                         // exibir todas as pastas
                         ForEach(folders) { folder in
                             // pastas + apagar
                             HStack {
                                 NavigationLink(folder.nome) {
-                                    PastaView(folderVM: FoldersViewModel(folder: folder))
-                                    //PastaView(folderVM: presentationVM.foldersViewModels[folder.id]!)
+                                    if let folderVM = presentationVM.foldersViewModels[folder.id] {
+                                        PastaView(folderVM: folderVM)
+                                    } else {
+                                        Text("ViewModel não encontrada para esta pasta")
+                                    }
                                 }
                                 Button("Apagar \(folder.nome)") {
                                     presentationVM.deleteFolder(folder)
                                 }
                             }
-                            
                         }
 //                        ForEach(presentationVM.apresentacao.folders) { folder in
 //                            NavigationLink(folder.nome) {
@@ -62,38 +79,38 @@ struct ContentView: View {
 //                        }
                     }
                 }
-                
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 200)
             
         } detail: {
-            // MESMA COISA AQUI
-            if presentationVM.apresentacao.folders.isEmpty {
-                ContentUnavailableView("Adicione sua primeira pasta.", systemImage: "folder.badge.questionmark")
-                Button("Criar pasta") {
-                    isModalPresented.toggle()
-                }
-            } else {
-                List {
-//                    ForEach(presentationVM.apresentacao.folders) { folder in
+//            // MESMA COISA AQUI
+//            if presentationVM.apresentacao.folders.isEmpty {
+//                ContentUnavailableView("Adicione sua primeira pasta.", systemImage: "folder.badge.questionmark")
+//                Button("Criar pasta") {
+//                    isModalPresented.toggle()
+//                }
+//            } else {
+//                List {
+////                    ForEach(presentationVM.apresentacao.folders) { folder in
+////                        NavigationLink(folder.nome) {
+////                            //PastaView(folderVM: presentationVM.foldersViewModel)
+////                            PastaView(folderVM: FoldersViewModel(folder: folder))
+////
+////                        }
+////                    }
+//                    ForEach(folders) { folder in
 //                        NavigationLink(folder.nome) {
-//                            //PastaView(folderVM: presentationVM.foldersViewModel)
 //                            PastaView(folderVM: FoldersViewModel(folder: folder))
-//
+//                            //PastaView(folderVM: presentationVM.foldersViewModels[folder.id]!)
 //                        }
 //                    }
-                    ForEach(folders) { folder in
-                        NavigationLink(folder.nome) {
-                            PastaView(folderVM: FoldersViewModel(folder: folder))
-                            //PastaView(folderVM: presentationVM.foldersViewModels[folder.id]!)
-                        }
-                    }
-                }
-            }
+//                }
+//            }
         }
         .onAppear {
             presentationVM.modelContext = modelContext
             presentationVM.fetchFolders()
+            presentationVM.bro()
         }
         .sheet(isPresented: $isModalPresented) {
             VStack {

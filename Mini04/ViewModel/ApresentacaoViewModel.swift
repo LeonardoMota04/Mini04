@@ -17,20 +17,53 @@ import SwiftData
 
 @Observable
 class ApresentacaoViewModel: ObservableObject {
-    // Modelo
+    // MARK: - Modelo
     var apresentacao: ApresentacaoModel
     var modelContext: ModelContext?
 
-    // Pasta
-    //var foldersViewModels: [UUID: FoldersViewModel] = [:]
+    // MARK: - FoldersViewModels
+    var foldersViewModels: [UUID: FoldersViewModel] = [:]
+    var activeFolderViewModels: [UUID: FoldersViewModel] = [:]
+
     
     init(apresentacao: ApresentacaoModel = ApresentacaoModel(), modelContext: ModelContext? = nil) {
         self.apresentacao = apresentacao
         self.modelContext = modelContext
-        fetchFolders()
+        
     }
     
+    // MARK: - CRUD
+    func bro() {
+        for folder in apresentacao.folders {
+            let folderViewModel = FoldersViewModel(folder: folder)
+            foldersViewModels[folder.id] = folderViewModel
+        }
+    }
+    // CREATE
+    func createNewFolder(name: String, pretendedTime: Int, presentationGoal: String) {
+        guard let modelContext = modelContext else { return }
+        
+        // cria nova pasta
+        let newFolder = PastaModel(nome: name, tempoDesejado: pretendedTime, objetivoApresentacao: presentationGoal)
 
+        // FoldersViewModel com a nova pasta
+        //if foldersViewModels[newFolder.id] == nil {
+        let newFolderViewModel = FoldersViewModel(folder: newFolder)
+        foldersViewModels[newFolder.id] = newFolderViewModel
+            
+        //}
+
+        // armazenar
+        do {
+            modelContext.insert(newFolder)
+            try modelContext.save()
+            apresentacao.folders.append(newFolder)
+        } catch {
+            print("Não conseguiu criar e salvar a pasta. \(error)")
+        }
+    }
+    
+    // READ
     func fetchFolders() {
         guard let modelContext = modelContext else { return }
         do {
@@ -45,36 +78,14 @@ class ApresentacaoViewModel: ObservableObject {
                 print("- Treinos: \(folder.treinos)")
                 print("- Objetivo: \(folder.objetivoApresentacao)")
                 print("- Data: \(folder.data)")
-                print("\n\n\n\n\n\n\n\n")
+                print("\n\n\n\n")
             }
         } catch {
             print("Fetch failed: \(error)")
         }
     }
     
-    // métodos
-    // CRIAR PASTA
-    func createNewFolder(name: String, pretendedTime: Int, presentationGoal: String) {
-        guard let modelContext = modelContext else { return }
-        
-        // cria nova pasta
-        let newFolder = PastaModel(nome: name, tempoDesejado: pretendedTime, objetivoApresentacao: presentationGoal)
-        
-        // FoldersViewModel com a nova pasta
-//        if foldersViewModels[newFolder.id] == nil {
-//            let newFolderViewModel = FoldersViewModel(folder: newFolder)
-//            foldersViewModels[newFolder.id] = newFolderViewModel
-//        }
-//        
-        do {
-            modelContext.insert(newFolder)
-            try modelContext.save()
-            apresentacao.folders.append(newFolder)
-        } catch {
-            print("Não conseguiu criar e salvar a pasta. \(error)")
-        }
-    }
-    
+    // DELETE
     func deleteFolder(_ folder: PastaModel) {
         guard let modelContext = modelContext else { return }
         
