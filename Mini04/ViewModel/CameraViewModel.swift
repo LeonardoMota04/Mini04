@@ -34,6 +34,9 @@ class CameraViewModel: NSObject, ObservableObject {
     
     var urltemp: URL?
     
+    // numero de contagem
+    @Published var countdownNumber: Int = 3
+    
     // Speech To Text
     var speechManager = SpeechManager()
     @Published var speechText: String = ""
@@ -202,10 +205,26 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     }
     
     func startRecording() {
-        isRecording = true
-        print("começou a gravar")
-        let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
-        videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
+        isRecording.toggle()
+
+
+        // Contagem antes de iniciar a gravar
+        // Timer para contagem regressiva de 3 segundos
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
+            if self.countdownNumber > 0 {
+                print(countdownNumber)
+                countdownNumber -= 1
+            } else {
+                isRecording = true
+              // reiniciando as variaveis
+                  //deinitVariables()
+                print("começou a gravar")
+                let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
+                videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
+                
+                timer.invalidate()
+            }
+        }
         
         // Inciando o SpeechToText
         do {
@@ -217,6 +236,7 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
                 }
                 self.speechText = text
                 print(text)
+
             }
         } catch {
             print(error)
@@ -229,12 +249,15 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     }
     
     func stopRecording() {
-        isRecording = false
+        isRecording.toggle()
+        // variavel para armazenar o scrip (quando da stop ele deixa a string "" e fica impossivel salva-la)
+        auxSpeech = speechText
+        speechManager.stopRecording()
+
         guard videoFileOutput.isRecording else {
             print("Nenhuma gravação em andamento.")
             return
         }
-        
         videoFileOutput.stopRecording()
         print("Speech Normal: \(speechText)")
         print("Speech Topicos: " + speechTopicText)
