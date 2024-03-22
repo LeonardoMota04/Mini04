@@ -14,8 +14,13 @@ struct CameraPreview : View {
             let size = proxy.size
             ZStack {
                 CameraRepresentable(size: size)
-//                CameraOverlayView(size: size)
+                CameraOverlayView(size: size)
                 //pverlay em cima da mao
+                
+                if cameraVC.countdownNumber > 0 {
+                    Text("\(cameraVC.countdownNumber)")
+                        .font(.largeTitle)
+                }
             }
         }
         .onAppear(perform: cameraVC.configureSession)
