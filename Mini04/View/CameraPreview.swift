@@ -16,12 +16,17 @@ struct CameraPreview : View {
                 CameraRepresentable(size: size)
 //                CameraOverlayView(size: size)
                 //pverlay em cima da mao
+                
+                ForEach(cameraVC.chatVM.messages, id: \.self) { message in
+                    Text("\(message.role): \(message.content)")
+                }
             }
         }
         .onAppear(perform: cameraVC.configureSession)
         
         .onAppear {
             cameraVC.startSession()
+            
         }
         .onDisappear {
             cameraVC.stopSession()

@@ -11,6 +11,9 @@ import AppKit
 import Vision
 
 class CameraViewModel: NSObject, ObservableObject {
+    
+    @StateObject var chatVM = ChatViewModel()
+    
     var cameraDevice: AVCaptureDevice!
     var cameraInput: AVCaptureInput!
     var micDevice: AVCaptureDevice!
@@ -21,31 +24,31 @@ class CameraViewModel: NSObject, ObservableObject {
     @Published var videoDataOutput = AVCaptureVideoDataOutput()
     @Published var audioOutput = AVCaptureAudioDataOutput()
     @Published var captureSession =  AVCaptureSession()
-
+    
     @Published var isRecording = false
     
     @Published var handPoseModelController: HandGestureController?
     @Published var detectedGestureModel1: String = "" {
-          // Quando detectar a mudanca de valor (uma mao na tela) ele chama a funcao de topicos
-          didSet {
-              self.createTopics(handPoseResult: detectedGestureModel1)
-          }
-      }
-
-      var urltemp: URL?
-      
-      // Speech To Text
-      var speechManager = SpeechManager()
-      @Published var speechText: String = ""
-      @Published var speechTopicText: String = ""
-      var auxSpeech: String = ""
-      // Cria o temporizador e o current time para saber qual o tempo atual na hora de marcar os topicos
-      var timer: Timer?
-      @Published var currentTime: TimeInterval = 0
-      var topicTime: [TimeInterval] = []
-      
-      // Video Player
-      var videoPlayer: AVPlayer?
+        // Quando detectar a mudanca de valor (uma mao na tela) ele chama a funcao de topicos
+        didSet {
+            self.createTopics(handPoseResult: detectedGestureModel1)
+        }
+    }
+    
+    var urltemp: URL?
+    
+    // Speech To Text
+    var speechManager = SpeechManager()
+    @Published var speechText: String = ""
+    @Published var speechTopicText: String = ""
+    var auxSpeech: String = ""
+    // Cria o temporizador e o current time para saber qual o tempo atual na hora de marcar os topicos
+    var timer: Timer?
+    @Published var currentTime: TimeInterval = 0
+    var topicTime: [TimeInterval] = []
+    
+    // Video Player
+    var videoPlayer: AVPlayer?
     
     override init() {
         super.init()
@@ -58,23 +61,23 @@ class CameraViewModel: NSObject, ObservableObject {
     }
     
     // MARK: - Start/Stop Session
-
+    
     func startSession() {
         guard !captureSession.isRunning else {
             return
         }
-
+        
         DispatchQueue.global().async {
             self.captureSession.startRunning()
             print("sessão iniciada")
         }
     }
-
+    
     func stopSession() {
         guard captureSession.isRunning else {
             return
         }
-
+        
         DispatchQueue.global().async {
             self.captureSession.stopRunning()
             print("sessão finalizada")
@@ -93,13 +96,13 @@ class CameraViewModel: NSObject, ObservableObject {
         captureSession.outputs.forEach { output in
             captureSession.removeOutput(output)
         }
-
+        
         setupInputs()
         
         if captureSession.canAddOutput(audioOutput) {
             captureSession.addOutput(audioOutput)
         }
-
+        
         if captureSession.canAddOutput(videoFileOutput) {
             captureSession.addOutput(videoFileOutput)
         }
@@ -108,9 +111,9 @@ class CameraViewModel: NSObject, ObservableObject {
             captureSession.addOutput(videoDataOutput)
         }
         
-
+        
         self.videoDataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
-
+        
         captureSession.commitConfiguration()
     }
     
@@ -121,7 +124,7 @@ class CameraViewModel: NSObject, ObservableObject {
         } else {
             fatalError("Cant catch camera device")
         }
-
+        
         
         if let microphoneDevice = AVCaptureDevice.default(for: .audio) {
             micDevice = microphoneDevice
@@ -141,48 +144,48 @@ class CameraViewModel: NSObject, ObservableObject {
         } else {
             fatalError("could not create input device from back camera")
         }
-
+        
         // conficurar os devices na sessão
         captureSession.addInput(micInput)
         captureSession.addInput(cameraInput)
     }
-
+    
     // função para colocar o // no scrpit e criar topico
-        func createTopics(handPoseResult: String) {
-            if handPoseResult == "0" {
-                if speechTopicText.isEmpty {
-                    speechTopicText = speechText + " //"
+    func createTopics(handPoseResult: String) {
+        if handPoseResult == "0" {
+            if speechTopicText.isEmpty {
+                speechTopicText = speechText + " //"
+                auxSpeech = speechText
+                // adicionando o tempo do topico
+                self.topicTime.append(self.currentTime)
+                
+            }  else {
+                // caso o texto nao seja o mesmo para evitar repeticoes
+                if auxSpeech != speechText {
+                    let newSpeechText = substractionString(speechText, auxSpeech)
+                    // adiciona as novas palavras e atualiza o texto atual na variavel auxiliar
+                    speechTopicText += " //" + (newSpeechText ?? "")
                     auxSpeech = speechText
                     // adicionando o tempo do topico
                     self.topicTime.append(self.currentTime)
-                   
-                }  else {
-                    // caso o texto nao seja o mesmo para evitar repeticoes
-                    if auxSpeech != speechText {
-                        let newSpeechText = substractionString(speechText, auxSpeech)
-                        // adiciona as novas palavras e atualiza o texto atual na variavel auxiliar
-                        speechTopicText += " //" + (newSpeechText ?? "")
-                        auxSpeech = speechText
-                        // adicionando o tempo do topico
-                        self.topicTime.append(self.currentTime)
-                       
-                    }
+                    
                 }
             }
         }
-        
-        func substractionString(_ strA: String, _ strB: String) -> String? {
-            // percorre os caracteres até o count da string comparada
-            if strA.count > strB.count {
-                let index = strA.index(strA.startIndex, offsetBy: strB.count)
-                return String(strA[index...])
-            } else if strB.count > strA.count {
-                let index = strB.index(strB.startIndex, offsetBy: strA.count)
-                return String(strB[index...])
-            } else {
-                return nil // or handle the case where both strings have equal lengths
-            }
+    }
+    
+    func substractionString(_ strA: String, _ strB: String) -> String? {
+        // percorre os caracteres até o count da string comparada
+        if strA.count > strB.count {
+            let index = strA.index(strA.startIndex, offsetBy: strB.count)
+            return String(strA[index...])
+        } else if strB.count > strA.count {
+            let index = strB.index(strB.startIndex, offsetBy: strA.count)
+            return String(strB[index...])
+        } else {
+            return nil // or handle the case where both strings have equal lengths
         }
+    }
 }
 
 /// MARK: VIDEO RECORDING
@@ -195,20 +198,20 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
         print("nome do arquivo: \(outputFileURL)")
         
         self.urltemp = outputFileURL
-            // passando url par o player local
+        // passando url par o player local
         if let url = urltemp {
             self.videoPlayer = AVPlayer(url: url)
         }
     }
     
     func startRecording() {
-          isRecording = true
-          print("começou a gravar")
-          let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
-          videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
-          
-          // Inciando o SpeechToText
-          do {
+        isRecording = true
+        print("começou a gravar")
+        let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
+        videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
+        
+        // Inciando o SpeechToText
+        do {
             try self.speechManager.startRecording { text, error in
                 // verificando se o script falado nao esta vazio
                 guard let text = text else {
@@ -217,38 +220,45 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
                 }
                 self.speechText = text
                 print(text)
-              }
-          } catch {
-              print(error)
-          }
-          
-          // iniciando o timer para saber o momento de cada topico
-          timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { time in
-              self.currentTime += 1
-          })
-      }
-      
-      func stopRecording() {
-          isRecording = false
-          guard videoFileOutput.isRecording else {
-              print("Nenhuma gravação em andamento.")
-              return
-          }
-          
-          videoFileOutput.stopRecording()
-          print("Speech Normal: \(speechText)")
-          print("Speech Topicos: " + speechTopicText)
-          
-          // parando o timer e reiniciando ele
-          timer?.invalidate()
-          timer = nil
-          currentTime = 0
-      }
-      
-      func seekPlayerVideo(topic: Int){
-          let targetTime = CMTime(value: CMTimeValue(topicTime[topic]), timescale: 1)
-          videoPlayer?.seek(to: targetTime)
-      }
+                
+                
+            }
+        } catch {
+            print(error)
+        }
+        
+        // iniciando o timer para saber o momento de cada topico
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { time in
+            self.currentTime += 1
+        })
+        
+        
+        
+    }
+    
+    func stopRecording() {
+        isRecording = false
+        guard videoFileOutput.isRecording else {
+            print("Nenhuma gravação em andamento.")
+            return
+        }
+        
+        chatVM.sendMessage(content: speechText)
+        
+        videoFileOutput.stopRecording()
+        print("Speech Normal: \(speechText)")
+        print("Speech Topicos: " + speechTopicText)
+        
+        // parando o timer e reiniciando ele
+        timer?.invalidate()
+        timer = nil
+        currentTime = 0
+    }
+    
+    func seekPlayerVideo(topic: Int){
+        let targetTime = CMTime(value: CMTimeValue(topicTime[topic]), timescale: 1)
+        videoPlayer?.seek(to: targetTime)
+    }
     
 }
 
@@ -265,11 +275,11 @@ extension CameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
 struct CameraRepresentable: NSViewRepresentable {
     @EnvironmentObject var camVM: CameraViewModel
     var size: CGSize
-
+    
     func makeNSView(context: Context) -> NSView {
         let view = NSView(frame: NSRect(x: 0, y: 0, width: size.width, height: size.height))
         view.wantsLayer = true // Certifique-se de que a view tenha uma camada
-
+        
         DispatchQueue.main.async {
             self.camVM.previewLayer = AVCaptureVideoPreviewLayer(session: self.camVM.captureSession)
             self.camVM.previewLayer.frame = view.bounds
@@ -278,8 +288,8 @@ struct CameraRepresentable: NSViewRepresentable {
             self.camVM.previewLayer.connection?.isVideoMirrored = true // Espelhando horizontalmente
             view.layer?.addSublayer(self.camVM.previewLayer)
         }
-
-
+        
+        
         return view
     }
     
@@ -304,7 +314,7 @@ struct CameraOverlayView: View {
                 
                 let averageX = allPoints.reduce(0, { $0 + $1.location.x }) / CGFloat(allPoints.count)
                 let averageY = allPoints.reduce(0, { $0 + $1.location.y }) / CGFloat(allPoints.count)
-
+                
                 Circle()
                     .stroke(lineWidth: averageDistance * size.width / 10)
                     .foregroundColor(.red)

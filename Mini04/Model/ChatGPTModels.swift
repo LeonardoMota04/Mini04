@@ -8,81 +8,78 @@
 import Foundation
 
 // MARK: - CHATGPT API MODELS
-// Message structure
+// Estrutura da mensagem
 struct Message: Codable, Hashable {
-//    var id = UUID()
-    let role: String                     // role change
-    let content: String
+    let role: String             // O responsável pela mensagem (user ou assistant)
+    let content: String          // O conteúdo da mensagem
 }
 
 // Sums all the content for each one of the elements when the Element is of type Message
-extension Array where Element == Message {
-    var contentCount: Int { reduce(0, { $0 + $1.content.count })}
-}
+//
+//extension Array where Element == Message {
+//    var contentCount: Int { reduce(0, { $0 + $1.content.count })}
+//}
 
-// Stores the possibles roles for the message
-enum Role: Codable {
-    case system
-    case user
-    case assistant
-}
-
-// Constains what's needed to do a request
+// Objeto Request contém o necessário para fazer uma Request
 struct Request: Codable {
-    let model: String
-    let temperature: Double
-    let messages: [Message]
+    let model: String           // Qual modelo do ChatGPT estamos fazendo a request - ATUAL: "gpt-turbo-3.5"
+    let temperature: Double     // Determina a "seriedade" das respostas da API     - ATUAL: 0.5
+    let messages: [Message]     // Array de Message
 }
 
-// Error
-struct ErrorRootReponse: Decodable {
-    let error: ErrorResponse
-}
-struct ErrorResponse: Decodable {
-    let message: String
-    let type: String?
-}
+/// Error
+///struct ErrorRootReponse: Decodable {
+///    let error: ErrorResponse
+///}
+///struct ErrorResponse: Decodable {
+///    let message: String
+///    let type: String?
+///}
 
+// Objeto da resposta recebida da request
 struct CompletionResponse: Decodable {
-    let choices: [Choice]
-    let usage: Usage?
+    let choices: [Choice]               // A resposta fica dentro das choices (Em alguns casos, o GPT têm duas opções de resposta. Essas opções são as choices)
+    let usage: Usage?                   // Armazena o número de tokens usados na requisição
 }
 
-// Model which contains the total tokens used in the conversation
-struct Usage: Decodable {
-    let totalTokens: Int?
-}
-
+// Objeto das Choices
 struct Choice: Decodable {
-    let message: Message
-    let finishreason: String?
+    let index: Int?             // Index da choice
+    let message: Message        // A mensagem presente nesta choice
+    let finishreason: String?   // O motivo da mensagem ter sido finalizada ? não tenho certeza
+}
+
+// Armazena o número de tokens usados na requisição
+struct Usage: Decodable {
+    let totalTokens: Int?       // Nesse caso, armazenando apenas o total de tokens utilizados na requisição. - Pode-se armazenar o número de tokens por role (user / assistant)
 }
 
 // MARK: - Debugging
-//extension Message {
-//    private enum CodingKeys: String, CodingKey {
-//        case role
-//        case content
-//    }
-//    
-//    init(from decoder: Decoder) throws {
-//        let values = try decoder.container(keyedBy: CodingKeys.self)
-//        let rawRole = try? values.decode(String.self, forKey: .role)
-//        let rawContent = try? values.decode(String.self, forKey: .content)
-//        
-//        guard let role = rawRole,
-//              let content = rawContent
-//        else {
-//            throw ResponseError.missingData
-//        }
-//        
-//        self.role = role
-//        self.content = content
-//    }
-//}
-//
-//enum ResponseError: Error {
-//    case missingData
-//    case networkError
-//    case unexpectedError(error: Error)
-//}
+// Método de debug que percorre os elementos da Message separadamente
+extension Message {
+    private enum CodingKeys: String, CodingKey {
+        case role
+        case content
+    }
+    
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let rawRole = try? values.decode(String.self, forKey: .role)
+        let rawContent = try? values.decode(String.self, forKey: .content)
+        
+        guard let role = rawRole,
+              let content = rawContent
+        else {
+            throw ResponseError.missingData
+        }
+        
+        self.role = role
+        self.content = content
+    }
+}
+
+enum ResponseError: Error {
+    case missingData
+    case networkError
+    case unexpectedError(error: Error)
+}
