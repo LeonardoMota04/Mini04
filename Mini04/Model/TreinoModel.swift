@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import SwiftData
 
-struct TreinoModel: Identifiable {
-    var id = UUID()
+@Model
+class TreinoModel: Identifiable {
+    @Attribute(.unique) var id = UUID()
     var data: Date = Date()
     var nome: String
     /// feedback
