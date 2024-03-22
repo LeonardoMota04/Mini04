@@ -207,7 +207,8 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     }
     
     func startRecording() {
-        
+        isRecording.toggle()
+
         // Contagem antes de iniciar a gravar
         var countdown = 3
         
@@ -222,7 +223,6 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
                 
             } else {
                 
-                isRecording = true
                 print("começou a gravar")
                 let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
                 videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
@@ -256,7 +256,7 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     }
     
     func stopRecording() {
-        isRecording = false
+        isRecording.toggle()
         guard videoFileOutput.isRecording else {
             print("Nenhuma gravação em andamento.")
             return

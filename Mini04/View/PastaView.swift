@@ -7,9 +7,11 @@
 
 import SwiftUI
 
+
 struct PastaView: View {
     @ObservedObject var folderVM: FoldersViewModel
     @State private var isModalPresented = true // Modal sempre será apresentado ao entrar na view
+    @State private var showTreinoViewOverlay = false // Variável de estado para controlar o overlay do TreinoView
 
     var body: some View {
         NavigationStack {
@@ -28,17 +30,10 @@ struct PastaView: View {
             
                 // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
                 NavigationLink {
-                    RecordingVideoView(folderVM: folderVM)
+                    RecordingVideoView(folderVM: folderVM, showTreinoViewOverlay: $showTreinoViewOverlay)
                 } label: {
                     Text("Novo Treino")
                 }
-
-                
-//                NavigationLink("Criar treino") {
-//                    let newTraining = TreinoModel(name: "\(folderVM.folder.nome) - Treino \(folderVM.folder.treinos.count + 1)")
-//                    TreinoView(trainingVM: TreinoViewModel(treino: newTraining), folder: folderVM.folder)
-//                }
-                
                 ForEach(folderVM.folder.treinos) { treino in
                     NavigationLink(treino.nome) {
                         TreinoView(trainingVM: TreinoViewModel(treino: treino))
@@ -51,9 +46,25 @@ struct PastaView: View {
         .sheet(isPresented: $isModalPresented) {
             ModalView(isModalPresented: $isModalPresented)
         }
+        .sheet(isPresented: $showTreinoViewOverlay) {
+            TreinoView(trainingVM: TreinoViewModel(treino: folderVM.folder.treinos.last!))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.all)
+                .onDisappear {
+                    showTreinoViewOverlay = false
+                }
+        }.presentationDetents([.fraction(1.0)])
+
+//        .overlay(content: {
+//            if showTreinoViewOverlay {
+//                TreinoView(trainingVM: TreinoViewModel(treino: folderVM.folder.treinos.last!))
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                    .edgesIgnoringSafeArea(.all)
+//                    .onDisappear {
+//                        showTreinoViewOverlay = false
+//                    }
+//            }
+//        })
+        
     }
 }
-//
-//#Preview {
-//    PastaView()
-//}
