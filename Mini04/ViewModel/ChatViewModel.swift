@@ -9,18 +9,19 @@ import SwiftUI
 
 class ChatViewModel: ObservableObject {
         
-    @Published var messages: [Message] = []                                                         // Array que contém todas as mensagens da conversa atual
+    @Published var messages: [Message] = []    // Array que contém todas as mensagens da conversa atual
     
-    private let openAIService = OpenAIService()                                                     // Instância da OpenAIService
+    private let openAIService = OpenAIService()    // Instância da OpenAIService
     
     func sendMessage(content: String) {
-        let newMessage = Message(role: "user", content: content)                                    // Cria uma nova mensagem com o conteúdo digitado pelo usuário na View
-        messages.append(newMessage)                                                                 // Adiciona a nova mensagem no array de mensagens
+        let newMessage = Message(role: "user", content: content)    // Cria uma nova mensagem com o conteúdo de uma string
+        messages.append(newMessage)     // Adiciona a nova mensagem no array de mensagens
         
         // MARK: Task assíncrona
         Task {
             // Envia a mensagem e espera a resposta
-            guard let response = await openAIService.sendMessage(messages: messages) else {         // O prompt é enviado com todas as mensagens já enviadas, para manutenção do contexto da conversa
+            // O prompt é enviado com todas as mensagens já enviadas, para manutenção do contexto da conversa
+            guard let response = await openAIService.sendMessage(messages: messages) else {
                 print("\nFailed to receive a valid response from the server.")
                 return
             }
