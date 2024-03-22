@@ -43,6 +43,8 @@ class CameraViewModel: NSObject, ObservableObject {
     var timer: Timer?
     @Published var currentTime: TimeInterval = 0
     var topicTime: [TimeInterval] = []
+    @Published var videoTopicDuration: [TimeInterval] = []
+    @Published var videoTime: TimeInterval = 0
     
     // Video Player
     var videoPlayer: AVPlayer?
@@ -202,6 +204,8 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     }
     
     func startRecording() {
+        // Reiniciando as variaveis
+        deinitVariables()
         isRecording = true
         print("começou a gravar")
         let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
@@ -250,6 +254,58 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
         videoPlayer?.seek(to: targetTime)
     }
     
+    // Formata uma string com segundo minutos e horas
+    func FormatVideoDuration(from path: URL) -> String {
+        let asset = AVURLAsset(url: path)
+        let duration: CMTime = asset.duration
+        
+        let totalSeconds = CMTimeGetSeconds(duration)
+        let hours = Int(totalSeconds / 3600)
+        let minutes = Int((totalSeconds.truncatingRemainder(dividingBy: 3600)) / 60)
+        let seconds = Int(totalSeconds.truncatingRemainder(dividingBy: 60))
+        
+        if hours > 0 {
+            return String(format: "%i:%02i:%02i", hours, minutes, seconds)
+        } else {
+            return String(format: "%02i:%02i", minutes, seconds)
+        }
+    }
+    
+    // Retorna o tempo do video MARK: o certo seria fazer com uma funcao assincrona e load
+    func getVideoDuration(from path: URL) -> TimeInterval {
+        let asset = AVURLAsset(url: path)
+        let duration: CMTime = asset.duration
+        
+        let totalSeconds = CMTimeGetSeconds(duration)
+        
+        return totalSeconds
+    }
+    
+    func timeSpentOnTopic(){
+        // guard let topicTime = self.topicTime else { return print("Topicos nao foram criados")}
+        for index in 0..<self.topicTime.count {
+            if index == 0 {
+                // Caso seja o primeiro elemento ele pega o tempo do primeiro topico
+                self.videoTopicDuration.append(topicTime[0])
+            } else if index == self.topicTime.count - 1 {
+                // Caso seja o ultimo elemento da array ele diminu o tempo de video com o ultimo topico
+                self.videoTopicDuration.append(self.videoTime - (self.videoTopicDuration.last ?? 0))
+            } else {
+                self.videoTopicDuration.append(topicTime[index + 1] - topicTime[index])
+            }
+        }
+    }
+
+    
+    func deinitVariables() {
+        // reinciando as variaveis para conseguir limpar os dados
+        self.auxSpeech = ""
+        self.speechTopicText = ""
+        self.speechText = ""
+        self.topicTime = []
+        self.videoTopicDuration = []
+        self.videoTime = 0
+    }
 }
 
 extension CameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
