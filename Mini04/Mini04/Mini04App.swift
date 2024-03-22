@@ -32,6 +32,7 @@ struct Mini04App: App {
 //            SwiftDataView()
             ContentView()
 //            RecordingVideoView()
+//            ChatView()
                 .environmentObject(camVM)
 
         }
