@@ -35,7 +35,6 @@ struct HUDCameraView: View {
                         isRecording.toggle()
                     } else {
                         cameraVC.stopRecording() // para de gravar video
-                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             if let videoURL = cameraVC.urltemp {
                                 folderVM.createNewTraining(videoURL: videoURL) // cria novo treino com o URL do vídeo
@@ -58,7 +57,6 @@ struct HUDCameraView: View {
             }
         }
         .padding(4)
-
     }
 }
 
