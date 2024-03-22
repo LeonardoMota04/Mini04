@@ -42,10 +42,11 @@ class CameraViewModel: NSObject, ObservableObject {
     @Published var speechText: String = ""
     @Published var speechTopicText: String = ""
     var auxSpeech: String = ""
-    // Cria o temporizador e o current time para saber qual o tempo atual na hora de marcar os topicos
-    var timer: Timer?
+    var timer: Timer? // timer inicia junto com o video
     @Published var currentTime: TimeInterval = 0
-    var topicTime: [TimeInterval] = []
+    var topicTime: [TimeInterval] = [] // momentos em que foi feito o tópico
+    @Published var videoTime: TimeInterval = 0 // tempo do video
+    @Published var videoTopicDuration: [TimeInterval] = [] // duração de cada tópico
     
     // Video Player
     var videoPlayer: AVPlayer?
@@ -174,6 +175,7 @@ class CameraViewModel: NSObject, ObservableObject {
         }
     }
     
+    // PEGA TEXTO PÓS TOPICO
     func substractionString(_ strA: String, _ strB: String) -> String? {
         // percorre os caracteres até o count da string comparada
         if strA.count > strB.count {
@@ -186,6 +188,60 @@ class CameraViewModel: NSObject, ObservableObject {
             return nil // or handle the case where both strings have equal lengths
         }
     }
+    
+    // Formata uma string com segundo minutos e horas
+        func FormatVideoDuration(from path: URL) -> String {
+            let asset = AVURLAsset(url: path)
+            let duration: CMTime = asset.duration
+            
+            let totalSeconds = CMTimeGetSeconds(duration)
+            let hours = Int(totalSeconds / 3600)
+            let minutes = Int((totalSeconds.truncatingRemainder(dividingBy: 3600)) / 60)
+            let seconds = Int(totalSeconds.truncatingRemainder(dividingBy: 60))
+            
+            if hours > 0 {
+                return String(format: "%i:%02i:%02i", hours, minutes, seconds)
+            } else {
+                return String(format: "%02i:%02i", minutes, seconds)
+            }
+        }
+        
+        // Retorna o tempo do video MARK: o certo seria fazer com uma funcao assincrona e load
+        func getVideoDuration(from path: URL) -> TimeInterval {
+            let asset = AVURLAsset(url: path)
+            let duration: CMTime = asset.duration
+            
+            let totalSeconds = CMTimeGetSeconds(duration)
+            
+            return totalSeconds
+        }
+        
+        // Calcula tempo gastado em cada tópico
+        func timeSpentOnTopic(){
+            // guard let topicTime = self.topicTime else { return print("Topicos nao foram criados")}
+            for index in 0..<self.topicTime.count {
+                if index == 0 {
+                    // Caso seja o primeiro elemento ele pega o tempo do primeiro topico
+                    self.videoTopicDuration.append(topicTime[0])
+                } else if index == self.topicTime.count - 1 {
+                    // Caso seja o ultimo elemento da array ele diminu o tempo de video com o ultimo topico
+                    self.videoTopicDuration.append(self.videoTime - (self.videoTopicDuration.last ?? 0))
+                } else {
+                    self.videoTopicDuration.append(topicTime[index + 1] - topicTime[index])
+                }
+            }
+        }
+
+        
+        func deinitVariables() {
+            // reinciando as variaveis para conseguir limpar os dados
+            self.auxSpeech = ""
+            self.speechTopicText = ""
+            self.speechText = ""
+            self.topicTime = []
+            self.videoTopicDuration = []
+            self.videoTime = 0
+        }
     
     
 }
@@ -203,6 +259,7 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
         // passando url par o player local
         if let url = urltemp {
             self.videoPlayer = AVPlayer(url: url)
+            self.timeSpentOnTopic()
         }
     }
     
@@ -218,8 +275,9 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
                 countdownNumber -= 1
             } else {
                 isRecording = true
-              // reiniciando as variaveis
-                  //deinitVariables()
+                
+                // reiniciando as variaveis
+                deinitVariables()
                 print("começou a gravar")
                 let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
                 videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)

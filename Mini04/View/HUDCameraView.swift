@@ -53,8 +53,13 @@ struct HUDCameraView: View {
                 print("same video")
                 return
             }
-
-            folderVM.createNewTraining(videoURL: newVideoURL) // Cria um novo treino com o URL do vídeo
+            
+            // Cria um novo treino com o URL do vídeo
+            folderVM.createNewTraining(videoURL: newVideoURL,
+                                       videoScript: cameraVC.auxSpeech,
+                                       videoTime: cameraVC.getVideoDuration(from: newVideoURL), 
+                                       videoTopics: cameraVC.speechTopicText.components(separatedBy: "//"), 
+                                       topicsDuration: cameraVC.videoTopicDuration)
             presentationMode.wrappedValue.dismiss()
         }
     }

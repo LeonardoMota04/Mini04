@@ -25,11 +25,16 @@ class FoldersViewModel: ObservableObject {
         
     // MARK: - CRUD
     // CREATE
-    func createNewTraining(videoURL: URL) {
+    func createNewTraining(videoURL: URL, videoScript: String, videoTime: TimeInterval, videoTopics: [String], topicsDuration: [TimeInterval]) {
         guard let modelContext = modelContext else { return }
         
         // cria novo treino
-        let newTraining = TreinoModel(name: "\(folder.nome) - Treino \(folder.treinos.count + 1)", video: VideoModel(videoURL: videoURL))
+        let newTraining = TreinoModel(name: "\(folder.nome) - Treino \(folder.treinos.count + 1)", 
+                                      video: VideoModel(videoURL: videoURL,
+                                                        script: videoScript,
+                                                        videoTime: videoTime, 
+                                                        videoTopics: videoTopics, 
+                                                        topicsDuration: topicsDuration))
         
         // modelContext
         do {
