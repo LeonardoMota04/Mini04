@@ -246,7 +246,7 @@ class CameraViewModel: NSObject, ObservableObject {
     
 }
 
-// MARK: - VIDEO RECORDING
+/// MARK: VIDEO RECORDING
 extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let error = error {
@@ -296,6 +296,7 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
                 }
                 self.speechText = text
                 print(text)
+
             }
         } catch {
             print(error)
@@ -332,88 +333,6 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
         videoPlayer?.seek(to: targetTime)
     }
     
-    func stopRecording() {
-        isRecording = false
-        // variavel para armazenar o scrip (quando da stop ele deixa a string "" e fica impossivel salva-la)
-        auxSpeech = speechText
-        speechManager.stopRecording()
-
-        guard videoFileOutput.isRecording else {
-            print("Nenhuma gravação em andamento.")
-            return
-        }
-        videoFileOutput.stopRecording()
-        print("Speech Normal: \(speechText)")
-        print("Speech Topicos: " + speechTopicText)
-        
-        // parando o timer e reiniciando ele
-        timer?.invalidate()
-        timer = nil
-        currentTime = 0
-    }
-    
-
-    func getURLVideo(url: URL) {
-        self.videoPlayer = AVPlayer(url: url)
-    }
-
-    func seekPlayerVideo(topic: Int){
-        let targetTime = CMTime(value: CMTimeValue(topicTime[topic]), timescale: 1)
-        videoPlayer?.seek(to: targetTime)
-    }
-    
-    // Formata uma string com segundo minutos e horas
-    func FormatVideoDuration(from path: URL) -> String {
-        let asset = AVURLAsset(url: path)
-        let duration: CMTime = asset.duration
-        
-        let totalSeconds = CMTimeGetSeconds(duration)
-        let hours = Int(totalSeconds / 3600)
-        let minutes = Int((totalSeconds.truncatingRemainder(dividingBy: 3600)) / 60)
-        let seconds = Int(totalSeconds.truncatingRemainder(dividingBy: 60))
-        
-        if hours > 0 {
-            return String(format: "%i:%02i:%02i", hours, minutes, seconds)
-        } else {
-            return String(format: "%02i:%02i", minutes, seconds)
-        }
-    }
-    
-    // Retorna o tempo do video MARK: o certo seria fazer com uma funcao assincrona e load
-    func getVideoDuration(from path: URL) -> TimeInterval {
-        let asset = AVURLAsset(url: path)
-        let duration: CMTime = asset.duration
-        
-        let totalSeconds = CMTimeGetSeconds(duration)
-        
-        return totalSeconds
-    }
-    
-    func timeSpentOnTopic(){
-        // guard let topicTime = self.topicTime else { return print("Topicos nao foram criados")}
-        for index in 0..<self.topicTime.count {
-            if index == 0 {
-                // Caso seja o primeiro elemento ele pega o tempo do primeiro topico
-                self.videoTopicDuration.append(topicTime[0])
-            } else if index == self.topicTime.count - 1 {
-                // Caso seja o ultimo elemento da array ele diminu o tempo de video com o ultimo topico
-                self.videoTopicDuration.append(self.videoTime - (self.videoTopicDuration.last ?? 0))
-            } else {
-                self.videoTopicDuration.append(topicTime[index + 1] - topicTime[index])
-            }
-        }
-    }
-
-    
-    func deinitVariables() {
-        // reinciando as variaveis para conseguir limpar os dados
-        self.auxSpeech = ""
-        self.speechTopicText = ""
-        self.speechText = ""
-        self.topicTime = []
-        self.videoTopicDuration = []
-        self.videoTime = 0
-    }
 }
 
 extension CameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -511,7 +430,6 @@ struct CameraOverlayView: View {
         return distances.reduce(0.0, +) / CGFloat(distances.count)
     }
 }
-
 
 
 
