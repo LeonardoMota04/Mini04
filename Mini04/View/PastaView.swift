@@ -62,7 +62,7 @@ struct PastaView: View {
                     // treinos + apagar
                     HStack {
                         NavigationLink(training.nome) {
-                            TreinoView(trainingVM: TreinoViewModel(treino: training))
+                            TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: training))
                         }
                         Button("Apagar \(training.nome)") {
                             folderVM.deleteTraining(training)
@@ -76,11 +76,27 @@ struct PastaView: View {
             folderVM.modelContext = modelContext
         }
         .sheet(isPresented: $isModalPresented) {
-            ModalView(isModalPresented: $isModalPresented)
+            FolderInfoModalView(isModalPresented: $isModalPresented)
         }
     }
 }
-//
-//#Preview {
-//    PastaView()
-//}
+
+// MARK: - MODAL DE INFORMACOES
+struct FolderInfoModalView: View {
+    @Binding var isModalPresented: Bool
+    var body: some View {
+        VStack {
+            Text("Instruções:")
+                .font(.title)
+                .padding()
+
+            Text("pipipipi")
+                .padding()
+
+            Button("Fechar") {
+                isModalPresented = false
+            }
+            .padding()
+        }
+    }
+}
