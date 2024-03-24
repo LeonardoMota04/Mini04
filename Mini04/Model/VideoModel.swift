@@ -14,16 +14,16 @@ class VideoModel: Identifiable {
     var id = UUID()
     var videoURL: URL
     var script: String
-    var topics: [String]
-    var time: TimeInterval
-    var topicDurationTime: [TimeInterval]
+    var videoTime: TimeInterval
+    var videoTopics: [String]
+    var topicsDuration: [TimeInterval]
     
-    init(id: UUID = UUID(), videoURL: URL, script: String, topics: [String], time: TimeInterval, topicDuration: [TimeInterval]) {
+    init(id: UUID = UUID(), videoURL: URL, script: String, videoTime: TimeInterval, videoTopics: [String], topicsDuration: [TimeInterval]) {
         self.id = id
         self.videoURL = videoURL
         self.script = script
-        self.topics = topics
-        self.time = time
-        self.topicDurationTime = topicDuration
+        self.videoTime = videoTime
+        self.videoTopics = videoTopics
+        self.topicsDuration = topicsDuration
     }
 }

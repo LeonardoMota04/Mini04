@@ -18,42 +18,12 @@ struct TreinoView: View {
             Text("Pertenço à pasta: \(trainingVM.treino.nome)")
             Text("NOME: \(trainingVM.treino.nome)")
             Text("Data: \(trainingVM.treino.data)")
-            Text("Tempo do vídeo: )")
-            ScrollView {
-                VStack {
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(0..<cameraVC.topicTime.count, id: \.self) { index in
-                                VStack {
-                                    Text("Titulo tópico: \(index)")
-                                    Button {
-                                        cameraVC.seekPlayerVideo(topic: index)
-                                    } label: {
-                                        Text("Time topico: \(index)")
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    Text("Script da apresentação: " + (trainingVM.treino.video?.script ?? ""))
-                        .padding()
-                    ForEach(0..<(trainingVM.treino.video?.topics.count ?? 0), id: \.self) { index in
-                        Text("Topicos da apresentação: " + (trainingVM.treino.video?.topics[index] ?? ""))
-                    }
-                    Text("Tempo da apresesentação: \(trainingVM.treino.video?.time ?? 0)")
-                        .font(.title)
-                        .foregroundStyle(.green)
-                    Text("Duração em cada tópico: ")
-                        .font(.title)
-                    ForEach(0..<(trainingVM.treino.video?.topicDurationTime.count ?? 0), id: \.self) { index in
-                        Text("Tópico \(index): \(trainingVM.treino.video?.topicDurationTime[index] ?? 0)")
-                    }
-                }
+            Text(String("TempoVideo: \(trainingVM.treino.video?.videoTime)"))
+            Text("SCRIPT: \(trainingVM.treino.video?.script ?? "nao achou o script")")
+            Text(String("TOPICS: \(trainingVM.treino.video?.videoTopics)"))
+            ForEach((trainingVM.treino.video?.topicsDuration.indices)!, id: \.self) { index in
+                Text(String((trainingVM.treino.video?.topicsDuration[index])!))
             }
-        }
-        .onAppear() {
-            cameraVC.getURLVideo(url: self.trainingVM.treino.video!.videoURL)
-//            self.videoTime = cameraVC.getVideoDuration(from: self.trainingVM.treino.video!.videoURL)
         }
     }
 }

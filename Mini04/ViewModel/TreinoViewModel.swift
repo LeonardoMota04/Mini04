@@ -12,4 +12,7 @@ class TreinoViewModel: ObservableObject {
     init(treino: TreinoModel = TreinoModel(name: "")) {
         self.treino = treino
     }
+    
+    
+    
 }
