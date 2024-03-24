@@ -22,16 +22,6 @@ struct HUDCameraView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                HStack {
-                    Spacer()
-                    Button {
-                        isPreviewShowing.toggle()
-                        
-                    } label: {
-                        Text("save")
-                    }
-                    .disabled(isSaveButtonDisabled)
-                }
                 Button {
                     if !cameraVC.videoFileOutput.isRecording {
                         cameraVC.startRecording()
@@ -64,11 +54,11 @@ struct HUDCameraView: View {
             presentationMode.wrappedValue.dismiss()
         }
         .onReceive(cameraVC.$finalModelDetection, perform: { result in
-                    if result == "0" && !isRecording{
-                        cameraVC.startRecording()
-                        isRecording.toggle()
-                    }
-                })
+            if result == "0" && !isRecording{
+                cameraVC.startRecording()
+                isRecording.toggle()
+            }
+        })
     }
 }
 
