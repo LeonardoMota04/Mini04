@@ -21,7 +21,7 @@ class CameraViewModel: NSObject, ObservableObject {
     @Published var videoDataOutput = AVCaptureVideoDataOutput()
     @Published var audioOutput = AVCaptureAudioDataOutput()
     @Published var captureSession =  AVCaptureSession()
-    
+
     @Published var isRecording = false
     
     @Published var handPoseModelController: HandGestureController?
