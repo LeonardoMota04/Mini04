@@ -11,7 +11,8 @@ import SwiftUI
 struct HUDCameraView: View {
     @EnvironmentObject var cameraVC: CameraViewModel
     @Environment(\.presentationMode) var presentationMode // Para controlar o modo de apresentação
-    
+    @State private var isRecording = false
+
     
     @ObservedObject var folderVM: FoldersViewModel // pasta que estamos gravando
     @Binding var isPreviewShowing: Bool
@@ -62,6 +63,12 @@ struct HUDCameraView: View {
                                        topicsDuration: cameraVC.videoTopicDuration)
             presentationMode.wrappedValue.dismiss()
         }
+        .onReceive(cameraVC.$finalModelDetection, perform: { result in
+                    if result == "0" && !isRecording{
+                        cameraVC.startRecording()
+                        isRecording.toggle()
+                    }
+                })
     }
 }
 
