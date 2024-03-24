@@ -31,7 +31,9 @@ class CameraViewModel: NSObject, ObservableObject {
             self.createTopics(handPoseResult: detectedGestureModel1)
         }
     }
-    
+    //variável que recebe o resultado do model se for constante durante um tempo
+    @Published var finalModelDetection = ""
+
     var urltemp: URL?
     
     // numero de contagem
