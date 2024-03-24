@@ -53,5 +53,6 @@ struct TreinoView: View {
     // UPDATE Nome do treino
     func saveChanges() {
         trainingVM.treino.nome = editedName
+        trainingVM.treino.changedTrainingName = true
     }
 }

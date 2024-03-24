@@ -13,6 +13,4 @@ class TreinoViewModel: ObservableObject {
         self.treino = treino
     }
     
-    
-    
 }
