@@ -52,6 +52,7 @@ struct TreinoView: View {
             }
         }
         .onAppear() {
+            print(trainingVM.treino)
             cameraVC.getURLVideo(url: self.trainingVM.treino.video!.videoURL)
 //            self.videoTime = cameraVC.getVideoDuration(from: self.trainingVM.treino.video!.videoURL)
         }

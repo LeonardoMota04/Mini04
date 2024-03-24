@@ -98,8 +98,8 @@ class HandGestureController: ObservableObject {
                     let formattedProbabilities = result.labelProbabilities.map { label, probability in
                         return "\(label): \(String(format: "%.2f%%", probability * 100))"
                     }.joined(separator: ", ")
-                    print("Label: \(result.label), Label Probabilities: \(formattedProbabilities)")
-                    print(type(of: result.label))
+//                    print("Label: \(result.label), Label Probabilities: \(formattedProbabilities)")
+//                    print(type(of: result.label))
                     self.resulHandPoseModel = result.label
                 }
             }
@@ -161,7 +161,7 @@ class HandGestureController: ObservableObject {
                     
                     if confidence != nil {
                         renderHandPoseEffect(name: handPosePrediction.label)
-                        print("Result Hand: \(handPosePrediction.label)")
+//                        print("Result Hand: \(handPosePrediction.label)")
                     }
                 }
             } catch {
@@ -173,13 +173,13 @@ class HandGestureController: ObservableObject {
         switch name {
         case "0":
             self.resulHandPoseModel = "0"
-            print("Result Model HandPose: 0")
+//            print("Result Model HandPose: 0")re
         case "1":
             self.resulHandPoseModel = "1"
-            print("Result Model HandPose: 1")
+//            print("Result Model HandPose: 1")
         default:
             self.resulHandPoseModel = "Other"
-            print("Result Model HandPose: Other")
+//            print("Result Model HandPose: Other")
         }
     }
 }

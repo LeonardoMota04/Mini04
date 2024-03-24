@@ -37,6 +37,7 @@ class FoldersViewModel: ObservableObject {
             modelContext.insert(newTraining)
             try modelContext.save()
             folder.treinos.append(newTraining)
+//            print(newTraining.video?.videoURL.description)
         } catch {
             print("Não conseguiu criar e salvar o treino. \(error)")
         }

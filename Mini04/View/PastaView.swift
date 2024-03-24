@@ -44,8 +44,7 @@ struct PastaView: View {
                 }
 
                 Divider()
-                ForEach(folderVM.folder.treinos) { training in
-                    // treinos + apagar
+                ForEach(folderVM.folder.treinos, id: \.id) { training in
                     HStack {
                         NavigationLink(training.nome) {
                             TreinoView(trainingVM: TreinoViewModel(treino: training))
@@ -55,17 +54,18 @@ struct PastaView: View {
                         }
                     }
                 }
+
             }
-            .overlay(content: {
-                if showTreinoViewOverlay {
-                    TreinoView(trainingVM: TreinoViewModel(treino: folderVM.folder.treinos.last!))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .edgesIgnoringSafeArea(.all)
-                        .onDisappear {
-                            showTreinoViewOverlay = false
-                        }
-                }
-            })
+//            .overlay(content: {
+//                if showTreinoViewOverlay {
+//                    TreinoView(trainingVM: TreinoViewModel(treino: folderVM.folder.treinos.last!))
+//                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                        .edgesIgnoringSafeArea(.all)
+//                        .onDisappear {
+//                            showTreinoViewOverlay = false
+//                        }
+//                }
+//            })
         }
         .padding()
         .onAppear {

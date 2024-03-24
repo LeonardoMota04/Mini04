@@ -11,19 +11,19 @@ struct HUDCameraView: View {
     @EnvironmentObject var cameraVC: CameraViewModel
     @ObservedObject var folderVM: FoldersViewModel // pasta que estamos gravando
     @State private var isRecording = false
-    @State private var isTreinoViewPresented = false
     @State private var newTraining: TreinoModel? // Variável de estado para armazenar o novo treino
     @Environment(\.presentationMode) var presentationMode // Para controlar o modo de apresentação
     @Binding var showTreinoViewOverlay: Bool // Adicione um Binding para controlar o overlay do TreinoView
-
     var body: some View {
         NavigationStack {
             ZStack {
                 Button {
-                    if !cameraVC.isRecording {
+                    print("aaaaa: \(cameraVC.finalModelDetection)")
+                    if !cameraVC.isRecording || cameraVC.finalModelDetection == "0"{
                         cameraVC.startRecording()
                     } else {
                         cameraVC.stopRecording() // para de gravar video
+                        isRecording.toggle()
                     }
                 } label: {
                     ZStack {
@@ -37,23 +37,20 @@ struct HUDCameraView: View {
         }
         .padding(4)
         .onChange(of: cameraVC.urltemp) { oldValue, newValue in
+            // veririca se o novo vídeo gravado é igual ao último
             guard let newVideoURL = newValue else {
-                print("URL do vídeo é nil.")
+                print("same video")
                 return
             }
 
             folderVM.createNewTraining(videoURL: newVideoURL, videoScript: cameraVC.auxSpeech, videoTopics: [cameraVC.speechTopicText], videoTime: cameraVC.videoTime, topicDurationTime: cameraVC.videoTopicDuration) // Cria um novo treino com o URL do vídeo
-
-            if let lastTraining = folderVM.folder.treinos.last {
-                // Define o novo treino e exibe a TreinoView
-                newTraining = lastTraining
-                isTreinoViewPresented = true
-
-                // Fecha a HUDCameraView e seu overlay
-                presentationMode.wrappedValue.dismiss()
-                showTreinoViewOverlay = true // Ativa o overlay na PastaView com a nova TreinoView
-            }
+            presentationMode.wrappedValue.dismiss()
         }
-
+        .onReceive(cameraVC.$finalModelDetection, perform: { result in
+            if result == "0" && !isRecording{
+                cameraVC.startRecording()
+                isRecording.toggle()
+            }
+        })
     }
 }
