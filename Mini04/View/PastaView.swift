@@ -16,12 +16,23 @@ struct PastaView: View {
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
     @Query private var trainings: [TreinoModel] // read de treinos
+    
+    // EDITAR NOME DA PASTA
+    @State private var editedName: String = ""
 
     var body: some View {
         NavigationStack {
             VStack {
                 // infos da pasta
-                Text("NOME: \(folderVM.folder.nome)")
+                // NOME DA PASTA
+                HStack {
+                    TextField("Nome da pasta", text: $editedName)
+                        .font(.title)
+                    Spacer()
+                    Button("Salvar Alterações") {
+                        saveChanges()
+                    }
+                }
                 Text("Data: \(folderVM.folder.data)")
                 Text("Tempo Desejado: \(folderVM.folder.tempoDesejado)")
                 Text("Objetivo: \(folderVM.folder.objetivoApresentacao)")
@@ -62,7 +73,7 @@ struct PastaView: View {
                     // treinos + apagar
                     HStack {
                         NavigationLink(training.nome) {
-                            TreinoView(trainingVM: TreinoViewModel(treino: training))
+                            TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: training))
                         }
                         Button("Apagar \(training.nome)") {
                             folderVM.deleteTraining(training)
@@ -74,13 +85,45 @@ struct PastaView: View {
         .padding()
         .onAppear {
             folderVM.modelContext = modelContext
+            editedName = folderVM.folder.nome
         }
         .sheet(isPresented: $isModalPresented) {
-            ModalView(isModalPresented: $isModalPresented)
+            FolderInfoModalView(isModalPresented: $isModalPresented)
+        }
+    }
+    // UPDATE Nome da pasta e seus treinos
+    func saveChanges() {
+        // Atualiza o nome da pasta
+        folderVM.folder.nome = editedName
+        
+        for training in folderVM.folder.treinos {
+            if !training.changedTrainingName {
+                if let index = folderVM.folder.treinos.firstIndex(where: { $0.id == training.id }) {
+                    training.nome = "\(editedName) - Treino \(index + 1)"
+                }
+            }
+            
+        }
+    }
+
+}
+
+// MARK: - MODAL DE INFORMACOES
+struct FolderInfoModalView: View {
+    @Binding var isModalPresented: Bool
+    var body: some View {
+        VStack {
+            Text("Instruções:")
+                .font(.title)
+                .padding()
+
+            Text("pipipipi")
+                .padding()
+
+            Button("Fechar") {
+                isModalPresented = false
+            }
+            .padding()
         }
     }
 }
-//
-//#Preview {
-//    PastaView()
-//}

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import AVFoundation
 
 @Observable
 class FoldersViewModel: ObservableObject {
@@ -82,5 +83,4 @@ class FoldersViewModel: ObservableObject {
             }
         }
     }
-    
 }
