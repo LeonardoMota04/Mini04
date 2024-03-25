@@ -12,9 +12,10 @@ import SwiftData
 struct Mini04App: App {
     @StateObject var camVM = CameraViewModel()
 
-    var sharedModelContainer: ModelContainer = {
+    var modelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            PastaModel.self,
+            ApresentacaoModel.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -29,12 +30,12 @@ struct Mini04App: App {
     var body: some Scene {
         WindowGroup {
 //            SwiftDataView()
-//            ContentView()
+            ContentView()
 //            RecordingVideoView()
-            ChatView()
                 .environmentObject(camVM)
 
         }
+        .modelContainer(modelContainer)
         //.modelContainer(sharedModelContainer)
     }
 }

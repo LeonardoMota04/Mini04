@@ -6,15 +6,24 @@
 //
 
 import Foundation
+import SwiftData
+import AVFoundation
 
-struct VideoModel: Identifiable, Hashable {
+@Model
+class VideoModel: Identifiable {
     var id = UUID()
     var videoURL: URL
-//    var script: String
+    var script: String
+    var videoTime: TimeInterval
+    var videoTopics: [String]
+    var topicsDuration: [TimeInterval]
     
-    init(id: UUID = UUID(), videoURL: URL/*, script: String*/) {
+    init(id: UUID = UUID(), videoURL: URL, script: String, videoTime: TimeInterval, videoTopics: [String], topicsDuration: [TimeInterval]) {
         self.id = id
         self.videoURL = videoURL
-//        self.script = script
+        self.script = script
+        self.videoTime = videoTime
+        self.videoTopics = videoTopics
+        self.topicsDuration = topicsDuration
     }
 }

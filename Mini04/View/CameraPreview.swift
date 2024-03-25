@@ -12,7 +12,16 @@ struct CameraPreview : View {
     var body: some View {
         GeometryReader { proxy in
             let size = proxy.size
-            CameraRepresentable(size: size)
+            ZStack {
+                CameraRepresentable(size: size)
+                CameraOverlayView(size: size)
+                //pverlay em cima da mao
+                
+                if cameraVC.countdownNumber > 0 {
+                    Text("\(cameraVC.countdownNumber)")
+                        .font(.largeTitle)
+                }
+            }
         }
         .onAppear(perform: cameraVC.configureSession)
         

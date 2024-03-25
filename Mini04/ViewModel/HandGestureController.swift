@@ -16,11 +16,19 @@ class HandGestureController: ObservableObject {
     let handPoseRequest = VNDetectHumanHandPoseRequest()
     var observationsBuffer: [VNHumanHandPoseObservation] = []
     var onUpdatePoints: (([VNRecognizedPoint]) -> Void)?
-    @Published var resultModel1: String = "" {
+    @Published var resulHandPoseModel: String = "" {
         didSet {
-            self.onResultModel1Changed?(self.resultModel1)
+            self.onResultModel1Changed?(self.resulHandPoseModel)
         }
     }
+    
+    @Published var isHandIdentified: Bool = false {
+        didSet {
+            self.onHandIdentificationChanged?(self.isHandIdentified)
+        }
+    }
+    var onHandIdentificationChanged: ((Bool) -> Void)?
+    
     var onResultModel1Changed: ((String) -> Void)?
 
     
@@ -92,7 +100,7 @@ class HandGestureController: ObservableObject {
                     }.joined(separator: ", ")
                     print("Label: \(result.label), Label Probabilities: \(formattedProbabilities)")
                     print(type(of: result.label))
-                    self.resultModel1 = result.label
+                    self.resulHandPoseModel = result.label
                 }
             }
             
@@ -129,4 +137,50 @@ class HandGestureController: ObservableObject {
         return extractedPoints
     }
     
+    func performHandPoseRequestShort(sampleBuffer: CMSampleBuffer) {
+        
+            guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+                return
+            }
+            
+            let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .down, options: [:])
+            do {
+                try handler.perform([handPoseRequest])
+                // observation sao os pontos que ele detecta
+                guard let observation = handPoseRequest.results?.first as? VNHumanHandPoseObservation else {
+                    return
+                }
+                
+                observationsBuffer.append(observation)
+                
+                guard let keypointsMultiArray = try? observation.keypointsMultiArray() else { return }
+                
+                if let model = model1 {
+                    let handPosePrediction = try model.prediction(poses: keypointsMultiArray)
+                    let confidence = handPosePrediction.labelProbabilities[handPosePrediction.label]
+                    
+                    if confidence != nil {
+                        renderHandPoseEffect(name: handPosePrediction.label)
+                        print("Result Hand: \(handPosePrediction.label)")
+                    }
+                }
+            } catch {
+                print("Error during hand pose request: \(error)")
+            }
+    }
+    
+    func renderHandPoseEffect(name: String) {
+        switch name {
+        case "0":
+            self.resulHandPoseModel = "0"
+            print("Result Model HandPose: 0")
+        case "1":
+            self.resulHandPoseModel = "1"
+            print("Result Model HandPose: 1")
+        default:
+            self.resulHandPoseModel = "Other"
+            print("Result Model HandPose: Other")
+        }
+    }
 }
+
