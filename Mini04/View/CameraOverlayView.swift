@@ -19,11 +19,13 @@ struct CameraOverlayView: View {
     @State private var timer: Timer? // Temporizador para controlar a transição de estado
     @State private var constantDetectionTimer: Timer? // Temporizador para detectar detecções constantes
     @State private var lastDetectionValue: String? // Último valor de detecção
-    @State private var timerPublisher = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
+    @State private var timerPublisher = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
 
     @State private var progress: Double = 0.0
     let animationDuration: Double = 2 // Duração da animação de preenchimento do trim
     @State var isAnimating = false
+    @State private var tempDetectionValue: String? // Variável temporária para armazenar o valor de modelDetection
+
     var body: some View {
         if let points = getProcessedPoints() {
             ZStack {
@@ -37,7 +39,6 @@ struct CameraOverlayView: View {
                         .position(circlePosition)
                         .onAppear {
                             updateCirclePosition(points: points)
-//                            startAnimation()
                             isHandTrackingActive = true
                             startTimer()
                         }
@@ -51,129 +52,112 @@ struct CameraOverlayView: View {
                                 camVM.finalModelDetection = lastDetectionValue ?? "aaaaa"
                             }
                         }
-                        
+
                     Text(handResultText)
                         .foregroundStyle(.red)
                         .position(circlePosition)
                         .font(.largeTitle)
                         .bold()
                 }
-                
             }
             .onReceive(camVM.$detectedGestureModel1, perform: { modelDetection in
                 if modelDetection != "Other" {
                     handResultText = modelDetection
-                    isHandTrackingActive = true // Define o tracking de mão como ativo ao receber dados
+                    isHandTrackingActive = true
                     startTimer()
                     isAnimating = true
-                    // Verifica se o valor de detecção é constante
-                    
 
-                    if modelDetection == lastDetectionValue {
-                        constantDetectionTimer?.invalidate() // Cancela o temporizador atual se houver
-                        constantDetectionTimer = Timer.scheduledTimer(withTimeInterval: animationDuration, repeats: false) { _ in
-                            camVM.finalModelDetection = modelDetection // Atribui o valor constante a finalModelDetection
+                    if let lastValue = lastDetectionValue {
+                        if modelDetection == lastValue {
+                            tempDetectionValue = modelDetection
+                        } else {
+                            tempDetectionValue = nil
                             isAnimating = false
-                            progress = 0
+
                         }
                     } else {
                         lastDetectionValue = modelDetection
-                        constantDetectionTimer?.invalidate() // Cancela o temporizador atual se houver
-                        isAnimating = false
-
+                        isAnimating = true
+                        progress = 0
                     }
                 } else {
-                    // se for other o overlay desaparece
                     isHandTrackingActive = false
                     isAnimating = false
-
                 }
-                
-                if isAnimating {
-                    withAnimation(Animation.linear(duration: 1).repeatForever(autoreverses: false)) {
+
+                if isAnimating && modelDetection != camVM.finalModelDetection{
+                    withAnimation(Animation.linear(duration: 3).repeatForever(autoreverses: false)) {
                         self.progress = 1.0
                     }
                 } else {
+                    isHandTrackingActive = false
                     progress = 0
                 }
+
                 print("final detection: \(camVM.finalModelDetection)")
             })
+            .onReceive(timerPublisher) { _ in
+                if let tempValue = tempDetectionValue {
+                    camVM.finalModelDetection = tempValue
+                    lastDetectionValue = tempValue
+                    tempDetectionValue = nil
+                }
+            }
         }
     }
-    
+
     // Funções auxiliares para controlar o temporizador
     func startTimer() {
         timer?.invalidate() // Cancela o temporizador atual se houver
-        timer = Timer.scheduledTimer(withTimeInterval: animationDuration, repeats: false) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
             isHandTrackingActive = false // Define o tracking de mão como inativo após 1 segundo sem receber novos dados
         }
     }
-    
+
     func resetTimer() {
         timer?.invalidate() // Cancela o temporizador atual se houver
         startTimer() // Reinicia o temporizador
     }
-    
-    func startConstantDetectionTimer() {
-        constantDetectionTimer?.invalidate() // Cancela o temporizador atual se houver
-        constantDetectionTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
-            camVM.finalModelDetection = lastDetectionValue ?? "aaaaa" // Atribui o último valor constante a finalModelDetection
-        }
-    }
-    
-    //pega os pontos da mao
+
     func getProcessedPoints() -> [VNRecognizedPoint]? {
         guard let observationsBuffer = camVM.handPoseModelController?.observationsBuffer.last else {
             return nil
         }
         return try? camVM.handPoseModelController?.processPoints(from: observationsBuffer)
     }
-    
-    // calcula a distancia de todos os pontos até todos os pontos
+
     func calculateAverageDistance(points: [VNRecognizedPoint]) -> CGFloat {
         var distances: [CGFloat] = []
-        
+
         for point1 in points {
             for point2 in points {
                 let distance = sqrt(pow(point1.location.x - point2.location.x, 2) + pow(point1.location.y - point2.location.y, 2))
                 distances.append(distance)
             }
         }
-        
+
         return distances.reduce(0.0, +) / CGFloat(distances.count)
     }
-    // a posicao de de todos os pontos e tira uma média
+
     func updateCirclePosition(points: [VNRecognizedPoint]) {
         guard !points.isEmpty else {
-            // Se não houver pontos, definimos a posição e o tamanho do círculo como zero para que ele desapareça
             circlePosition = .zero
             circleSize = 0.0
             return
         }
-        
-        // Calculamos a posição média dos pontos de mão
+
         let averageX = points.reduce(0, { $0 + $1.location.x }) / CGFloat(points.count)
         let averageY = points.reduce(0, { $0 + $1.location.y }) / CGFloat(points.count)
-        
-        // Verificamos se a posição média está dentro dos limites da view
+
         let maxX = size.width
         let maxY = size.height
-        
+
         if averageX >= 0 && averageX <= maxX && averageY >= 0 && averageY <= maxY {
             circlePosition = CGPoint(x: averageX * maxX, y: averageY * maxY)
             circleSize = calculateAverageDistance(points: points) * maxX
         } else {
-            // Se estiver fora dos limites, definimos a posição e o tamanho do círculo como zero para que ele desapareça
             circlePosition = .zero
             circleSize = 0.0
         }
     }
-
-
-//
-//    func startAnimation() {
-//        withAnimation(Animation.linear(duration: duration).repeatForever(autoreverses: false)) {
-//            self.progress = 1.0
-//        }
-//    }
 }
