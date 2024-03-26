@@ -37,7 +37,7 @@ struct Mini04App: App {
 //            RecordingVideoView()
                 .environmentObject(camVM)
 //            WebScrappingView()
-                .frame(minWidth: (screenSize?.width ?? 800) * (4/5), minHeight: (screenSize?.height ?? 600) * (4/5)) // Define o tamanho mínimo da janela
+                .frame(minWidth: (screenSize?.width ?? 800) * (2/3), minHeight: (screenSize?.height ?? 600) * (2/3)) // Define o tamanho mínimo da janela
 
         }
         .modelContainer(modelContainer)

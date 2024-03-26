@@ -23,6 +23,7 @@ struct SiderbarFolderComponent: View {
             
         }
         .frame(width: 340, height: 74)
+        .scaleEffect(CGSize(width: 0.8, height: 0.8))
     }
 }
 
