@@ -276,7 +276,6 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
                 print(countdownNumber)
                 countdownNumber -= 1
             } else {
-                isRecording = true
                 
                 // reiniciando as variaveis
                 deinitVariables()
