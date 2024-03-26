@@ -15,88 +15,98 @@ struct SynonymsInfo {
     let word: String
     let num_synonyms: Int
     let num_contexts: Int
-    //let synonymsInfo: [[String : Any]]
     let synonymsInfo: [SynonymContext]
 }
 
-struct SynonymContext: Decodable, Hashable {
+struct SynonymContext: Hashable {
     let context: String
     let synonyms: [String]
 }
 
 
-// Função para obter os sinônimos de u ma palavra
-func getSynonymInfo(for word: String, completion: @escaping (Result<SynonymsInfo, Error>) -> Void) {
-    do {
-        // URL
-        guard let url = URL(string: "https://www.sinonimos.com.br/\(word.lowercased())/") else {
+// Classe para gerenciar chamadas de rede
+class NetworkManager {
+    static func fetchData(for word: String, completion: @escaping (Result<Data, Error>) -> Void) {
+        // Normaliza a palavra (remove acentuações e converte para minúscula)
+        let normalizedWord = word.folding(options: .diacriticInsensitive, locale: nil).lowercased()
+        
+        guard let url = URL(string: "https://www.sinonimos.com.br/\(normalizedWord)/") else {
             completion(.failure(NSError(domain: "InvalidURL", code: -1, userInfo: [NSLocalizedDescriptionKey: "URL inválido"])))
             return
         }
         
-        // SESSION
         let session = URLSession.shared
-        
-        // TASK
         let task = session.dataTask(with: url) { data, response, error in
-            // Verifica se ocorreu algum erro
             if let error = error {
                 completion(.failure(error))
                 return
             }
             
-            // Verifica se os dados foram recebidos com sucesso
             guard let data = data else {
                 completion(.failure(NSError(domain: "NoData", code: -1, userInfo: [NSLocalizedDescriptionKey: "Nenhum dado recebido"])))
                 return
             }
             
-            do {
-                // Analisa os dados
-                let html = String(data: data, encoding: .utf8)!
-                let doc: Document = try SwiftSoup.parse(html)
+            completion(.success(data))
+        }
+        task.resume()
+    }
+}
+
+// Classe para analisar dados HTML
+class HTMLParser {
+    static func parseHTML(data: Data, word: String, completion: @escaping (Result<SynonymsInfo, Error>) -> Void) {
+        do {
+            let html = String(data: data, encoding: .utf8)!
+            let doc: Document = try SwiftSoup.parse(html)
+            
+            let numOfSynonymsText = try doc.select("p.word-count").text()
+            let components = numOfSynonymsText.components(separatedBy: CharacterSet.decimalDigits.inverted)
+            let numbers = components.compactMap { Int($0) }
+            
+            var numOfSynonyms = 0
+            var numOfContexts = 0
+            var shouldGetContextName = false
+            
+            if numbers.count == 2 {
+                numOfContexts = numbers[1]
+                shouldGetContextName = true
+            } else {
+                let contexts = try doc.select(".content-detail--subtitle")
+                numOfContexts = contexts.count - 1
+            }
+            
+            let contexts = try doc.select(".content-detail")
+            var synonymsInfo: [SynonymContext] = []
+            let numOfSynonymsToTake = 3
+            
+            for i in 0..<numOfContexts {
+                let context = contexts[i]
+                var contextName: String?
                 
-                // Obtém o número de sinônimos
-                let numOfSynonymsText = try doc.select("p.word-count strong").text()
-                let numOfSynonyms = Int(numOfSynonymsText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) ?? 0
-                
-                // Obtém o número de contextos
-                let contexts = try doc.select(".content-detail")
-                let numOfContexts = contexts.count - 1 // Ignora o último
-                
-                // Obtém os sinônimos por contexto
-                var synonymsInfo: [SynonymContext] = []
-                let numOfSynonymsToTake = 3
-                
-                for i in 0..<numOfContexts {
-                    let context = contexts[i]
-                    let contextNameToFix = try context.select(".content-detail--subtitle").text()
-                    let contextName = contextNameToFix.replacingOccurrences(of: ":", with: "")
-                    
-                    var synonyms: [String] = []
-                    let synonymElements = try context.select("p.syn-list a.sinonimo")
-                    for j in 0..<min(synonymElements.count, numOfSynonymsToTake) {
-                        let synonym = try synonymElements.get(j).text()
-                        synonyms.append(synonym)
-                    }
-                    
-                    let synonymContext = SynonymContext(context: contextName, synonyms: synonyms)
-                    synonymsInfo.append(synonymContext)
+                if shouldGetContextName, let contextSubtitle = try? context.select(".content-detail--subtitle").first()?.text() {
+                    contextName = contextSubtitle.replacingOccurrences(of: ":", with: "")
                 }
                 
-                // Cria o objeto SynonymsInfo
-                let synonymsInfos = SynonymsInfo(word: word, num_synonyms: numOfSynonyms, num_contexts: numOfContexts, synonymsInfo: synonymsInfo)
+                var synonyms: [String] = []
+                let synonymElements = try context.select("p.syn-list").select("a.sinonimo, span:not([class])")
                 
-                // Chama a conclusão com sucesso
-                completion(.success(synonymsInfos))
-            } catch {
-                // Chama a conclusão com erro
-                completion(.failure(error))
+                for j in 0..<min(synonymElements.count, numOfSynonymsToTake) {
+                    let synonym = try synonymElements.get(j).text()
+                    numOfSynonyms += 1
+                    synonyms.append(synonym)
+                }
+                
+                let synonymContext = SynonymContext(context: contextName ?? "\(i + 1)", synonyms: synonyms)
+                synonymsInfo.append(synonymContext)
             }
+            
+            let synonymsInfos = SynonymsInfo(word: word, num_synonyms: numOfSynonyms, num_contexts: numOfContexts, synonymsInfo: synonymsInfo)
+            completion(.success(synonymsInfos))
+            
+        } catch {
+            completion(.failure(error))
         }
-        
-        // Inicia a tarefa
-        task.resume()
     }
 }
 
@@ -104,6 +114,7 @@ func getSynonymInfo(for word: String, completion: @escaping (Result<SynonymsInfo
 struct WebScrappingView: View {
     @State private var word = ""
     @State private var synonymsInfo: SynonymsInfo?
+    @State private var isLoading = false
     
     var body: some View {
         VStack {
@@ -117,34 +128,42 @@ struct WebScrappingView: View {
             
             Divider()
             
-            if let synonymsInfo = synonymsInfo {
+            if isLoading {
+                ProgressView("Carregando...")
+            } else if let synonymsInfo = synonymsInfo {
                 SynonymsListView(synonymsInfo: synonymsInfo)
             }
         }
         .padding()
     }
     
+    // CHAMADA DE REDE -> PARSER HTML -> RESULTADO INFOS SINONIMOS
     func fetchSynonyms() {
-        // Chama a função getSynonymInfo com a palavra e um bloco de conclusão
-        getSynonymInfo(for: word.lowercased()) { result in
-            switch result {
-            case .success(let synonymsInfo):
-                // Se a operação for bem-sucedida, atualize a variável @State synonymsInfo
-                DispatchQueue.main.async {
-                    self.synonymsInfo = synonymsInfo
-                }
-            case .failure(let error):
-                // Se ocorrer um erro, exiba a mensagem de erro
-                DispatchQueue.main.async {
-                    self.synonymsInfo = nil // Limpa os sinônimos, se houver
+        isLoading = true
+        
+        // CHAMADA DE REDE
+        NetworkManager.fetchData(for: word) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                
+                switch result {
+                case .success(let data):
+                    // PARSER HTML
+                    HTMLParser.parseHTML(data: data, word: self.word.lowercased()) { result in
+                        switch result {
+                        case .success(let synonymsInfo):
+                            self.synonymsInfo = synonymsInfo
+                        case .failure(let error):
+                            self.synonymsInfo = nil
+                        }
+                    }
+                case .failure(let error):
+                    self.synonymsInfo = nil
                 }
             }
         }
     }
-
 }
-
-
 
 
 // LISTA DE SINONIMOS
@@ -156,14 +175,14 @@ struct SynonymsListView: View {
             Text("Palavra: \(synonymsInfo.word)")
                 .font(.headline)
                 .padding(.bottom)
-
+            
             Text("Número de Sinônimos: \(synonymsInfo.num_synonyms)")
                 .padding(.bottom)
-
+            
             Text("Número de Contextos: \(synonymsInfo.num_contexts)")
                 .padding(.bottom)
             
-            ForEach(synonymsInfo.synonymsInfo, id: \.context) { synonymContext in
+            ForEach(synonymsInfo.synonymsInfo, id: \.self) { synonymContext in
                 VStack(alignment: .leading) {
                     Text("Contexto: \(synonymContext.context)")
                         .font(.headline)
@@ -179,10 +198,6 @@ struct SynonymsListView: View {
         }
     }
 }
-
-
-
-
 
 
 #Preview {
