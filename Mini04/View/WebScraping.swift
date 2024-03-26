@@ -9,19 +9,6 @@ import SwiftUI
 import SwiftSoup
 
 
-// MARK: - MODEL
-// SINONIMOS INFOS
-struct SynonymsInfo {
-    let word: String
-    let num_synonyms: Int
-    let num_contexts: Int
-    let synonymsInfo: [SynonymContext]
-}
-
-struct SynonymContext: Hashable {
-    let context: String
-    let synonyms: [String]
-}
 
 
 // Classe para gerenciar chamadas de rede
@@ -101,7 +88,7 @@ class HTMLParser {
                 synonymsInfo.append(synonymContext)
             }
             
-            let synonymsInfos = SynonymsInfo(word: word, num_synonyms: numOfSynonyms, num_contexts: numOfContexts, synonymsInfo: synonymsInfo)
+            let synonymsInfos = SynonymsInfo(word: word, numSynonyms: numOfSynonyms, numContexts: numOfContexts, synonymContexts: synonymsInfo)
             completion(.success(synonymsInfos))
             
         } catch {
@@ -154,10 +141,12 @@ struct WebScrappingView: View {
                         case .success(let synonymsInfo):
                             self.synonymsInfo = synonymsInfo
                         case .failure(let error):
+                            print(error.localizedDescription)
                             self.synonymsInfo = nil
                         }
                     }
                 case .failure(let error):
+                    print(error.localizedDescription)
                     self.synonymsInfo = nil
                 }
             }
@@ -176,13 +165,13 @@ struct SynonymsListView: View {
                 .font(.headline)
                 .padding(.bottom)
             
-            Text("Número de Sinônimos: \(synonymsInfo.num_synonyms)")
+            Text("Número de Sinônimos: \(synonymsInfo.numSynonyms)")
                 .padding(.bottom)
             
-            Text("Número de Contextos: \(synonymsInfo.num_contexts)")
+            Text("Número de Contextos: \(synonymsInfo.numContexts)")
                 .padding(.bottom)
             
-            ForEach(synonymsInfo.synonymsInfo, id: \.self) { synonymContext in
+            ForEach(synonymsInfo.synonymContexts, id: \.self) { synonymContext in
                 VStack(alignment: .leading) {
                     Text("Contexto: \(synonymContext.context)")
                         .font(.headline)

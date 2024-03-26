@@ -15,7 +15,9 @@ struct TreinoView: View {
     @EnvironmentObject var cameraVC: CameraViewModel
     
     @State private var editedName: String = ""
-    
+    @State private var avPlayer: AVPlayer = AVPlayer()
+    @State private var feedback: FeedbackModel? // FeedbackModel agora é um estado
+
     var body: some View {
         GeometryReader { geometry in
             let size = geometry.size
@@ -33,16 +35,23 @@ struct TreinoView: View {
                 Text("Você está treinando na pasta \(folderVM.folder.nome)")
                 Text("Data de criação: \(trainingVM.treino.data)")
                 
-                VideoPlayer(player: AVPlayer(url: trainingVM.treino.video!.videoURL))
+                VideoPlayer(player: avPlayer)
+                    .onAppear {
+                        if let videoURL = trainingVM.treino.video?.videoURL {
+                            avPlayer.replaceCurrentItem(with: AVPlayerItem(url: videoURL))
+                        }
+                    }
                     .frame(height: size.height / 2)
                                 
-                // Frameworks
+                // Feedbacks
                 Text(String("TempoVideo: \(trainingVM.treino.video!.videoTime)"))
-                Text("SCRIPT: \(trainingVM.treino.video?.script ?? "nao achou o script")")
                 Text(String("TOPICS: \(trainingVM.treino.video!.videoTopics)"))
                 ForEach((trainingVM.treino.video?.topicsDuration.indices)!, id: \.self) { index in
                     Text(String((trainingVM.treino.video?.topicsDuration[index])!))
                 }
+                Text("SCRIPT: \(trainingVM.treino.video?.script ?? "nao achou o script")")
+                Text(String(describing: trainingVM.treino.feedback?.palavrasRepetidas5vezes))
+
             }
         }
         .onAppear {

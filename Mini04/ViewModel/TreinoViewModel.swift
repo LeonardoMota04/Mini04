@@ -9,7 +9,7 @@ import Foundation
 
 class TreinoViewModel: ObservableObject {
     @Published var treino: TreinoModel
-    init(treino: TreinoModel = TreinoModel(name: "")) {
+    init(treino: TreinoModel = TreinoModel()) {
         self.treino = treino
     }
     

@@ -16,5 +16,6 @@ class NetworkCallsTests: XCTestCase {
         
         XCTAssertEqual(response.choices.first?.message.content, "Olá! Como posso ajudar você hoje?")
     }
-
 }
+
+
