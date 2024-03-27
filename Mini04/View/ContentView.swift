@@ -20,8 +20,8 @@ struct ContentView: View {
     
     var body: some View {
         NavigationSplitView {
+            SiderbarFolderComponent()
             VStack {
-                SiderbarFolderComponent()
                 Spacer()
                 NavigationLink("Minhas Apresentações") {
                     // MESMA COISA AQUI
