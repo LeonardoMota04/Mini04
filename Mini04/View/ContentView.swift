@@ -72,7 +72,7 @@ struct CreatingFolderModalView: View {
     // CRIAR PASTA (modularizar)
     @ObservedObject var presentationVM: ApresentacaoViewModel
     @State var pastaName: String = ""
-    @State var tempoDesejado: Int = 0
+    @State var tempoDesejado: Int = 1
     @State var objetivo: String = ""
     @Binding var isModalPresented: Bool
     let tempos = [5,10,15]
@@ -87,7 +87,11 @@ struct CreatingFolderModalView: View {
                 }
             }
             .padding()
-            TextField("Objetivo", text: $objetivo)
+            Picker("Selecione o objetivo da pasta", selection: $objetivo) {
+                ForEach(ObjectiveApresentation.allCases, id: \.self) { objective in
+                    Text(String(describing: objective))
+                }
+            }
                 .padding()
             Spacer()
             Button("Criar pasta") {
