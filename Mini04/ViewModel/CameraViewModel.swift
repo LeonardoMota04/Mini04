@@ -191,22 +191,6 @@ class CameraViewModel: NSObject, ObservableObject {
         }
     }
     
-    // Formata uma string com segundo minutos e horas
-        func FormatVideoDuration(from path: URL) -> String {
-            let asset = AVURLAsset(url: path)
-            let duration: CMTime = asset.duration
-            
-            let totalSeconds = CMTimeGetSeconds(duration)
-            let hours = Int(totalSeconds / 3600)
-            let minutes = Int((totalSeconds.truncatingRemainder(dividingBy: 3600)) / 60)
-            let seconds = Int(totalSeconds.truncatingRemainder(dividingBy: 60))
-            
-            if hours > 0 {
-                return String(format: "%i:%02i:%02i", hours, minutes, seconds)
-            } else {
-                return String(format: "%02i:%02i", minutes, seconds)
-            }
-        }
         
         // Retorna o tempo do video MARK: o certo seria fazer com uma funcao assincrona e load
         func getVideoDuration(from path: URL) -> TimeInterval {
@@ -276,7 +260,6 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
                 print(countdownNumber)
                 countdownNumber -= 1
             } else {
-                isRecording = true
                 
                 // reiniciando as variaveis
                 deinitVariables()

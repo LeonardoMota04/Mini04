@@ -33,10 +33,63 @@ struct PastaView: View {
                         saveChanges()
                     }
                 }
-                Text("Data: \(folderVM.folder.data)")
-                Text("Tempo Desejado: \(folderVM.folder.tempoDesejado)")
-                Text("Objetivo: \(folderVM.folder.objetivoApresentacao)")
-                
+                HStack {
+                    HStack {
+                        Image(systemName: "calendar")
+                        Text("\(folderVM.folder.data)")
+                    }
+                    HStack {
+                        Image(systemName: "video.badge.waveform.fill")
+                        Text("\(folderVM.folder.treinos.count) Treinos")
+                    }
+                    HStack {
+                        Image(systemName: "handbag.fill")
+                        Text("Objetivo: \(folderVM.folder.objetivoApresentacao)")
+                    }
+                    Text("Tempo Desejado: \(folderVM.folder.tempoDesejado)")
+                }
+//                ZStack {
+//                    RoundedRectangle(cornerRadius: 16)
+//                        .frame(width: 350, height: 140)
+//                    HStack{
+//                        VStack(alignment: .leading) {
+//                            Text("\(folderVM.folder.avaregeTime)")
+//                                .font(.title2)
+//                                .bold()
+//                                .foregroundStyle(.black)
+//                            Text("Tempo médio próximo do desejado. ")
+//                                .multilineTextAlignment(.leading)
+//                                .frame(maxWidth: 135)
+//                                .foregroundStyle(.black)
+//                            Spacer()
+//                        }
+//                        Spacer()
+//                        VStack(alignment: .leading) {
+//                            Text("Tempo desejado - \(folderVM.folder.tempoDesejado)")
+//                            HStack {
+//                                ForEach(folderVM.folder.treinos.suffix(8)) { treino in // sufix 8 para mostrar os ultimos 8 treinos
+//                                    VStack {
+//                                        ZStack(alignment: .bottom) {
+//                                            RoundedRectangle(cornerRadius: 10)
+//                                                .frame(width: 10, height: 54)
+//                                            RoundedRectangle(cornerRadius: 10)
+//                                                .frame(width: 10, height: Double(treino.video?.videoTime ?? 0) > Double(folderVM.folder.tempoDesejado) ? 54 :  folderVM.calculateTreinoTime(videoTime: treino.video?.videoTime ?? 1))
+//                                                .foregroundStyle(Double(treino.video?.videoTime ?? 0) > Double(folderVM.folder.tempoDesejado) ? .red : .blue)
+//                                            
+//                                        }
+//                                        Text("T\(folderVM.folder.treinos.count + 1)")
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+                ExpandableView(thumbnail: ThumbnailView(content: {
+                    TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                }), expanded: ExpandedView(content: {
+                    TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                }))
+              
                 Spacer()
                 
                 if folderVM.folder.treinos.isEmpty {
@@ -68,6 +121,7 @@ struct PastaView: View {
 //                        }
 //                    }
 //                }
+          
                 Divider()
                 ForEach(folderVM.folder.treinos) { training in
                     // treinos + apagar
@@ -91,6 +145,11 @@ struct PastaView: View {
                 print("Nao salvou")
             }
             editedName = folderVM.folder.nome
+            folderVM.calculateAvarageTime()
+        }
+        .onChange(of: folderVM.folder) {
+            // quando adicionar um novo treino atualiza o valor do tempo medio dos treinos
+            folderVM.calculateAvarageTime()
         }
         .sheet(isPresented: $isModalPresented) {
             FolderInfoModalView(isModalPresented: $isModalPresented)

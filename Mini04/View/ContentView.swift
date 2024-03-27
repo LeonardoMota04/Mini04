@@ -20,37 +20,42 @@ struct ContentView: View {
     
     var body: some View {
         NavigationSplitView {
-            NavigationLink("Minhas Apresentações") {
-                // MESMA COISA AQUI
-                if presentationVM.apresentacao.folders.isEmpty {
-                    ContentUnavailableView("Adicione sua primeira pasta.", systemImage: "folder.badge.questionmark")
-                    Button("Criar pasta") {
-                        isModalPresented.toggle()
-                    }
-                } else {
-                    Button("Criar pasta") {
-                        isModalPresented.toggle()
-                    }
-                    List {
-                        // exibir todas as pastas
-                        ForEach(folders) { folder in
-                            // pastas + apagar
-                            HStack {
-                                NavigationLink(folder.nome) {
-                                    if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                        PastaView(folderVM: folderVM)
-                                    } else {
-                                        Text("ViewModel não encontrada para esta pasta")
+            VStack {
+                SiderbarFolderComponent()
+                Spacer()
+                NavigationLink("Minhas Apresentações") {
+                    // MESMA COISA AQUI
+                    if presentationVM.apresentacao.folders.isEmpty {
+                        ContentUnavailableView("Adicione sua primeira pasta.", systemImage: "folder.badge.questionmark")
+                        Button("Criar pasta") {
+                            isModalPresented.toggle()
+                        }
+                    } else {
+                        Button("Criar pasta") {
+                            isModalPresented.toggle()
+                        }
+                        List {
+                            // exibir todas as pastas
+                            ForEach(folders) { folder in
+                                // pastas + apagar
+                                HStack {
+                                    NavigationLink(folder.nome) {
+                                        if let folderVM = presentationVM.foldersViewModels[folder.id] {
+                                            PastaView(folderVM: folderVM)
+                                        } else {
+                                            Text("ViewModel não encontrada para esta pasta")
+                                        }
                                     }
-                                }
-                                Button("Apagar \(folder.nome)") {
-                                    presentationVM.deleteFolder(folder)
+                                    Button("Apagar \(folder.nome)") {
+                                        presentationVM.deleteFolder(folder)
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            .padding(.vertical, 34)
             .navigationSplitViewColumnWidth(min: 180, ideal: 200)
         } detail: {
             // MESMA COISA AQUI
@@ -72,7 +77,7 @@ struct CreatingFolderModalView: View {
     // CRIAR PASTA (modularizar)
     @ObservedObject var presentationVM: ApresentacaoViewModel
     @State var pastaName: String = ""
-    @State var tempoDesejado: Int = 0
+    @State var tempoDesejado: Int = 1
     @State var objetivo: String = ""
     @Binding var isModalPresented: Bool
     let tempos = [5,10,15]
@@ -87,7 +92,11 @@ struct CreatingFolderModalView: View {
                 }
             }
             .padding()
-            TextField("Objetivo", text: $objetivo)
+            Picker("Selecione o objetivo da pasta", selection: $objetivo) {
+                ForEach(ObjectiveApresentation.allCases, id: \.self) { objective in
+                    Text(String(describing: objective))
+                }
+            }
                 .padding()
             Spacer()
             Button("Criar pasta") {

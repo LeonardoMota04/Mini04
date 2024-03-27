@@ -27,6 +27,8 @@ struct HUDCameraView: View {
                         cameraVC.startRecording()
                     } else {
                         cameraVC.stopRecording() // para de gravar video
+                        cameraVC.finalModelDetection = ""
+
                     }
                 } label: {
                     ZStack {
@@ -54,9 +56,9 @@ struct HUDCameraView: View {
             presentationMode.wrappedValue.dismiss()
         }
         .onReceive(cameraVC.$finalModelDetection, perform: { result in
-            if result == "0" && !isRecording{
+            if result == "0" && !cameraVC.isRecording{
+                
                 cameraVC.startRecording()
-                isRecording.toggle()
             }
         })
     }
