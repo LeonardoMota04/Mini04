@@ -20,37 +20,42 @@ struct ContentView: View {
     
     var body: some View {
         NavigationSplitView {
-            NavigationLink("Minhas Apresentações") {
-                // MESMA COISA AQUI
-                if presentationVM.apresentacao.folders.isEmpty {
-                    ContentUnavailableView("Adicione sua primeira pasta.", systemImage: "folder.badge.questionmark")
-                    Button("Criar pasta") {
-                        isModalPresented.toggle()
-                    }
-                } else {
-                    Button("Criar pasta") {
-                        isModalPresented.toggle()
-                    }
-                    List {
-                        // exibir todas as pastas
-                        ForEach(folders) { folder in
-                            // pastas + apagar
-                            HStack {
-                                NavigationLink(folder.nome) {
-                                    if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                        PastaView(folderVM: folderVM)
-                                    } else {
-                                        Text("ViewModel não encontrada para esta pasta")
+            VStack {
+                SiderbarFolderComponent()
+                Spacer()
+                NavigationLink("Minhas Apresentações") {
+                    // MESMA COISA AQUI
+                    if presentationVM.apresentacao.folders.isEmpty {
+                        ContentUnavailableView("Adicione sua primeira pasta.", systemImage: "folder.badge.questionmark")
+                        Button("Criar pasta") {
+                            isModalPresented.toggle()
+                        }
+                    } else {
+                        Button("Criar pasta") {
+                            isModalPresented.toggle()
+                        }
+                        List {
+                            // exibir todas as pastas
+                            ForEach(folders) { folder in
+                                // pastas + apagar
+                                HStack {
+                                    NavigationLink(folder.nome) {
+                                        if let folderVM = presentationVM.foldersViewModels[folder.id] {
+                                            PastaView(folderVM: folderVM)
+                                        } else {
+                                            Text("ViewModel não encontrada para esta pasta")
+                                        }
                                     }
-                                }
-                                Button("Apagar \(folder.nome)") {
-                                    presentationVM.deleteFolder(folder)
+                                    Button("Apagar \(folder.nome)") {
+                                        presentationVM.deleteFolder(folder)
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            .padding(.vertical, 34)
             .navigationSplitViewColumnWidth(min: 180, ideal: 200)
         } detail: {
             // MESMA COISA AQUI
