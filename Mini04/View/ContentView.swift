@@ -13,16 +13,68 @@ struct ContentView: View {
     // VM
     @StateObject private var presentationVM = ApresentacaoViewModel()
     @State private var isModalPresented = false
-    
+    @State private var searchText = ""
+
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
     @Query var folders: [PastaModel]
     
     var body: some View {
         NavigationSplitView {
-            SiderbarFolderComponent()
+            
             VStack {
+                HStack {
+                    Text("Minhas Apresentações")
+                        .font(.largeTitle)
+                    Spacer()
+                }
+                HStack {
+                    TextField("Pesquisar", text: $searchText)
+                        .padding(8)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
+                    Button(action: {
+                        // Ação de pesquisa
+                    }) {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.trailing, 8)
+                }
+                .padding(.vertical, 8)
+                
+                ForEach(folders) { folder in
+                    NavigationLink {
+                        if let folderVM = presentationVM.foldersViewModels[folder.id] {
+                            PastaView(folderVM: folderVM)
+                        } else {
+                            Text("ViewModel não encontrada para esta pasta")
+                        }
+                    } label: {
+                        SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao)
+                    }
+                    .buttonStyle(.plain)
+
+                }
+                
                 Spacer()
+                
+                Button {
+                    isModalPresented.toggle()
+                } label: {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(height: 74)
+                            .frame(maxWidth: .infinity)
+                        Text("Criar Pasta")
+                            .foregroundStyle(.black)
+                    }
+
+
+                }
+                .buttonStyle(.plain)
+
+                
                 NavigationLink("Minhas Apresentações") {
                     // MESMA COISA AQUI
                     if presentationVM.apresentacao.folders.isEmpty {
@@ -55,11 +107,27 @@ struct ContentView: View {
                     }
                 }
             }
-            .padding(.vertical, 34)
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
+            .padding(8)
+            .toolbar(removing: .sidebarToggle)
+
         } detail: {
-            // MESMA COISA AQUI
+            VStack {
+                ForEach(folders) { folder in
+                    NavigationLink {
+                        if let folderVM = presentationVM.foldersViewModels[folder.id] {
+                            PastaView(folderVM: folderVM)
+                        } else {
+                            Text("ViewModel não encontrada para esta pasta")
+                        }
+                    } label: {
+                        SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao)
+                    }
+                    .buttonStyle(.plain)
+                    
+                }
+            }
         }
+
         .onAppear {
             presentationVM.modelContext = modelContext
             presentationVM.fetchFolders()
@@ -69,6 +137,7 @@ struct ContentView: View {
                                     isModalPresented: $isModalPresented)
         }
     }
+    
 }
 
 

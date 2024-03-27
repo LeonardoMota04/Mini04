@@ -8,28 +8,102 @@
 import SwiftUI
 
 struct SiderbarFolderComponent: View {
+    var foldersDate: Date
+    var foldersName: String
+    var foldersTrainingAmount: Int
+    var foldersObjetiveTime: Int
+    var foldersType: String
     var body: some View {
-        ZStack(alignment: .trailing) { // Alinhar ao final (direita)
-            CustomRoundedRectangle()
-            HStack {
-                Spacer()
-                CustomTag()
-                    .foregroundStyle(.gray)
+        ZStack {
+            ZStack {
+                CustomRoundedRectangle()
+                HStack {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(maxWidth: 54, maxHeight: 54)
+                            .foregroundStyle(.gray)
+                        iconImage(apresentationType: foldersType)
+                            .foregroundStyle(.black)
+                    }
+                    VStack {
+                        HStack {
+                            Text(foldersName)
+                                .foregroundStyle(.black)
+                            Spacer()
+                        }
+                        HStack {
+                            Text(formatDate())
+                                .foregroundStyle(.gray)
+                            Spacer()
+                        }
+                    }
+                    Spacer()
+                }
+                .padding(.leading, 8)
+                HStack {
+                    Spacer()
+                    VStack {
+                        Spacer()
+                        Text("\(String(foldersObjetiveTime)) min")
+                            .foregroundStyle(.gray)
+                        
+                    }
+                }
+                .padding(8)
             }
-            .alignmentGuide(.trailing) { d in d[.trailing] } // Guia de alinhamento à direita
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    ZStack {
+                        CustomTag()
+                            .frame(width: 65,height: 18)
+                        HStack {
+                            Text(String(foldersTrainingAmount))
+                                .foregroundStyle(.black)
+                            Image(systemName: "video.badge.waveform.fill")
+                                .foregroundStyle(.black)
+                        }
+                    }
+                }
+                Spacer()
+            }
+            
         }
-        .padding(.vertical, 40)
-        .padding(.horizontal, 40)
+        .frame(height: 74)
     }
+    func formatDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yy"
+        return dateFormatter.string(from: foldersDate)
+    }
+    
+    func iconImage(apresentationType: String) -> Image {
+        switch (apresentationType) {
+        case "pitch":
+            return Image(systemName: "lightbulb")
+        case "seles":
+            return Image(systemName: "person.3.fill")
+        case "event":
+            return Image(systemName: "megaphone.fill")
+        case "project":
+            return Image(systemName: "projective")
+        case "informative":
+            return Image(systemName: "book.fill")
+        default:
+            return Image(systemName: "xmark")
+        }
+    }
+    
 }
 
 
 
 
 struct CustomRoundedRectangle: Shape {
-
+    
     var rounded: CGFloat = 10
-
+    
     
     func path(in rect: CGRect) -> Path {
         var path = Path()
@@ -52,8 +126,8 @@ struct CustomRoundedRectangle: Shape {
         //290
         let controlPoint = CGPoint(x: rect.maxX - 45 - 5, y: 24)
         path.addQuadCurve(to: CGPoint(x: rect.maxX - 45 + 5, y: 24 ), control: controlPoint)
-//        path.addQuadCurve(to: CGPoint(x: 300 , y: 24 ), control: CGPoint(x: 300, y: 29))
-
+        //        path.addQuadCurve(to: CGPoint(x: 300 , y: 24 ), control: CGPoint(x: 300, y: 29))
+        
         
         //adicionar linha no meio direito
         path.addLine(to: CGPoint(x: rect.maxX - rounded, y: 24))
@@ -96,7 +170,7 @@ struct CustomRoundedRectangle: Shape {
 
 struct CustomTag: Shape {
     var rounded: CGFloat = 5
-
+    
     func path(in rect: CGRect) -> Path {
         var path = Path()
         
@@ -143,8 +217,3 @@ struct CustomTag: Shape {
     }
 }
 
-
-#Preview {
-    SiderbarFolderComponent()
-//        .frame(maxWidth: .infinity, maxHeight: .infinity)
-}
