@@ -15,7 +15,11 @@ struct Mini04App: App {
     var modelContainer: ModelContainer = {
         let schema = Schema([
             PastaModel.self,
-            ApresentacaoModel.self
+            ApresentacaoModel.self,
+            TreinoModel.self,
+            FeedbackModel.self,
+            SynonymsModel.self
+            //SynonymContext.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

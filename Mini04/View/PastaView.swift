@@ -85,6 +85,11 @@ struct PastaView: View {
         .padding()
         .onAppear {
             folderVM.modelContext = modelContext
+            do {
+                try folderVM.modelContext?.save()
+            } catch {
+                print("Nao salvou")
+            }
             editedName = folderVM.folder.nome
         }
         .sheet(isPresented: $isModalPresented) {

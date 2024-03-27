@@ -8,9 +8,6 @@
 import SwiftUI
 import SwiftSoup
 
-
-
-
 // Classe para gerenciar chamadas de rede
 class NetworkManager {
     static func fetchData(for word: String, completion: @escaping (Result<Data, Error>) -> Void) {
@@ -42,7 +39,7 @@ class NetworkManager {
 
 // Classe para analisar dados HTML
 class HTMLParser {
-    static func parseHTML(data: Data, word: String, completion: @escaping (Result<SynonymsInfo, Error>) -> Void) {
+    static func parseHTML(data: Data, word: String, completion: @escaping (Result<SynonymsModel, Error>) -> Void) {
         do {
             let html = String(data: data, encoding: .utf8)!
             let doc: Document = try SwiftSoup.parse(html)
@@ -64,7 +61,7 @@ class HTMLParser {
             }
             
             let contexts = try doc.select(".content-detail")
-            var synonymsInfo: [SynonymContext] = []
+            var synonymsInfo: [String] = []
             let numOfSynonymsToTake = 3
             
             for i in 0..<numOfContexts {
@@ -75,21 +72,20 @@ class HTMLParser {
                     contextName = contextSubtitle.replacingOccurrences(of: ":", with: "")
                 }
                 
-                var synonyms: [String] = []
+                let contextFinalName = contextName ?? "\(i+1)"
+                synonymsInfo.append(contextFinalName) // PRIMEIRO ELEMENTO DO ARRAY É O CONTEXTO
+                
                 let synonymElements = try context.select("p.syn-list").select("a.sinonimo, span:not([class])")
                 
                 for j in 0..<min(synonymElements.count, numOfSynonymsToTake) {
                     let synonym = try synonymElements.get(j).text()
                     numOfSynonyms += 1
-                    synonyms.append(synonym)
+                    synonymsInfo.append(synonym)
                 }
-                
-                let synonymContext = SynonymContext(context: contextName ?? "\(i + 1)", synonyms: synonyms)
-                synonymsInfo.append(synonymContext)
             }
             
-            let synonymsInfos = SynonymsInfo(word: word, numSynonyms: numOfSynonyms, numContexts: numOfContexts, synonymContexts: synonymsInfo)
-            completion(.success(synonymsInfos))
+            let synonymsModel = SynonymsModel(word: word, numSynonyms: numOfSynonyms, numContexts: numOfContexts, synonymContexts: synonymsInfo)
+            completion(.success(synonymsModel))
             
         } catch {
             completion(.failure(error))
@@ -98,97 +94,100 @@ class HTMLParser {
 }
 
 
-struct WebScrappingView: View {
-    @State private var word = ""
-    @State private var synonymsInfo: SynonymsInfo?
-    @State private var isLoading = false
-    
-    var body: some View {
-        VStack {
-            TextField("Digite uma palavra", text: $word)
-                .padding()
-            
-            Button("Obter Sinônimos") {
-                fetchSynonyms()
-            }
-            .padding()
-            
-            Divider()
-            
-            if isLoading {
-                ProgressView("Carregando...")
-            } else if let synonymsInfo = synonymsInfo {
-                SynonymsListView(synonymsInfo: synonymsInfo)
-            }
-        }
-        .padding()
-    }
-    
-    // CHAMADA DE REDE -> PARSER HTML -> RESULTADO INFOS SINONIMOS
-    func fetchSynonyms() {
-        isLoading = true
-        
-        // CHAMADA DE REDE
-        NetworkManager.fetchData(for: word) { result in
-            DispatchQueue.main.async {
-                isLoading = false
-                
-                switch result {
-                case .success(let data):
-                    // PARSER HTML
-                    HTMLParser.parseHTML(data: data, word: self.word.lowercased()) { result in
-                        switch result {
-                        case .success(let synonymsInfo):
-                            self.synonymsInfo = synonymsInfo
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                            self.synonymsInfo = nil
-                        }
-                    }
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    self.synonymsInfo = nil
-                }
-            }
-        }
-    }
-}
 
-
-// LISTA DE SINONIMOS
-struct SynonymsListView: View {
-    let synonymsInfo: SynonymsInfo
-    
-    var body: some View {
-        List {
-            Text("Palavra: \(synonymsInfo.word)")
-                .font(.headline)
-                .padding(.bottom)
-            
-            Text("Número de Sinônimos: \(synonymsInfo.numSynonyms)")
-                .padding(.bottom)
-            
-            Text("Número de Contextos: \(synonymsInfo.numContexts)")
-                .padding(.bottom)
-            
-            ForEach(synonymsInfo.synonymContexts, id: \.self) { synonymContext in
-                VStack(alignment: .leading) {
-                    Text("Contexto: \(synonymContext.context)")
-                        .font(.headline)
-                    
-                    ForEach(synonymContext.synonyms, id: \.self) { synonym in
-                        Text("Sinônimo: \(synonym)")
-                    }
-                }
-                .padding()
-                .background(Color.gray.opacity(0.2))
-                .padding(.vertical, 5)
-            }
-        }
-    }
-}
-
-
-#Preview {
-    WebScrappingView()
-}
+//
+//
+////struct WebScrappingView: View {
+////    @State private var word = ""
+////    @State private var synonymsInfo: SynonymsInfo?
+////    @State private var isLoading = false
+////    
+////    var body: some View {
+////        VStack {
+////            TextField("Digite uma palavra", text: $word)
+////                .padding()
+////            
+////            Button("Obter Sinônimos") {
+////                fetchSynonyms()
+////            }
+////            .padding()
+////            
+////            Divider()
+////            
+////            if isLoading {
+////                ProgressView("Carregando...")
+////            } else if let synonymsInfo = synonymsInfo {
+////                SynonymsListView(synonymsInfo: synonymsInfo)
+////            }
+////        }
+////        .padding()
+////    }
+////    
+////    // CHAMADA DE REDE -> PARSER HTML -> RESULTADO INFOS SINONIMOS
+////    func fetchSynonyms() {
+////        isLoading = true
+////        
+////        // CHAMADA DE REDE
+////        NetworkManager.fetchData(for: word) { result in
+////            DispatchQueue.main.async {
+////                isLoading = false
+////                
+////                switch result {
+////                case .success(let data):
+////                    // PARSER HTML
+////                    HTMLParser.parseHTML(data: data, word: self.word.lowercased()) { result in
+////                        switch result {
+////                        case .success(let synonymsInfo):
+////                            self.synonymsInfo = synonymsInfo
+////                        case .failure(let error):
+////                            print(error.localizedDescription)
+////                            self.synonymsInfo = nil
+////                        }
+////                    }
+////                case .failure(let error):
+////                    print(error.localizedDescription)
+////                    self.synonymsInfo = nil
+////                }
+////            }
+////        }
+////    }
+////}
+//
+//
+//// LISTA DE SINONIMOS
+////struct SynonymsListView: View {
+////    let synonymsInfo: SynonymsInfo
+////    
+////    var body: some View {
+////        List {
+////            Text("Palavra: \(synonymsInfo.word)")
+////                .font(.headline)
+////                .padding(.bottom)
+////            
+////            Text("Número de Sinônimos: \(synonymsInfo.numSynonyms)")
+////                .padding(.bottom)
+////            
+////            Text("Número de Contextos: \(synonymsInfo.numContexts)")
+////                .padding(.bottom)
+////            
+////            ForEach(synonymsInfo.synonymContexts, id: \.self) { synonymContext in
+////                VStack(alignment: .leading) {
+////                    Text("Contexto: \(synonymContext.context)")
+////                        .font(.headline)
+////                    
+////                    ForEach(synonymContext.synonyms, id: \.self) { synonym in
+////                        Text("Sinônimo: \(synonym)")
+////                    }
+////                }
+////                .padding()
+////                .background(Color.gray.opacity(0.2))
+////                .padding(.vertical, 5)
+////            }
+////        }
+////    }
+////}
+//
+//
+//#Preview {
+//    WebScrappingView()
+//}

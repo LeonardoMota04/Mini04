@@ -35,11 +35,10 @@ class ApresentacaoViewModel: ObservableObject {
         let newFolder = PastaModel(nome: name, tempoDesejado: pretendedTime, objetivoApresentacao: presentationGoal)
 
         // FoldersViewModel com a nova pasta
-        //if foldersViewModels[newFolder.id] == nil {
-        let newFolderViewModel = FoldersViewModel(folder: newFolder)
-        foldersViewModels[newFolder.id] = newFolderViewModel
-            
-        //}
+        if foldersViewModels[newFolder.id] == nil {
+            let newFolderViewModel = FoldersViewModel(folder: newFolder)
+            foldersViewModels[newFolder.id] = newFolderViewModel
+        }
 
         // armazenar
         do {

@@ -10,10 +10,10 @@ import SwiftData
 @Model
 class TreinoModel: Identifiable {
     var id = UUID()
+    var feedback: FeedbackModel?
     var data: Date = Date()
     var nome: String = ""
     var changedTrainingName: Bool = false
-    var feedback: FeedbackModel?
     var video: VideoModel?
 
     init(name: String = "", changedTrainingName: Bool = false, video: VideoModel? = nil, feedback: FeedbackModel? = nil) {
@@ -27,22 +27,22 @@ class TreinoModel: Identifiable {
 @Model
 class FeedbackModel {
     var coerencia: Int
-    var palavrasRepetidas5vezes: [SynonymsInfo] = []
+    var RepeatedWords: [SynonymsModel] = [] // palavras repetidas com seus sinonimos
 
-    init(coherence: Int, palavrasRepetidas5vezes: [SynonymsInfo] = []) {
+    init(coherence: Int, palavrasRepetidas5vezes: [SynonymsModel]) {
         self.coerencia = coherence
-        self.palavrasRepetidas5vezes = palavrasRepetidas5vezes
+        self.RepeatedWords = palavrasRepetidas5vezes
     }
 }
 
 @Model
-class SynonymsInfo {
+class SynonymsModel {
     let word: String // palavra repetida
     let numSynonyms: Int
     let numContexts: Int
-    var synonymContexts: [SynonymContext]
+    var synonymContexts: [String]
 
-    init(word: String, numSynonyms: Int, numContexts: Int, synonymContexts: [SynonymContext]) {
+    init(word: String, numSynonyms: Int, numContexts: Int, synonymContexts: [String] = []) {
         self.word = word
         self.numSynonyms = numSynonyms
         self.numContexts = numContexts
@@ -50,14 +50,26 @@ class SynonymsInfo {
     }
 }
 
-@Model
-class SynonymContext {
-    let context: String
-    let synonyms: [String]
+//@Model
+//class SynonymContext {
+//    let synonymsWithContext: [String]
+//
+//    init(synonymsWithContext: [String]) {
+//        self.synonymsWithContext = synonymsWithContext
+//    }
+//}
 
-    init(context: String, synonyms: [String]) {
-        self.context = context
-        self.synonyms = synonyms
-    }
-}
-
+//@Model
+//class SynonymsModel {
+//    let word: String // palavra repetida
+//    let numSynonyms: Int
+//    let numContexts: Int
+//    var synonymContexts: [(context: String, synonyms: [String])] // Array de tuplas
+//
+//    init(word: String, numSynonyms: Int, numContexts: Int, synonymContexts: [(context: String, synonyms: [String])] = []) {
+//        self.word = word
+//        self.numSynonyms = numSynonyms
+//        self.numContexts = numContexts
+//        self.synonymContexts = synonymContexts
+//    }
+//}

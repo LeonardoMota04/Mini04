@@ -16,8 +16,7 @@ struct TreinoView: View {
     
     @State private var editedName: String = ""
     @State private var avPlayer: AVPlayer = AVPlayer()
-    @State private var feedback: FeedbackModel? // FeedbackModel agora é um estado
-
+    
     var body: some View {
         GeometryReader { geometry in
             let size = geometry.size
@@ -41,16 +40,29 @@ struct TreinoView: View {
                             avPlayer.replaceCurrentItem(with: AVPlayerItem(url: videoURL))
                         }
                     }
-                    .frame(height: size.height / 2)
-                                
-                // Feedbacks
-                Text(String("TempoVideo: \(trainingVM.treino.video!.videoTime)"))
-                Text(String("TOPICS: \(trainingVM.treino.video!.videoTopics)"))
-                ForEach((trainingVM.treino.video?.topicsDuration.indices)!, id: \.self) { index in
-                    Text(String((trainingVM.treino.video?.topicsDuration[index])!))
+                    .frame(height: size.height / 5)
+                
+                // Verifica se o feedback está disponível
+                if let feedback = folderVM.folder.treinos.first?.feedback {
+                    // Feedbacks
+                    Text(String("TempoVideo: \(trainingVM.treino.video!.videoTime)"))
+                    Text(String("TOPICS: \(trainingVM.treino.video!.videoTopics)"))
+                    ForEach((trainingVM.treino.video?.topicsDuration.indices)!, id: \.self) { index in
+                        Text(String((trainingVM.treino.video?.topicsDuration[index])!))
+                    }
+                    Text("SCRIPT: \(trainingVM.treino.video?.script ?? "nao achou o script")")
+                    
+                    // Exibir a lista de sinônimos se disponível
+                    if !feedback.RepeatedWords.isEmpty {
+                        ForEach(feedback.RepeatedWords, id: \.word) { synonymsModel in
+                            SynonymsListView(synonymsInfo: synonymsModel)
+                        }
+                    } else {
+                        Text("Não há feedback disponível")
+                    }
+                } else {
+                    ProgressView("Carregando feedback...")
                 }
-                Text("SCRIPT: \(trainingVM.treino.video?.script ?? "nao achou o script")")
-                Text(String(describing: trainingVM.treino.feedback?.palavrasRepetidas5vezes))
 
             }
         }
@@ -65,3 +77,26 @@ struct TreinoView: View {
         trainingVM.treino.changedTrainingName = true
     }
 }
+
+// LISTA DE SINONIMOS
+struct SynonymsListView: View {
+    let synonymsInfo: SynonymsModel
+
+    var body: some View {
+        List {
+            Section(header: Text("Palavra: \(synonymsInfo.word)").font(.headline)) {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Número de Sinônimos: \(synonymsInfo.numSynonyms)")
+                    Text("Número de Contextos: \(synonymsInfo.numContexts)")
+
+                    Text("Contexto: \(synonymsInfo.synonymContexts[0])")
+                    ForEach(1..<synonymsInfo.synonymContexts.count) { index in
+                        Text("Sinônimo: \(synonymsInfo.synonymContexts[index])")
+                    }
+                }
+                .padding(.vertical, 10)
+            }
+        }
+    }
+}
+

@@ -48,8 +48,8 @@ struct HUDCameraView: View {
             // Cria um novo treino com o URL do vídeo
             folderVM.createNewTraining(videoURL: newVideoURL,
                                        videoScript: cameraVC.auxSpeech,
-                                       videoTime: cameraVC.getVideoDuration(from: newVideoURL), 
-                                       videoTopics: cameraVC.speechTopicText.components(separatedBy: "//"), 
+                                       videoTime: cameraVC.getVideoDuration(from: newVideoURL),
+                                       videoTopics: cameraVC.speechTopicText.components(separatedBy: "//"),
                                        topicsDuration: cameraVC.videoTopicDuration)
             presentationMode.wrappedValue.dismiss()
         }
