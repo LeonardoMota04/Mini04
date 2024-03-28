@@ -13,10 +13,14 @@ struct SiderbarFolderComponent: View {
     var foldersTrainingAmount: Int
     var foldersObjetiveTime: Int
     var foldersType: String
+    @Binding var backgroundHighlited: Bool
     var body: some View {
         ZStack {
             ZStack {
                 CustomRoundedRectangle()
+                    .foregroundStyle(.black)
+                    .opacity(backgroundHighlited ? 0.1 : 0.2)
+
                 HStack {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)
@@ -33,7 +37,7 @@ struct SiderbarFolderComponent: View {
                         }
                         HStack {
                             Text(formatDate())
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(.white)
                             Spacer()
                         }
                     }
@@ -45,7 +49,7 @@ struct SiderbarFolderComponent: View {
                     VStack {
                         Spacer()
                         Text("\(String(foldersObjetiveTime)) min")
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.white)
                         
                     }
                 }
@@ -58,11 +62,13 @@ struct SiderbarFolderComponent: View {
                     ZStack {
                         CustomTag()
                             .frame(width: 65,height: 18)
+                            .foregroundStyle(.black)
+                            .opacity(backgroundHighlited ? 0.3 : 0.4)
                         HStack {
                             Text(String(foldersTrainingAmount))
-                                .foregroundStyle(.black)
+                                .foregroundStyle(.white)
                             Image(systemName: "video.badge.waveform.fill")
-                                .foregroundStyle(.black)
+                                .foregroundStyle(.white)
                         }
                     }
                 }
