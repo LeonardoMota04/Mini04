@@ -28,6 +28,7 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView (columnVisibility: $columnVisibility){
             VStack {
+                //titulo principal
                 HStack {
                     Text("Minhas Apresentações")
                         .foregroundStyle(.black)
@@ -35,15 +36,19 @@ struct ContentView: View {
                         .bold()
                     Spacer()
                 }
+                //searchbar
                 HStack {
                     SearchBar(searchText: $searchText, isSearching: $isSearching, disableTextfield: $disableTextfield)
+                        //roda a funcao que buscar os folders filtrados toda vez ue textfiled muda de valor
                         .onChange(of: searchText) { oldValue, newValue in
                             searchVM.searchFolders(allFolders: folders, searchText: searchText)
                         }
                 }
                 .padding(.vertical, 8)
                 
+                //se estiver pesquisando aparece outro foraeach
                 if isSearching {
+                    // se nao tiver vazio roda isso, se nao um texto "nenhum resultado"
                     if !searchVM.filteredFolders.isEmpty {
                         ForEach(searchVM.filteredFolders) { folder in
                             NavigationLink {
@@ -67,6 +72,7 @@ struct ContentView: View {
                             .bold()
                     }
                 } else {
+                    //lista principal
                     ForEach(folders) { folder in
                         NavigationLink {
                             if let folderVM = presentationVM.foldersViewModels[folder.id] {
@@ -273,6 +279,8 @@ struct SearchBar: View {
                     .foregroundStyle(.gray)
 
                     .padding(.leading, 4)
+                
+                //https://stackoverflow.com/questions/70828401/how-to-detect-when-a-textfield-becomes-active-in-swiftui
                 TextField("Pesquisar apresentação...", text: $searchText, onEditingChanged: { changed in
                   if changed {
                     // User began editing the text field
@@ -292,6 +300,7 @@ struct SearchBar: View {
                         .onTapGesture {
                             searchText = ""
                             isSearching = false
+                            //ativa e desativa o textfield pra sair a interação do usuário
                             disableTextfield = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 disableTextfield = false
