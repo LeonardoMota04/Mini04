@@ -89,7 +89,7 @@ struct SiderbarFolderComponent: View {
         switch (apresentationType) {
         case "pitch":
             return Image(systemName: "lightbulb")
-        case "seles":
+        case "sales":
             return Image(systemName: "person.3.fill")
         case "event":
             return Image(systemName: "megaphone.fill")

@@ -216,6 +216,7 @@ struct ContentView: View {
                         } else {
                             Text("ViewModel não encontrada para esta pasta")
                         }
+
                     } label: {
 //                        SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao)
                     }
@@ -258,7 +259,12 @@ struct CreatingFolderModalView: View {
     @State var tempoDesejado: Int = 1
     @State var objetivo: String = ""
     @Binding var isModalPresented: Bool
-    let tempos = [5,10,15]
+    let tempos = [5, 10, 15]
+    let objetivos = ["pitch", "sales", "event", "project", "informative"]
+    
+    var isFormValid: Bool {
+        !pastaName.isEmpty && !objetivo.isEmpty && tempos.contains(tempoDesejado)
+    }
     
     var body: some View {
         VStack {
@@ -271,26 +277,33 @@ struct CreatingFolderModalView: View {
             }
             .padding()
             Picker("Selecione o objetivo da pasta", selection: $objetivo) {
-                ForEach(ObjectiveApresentation.allCases, id: \.self) { objective in
-                    Text(String(describing: objective))
+                ForEach(objetivos, id: \.self) { objetivo in
+                    Text(objetivo)
                 }
-            }
-                .padding()
-            Spacer()
-            Button("Criar pasta") {
-                withAnimation {
-                    
-                    presentationVM.createNewFolder(name: pastaName, pretendedTime: tempoDesejado, presentationGoal: objetivo)
-                }
-                isModalPresented.toggle()
             }
             .padding()
+            Spacer()
+                .padding()
         }
         .toolbar {
-            ToolbarItem {
+            ToolbarItem() {
                 Button("Cancelar") {
                     isModalPresented.toggle()
                 }
+            }
+            
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Criar pasta") {
+                    if isFormValid {
+                        withAnimation {
+                            presentationVM.createNewFolder(name: pastaName, pretendedTime: tempoDesejado, presentationGoal: objetivo)
+                        }
+                        isModalPresented.toggle()
+                    } else {
+                        // Exibir uma mensagem ou alerta informando que os campos estão vazios
+                    }
+                }
+                .disabled(!isFormValid) // Desabilitar o botão se o formulário não estiver válido
             }
         }
     }
