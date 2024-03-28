@@ -77,6 +77,7 @@ struct SiderbarFolderComponent: View {
             
         }
         .frame(height: 74)
+        .padding(.horizontal,12)
     }
     func formatDate() -> String {
         let dateFormatter = DateFormatter()

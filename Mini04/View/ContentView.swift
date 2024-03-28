@@ -36,6 +36,8 @@ struct ContentView: View {
                         .bold()
                     Spacer()
                 }
+                .padding(.horizontal, 12)
+
                 //searchbar
                 HStack {
                     SearchBar(searchText: $searchText, isSearching: $isSearching, disableTextfield: $disableTextfield)
@@ -45,12 +47,47 @@ struct ContentView: View {
                         }
                 }
                 .padding(.vertical, 8)
+                .padding(.horizontal, 12)
+
                 
                 //se estiver pesquisando aparece outro foraeach
                 if isSearching {
                     // se nao tiver vazio roda isso, se nao um texto "nenhum resultado"
                     if !searchVM.filteredFolders.isEmpty {
-                        ForEach(searchVM.filteredFolders) { folder in
+                        ScrollView {
+                            ForEach(searchVM.filteredFolders) { folder in
+                                NavigationLink {
+                                    if let folderVM = presentationVM.foldersViewModels[folder.id] {
+                                        PastaView(folderVM: folderVM)
+                                    } else {
+                                        Text("ViewModel não encontrada para esta pasta")
+                                    }
+                                } label: {
+                                    SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
+                                        .onHover { hovering in
+                                            overText = hovering ? folder.id : nil
+                                            backgroundHighlitedFolder = hovering ? folder.id : nil
+                                        }
+                                        .contextMenu {
+                                            Button {
+                                                print("menu apertado")
+                                            } label: {
+                                                Text("oiiii")
+                                            }
+                                        }
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    } else {
+                        Text("Nenhum Resultado")
+                            .font(.title2)
+                            .bold()
+                    }
+                } else {
+                    //lista principal
+                    ScrollView {
+                        ForEach(folders) { folder in
                             NavigationLink {
                                 if let folderVM = presentationVM.foldersViewModels[folder.id] {
                                     PastaView(folderVM: folderVM)
@@ -63,32 +100,35 @@ struct ContentView: View {
                                         overText = hovering ? folder.id : nil
                                         backgroundHighlitedFolder = hovering ? folder.id : nil
                                     }
+                                    .contextMenu {
+                                        Group {
+                                            Button {
+                                                withAnimation {
+                                                    presentationVM.deleteFolder(folder)
+                                                }
+                                            } label: {
+                                                Text("Apagar")
+                                            }
+                                            Button {
+                                                print("menu apertado")
+                                            } label: {
+                                                Text("Editar")
+                                            }
+                                            Divider()
+                                            Button {
+                                                print("menu apertado")
+                                            } label: {
+                                                Text("Selecionar")
+                                            }
+                                        }
+                                    }
+                                    
                             }
                             .buttonStyle(.plain)
+                            
                         }
-                    } else {
-                        Text("Nenhum Resultado")
-                            .font(.title2)
-                            .bold()
                     }
-                } else {
-                    //lista principal
-                    ForEach(folders) { folder in
-                        NavigationLink {
-                            if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                PastaView(folderVM: folderVM)
-                            } else {
-                                Text("ViewModel não encontrada para esta pasta")
-                            }
-                        } label: {
-                            SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
-                                .onHover { hovering in
-                                    overText = hovering ? folder.id : nil
-                                    backgroundHighlitedFolder = hovering ? folder.id : nil
-                                }
-                        }
-                        .buttonStyle(.plain)
-                    }
+                    
                 }
                 
                 Spacer()
@@ -145,10 +185,9 @@ struct ContentView: View {
                 }
                 
             }
-            .padding(8)
             //remove aquela parada de fechar a searchbar
             .toolbar(removing: .sidebarToggle)
-            .navigationSplitViewColumnWidth(min: 250, ideal: 250, max: 300)
+            .navigationSplitViewColumnWidth(min: 300, ideal: 300, max: 300)
             //remove aquele contorno azul quando esta usando algum elemento interagível
             .focusable(false)
             .background(.secondary)
@@ -162,6 +201,7 @@ struct ContentView: View {
                 }
             }
             .navigationSplitViewStyle(.balanced)
+
         } detail: {
             VStack {
                 ForEach(folders) { folder in
@@ -233,7 +273,10 @@ struct CreatingFolderModalView: View {
                 .padding()
             Spacer()
             Button("Criar pasta") {
-                presentationVM.createNewFolder(name: pastaName, pretendedTime: tempoDesejado, presentationGoal: objetivo)
+                withAnimation {
+                    
+                    presentationVM.createNewFolder(name: pastaName, pretendedTime: tempoDesejado, presentationGoal: objetivo)
+                }
                 isModalPresented.toggle()
             }
             .padding()
@@ -324,3 +367,5 @@ struct SearchBar: View {
     }
     
 }
+
+
