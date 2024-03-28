@@ -130,7 +130,9 @@ struct ContentView: View {
                             }
                         }
                     } else {
-                        Text("Nenhuma Apresentação")
+                        Text("Nenhum Resultado")
+                            .font(.title2)
+                            .bold()
                     }
                 }
                 
