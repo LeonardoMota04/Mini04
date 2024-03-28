@@ -19,12 +19,14 @@ struct ContentView: View {
     @State private var overText: UUID? = nil
     @State private var backgroundHighlitedFolder: UUID? = nil
     @State var disableTextfield = false
+    @State private var columnVisibility = NavigationSplitViewVisibility.automatic
+
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
     @Query var folders: [PastaModel]
     
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView (columnVisibility: $columnVisibility){
             VStack {
                 HStack {
                     Text("Minhas Apresentações")
@@ -153,6 +155,7 @@ struct ContentView: View {
                     }
                 }
             }
+            .navigationSplitViewStyle(.balanced)
         } detail: {
             VStack {
                 ForEach(folders) { folder in
@@ -172,7 +175,15 @@ struct ContentView: View {
 //            .navigationSplitViewColumnWidth(min: 200, ideal: 250, max: 300)
 
         }
-        
+        //abrir a sidebar sempre
+        //https://stackoverflow.com/questions/77794673/disable-collapsing-sidebar-navigationsplitview
+        .onChange(of: columnVisibility, initial: true) { oldVal, newVal in
+            if newVal == .detailOnly {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    columnVisibility = .all
+                }
+            }
+        }
 
         .onAppear {
             presentationVM.modelContext = modelContext
