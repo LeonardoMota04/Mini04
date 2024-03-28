@@ -86,49 +86,52 @@ struct ContentView: View {
                     }
                 } else {
                     //lista principal
-                    ScrollView {
-                        ForEach(folders) { folder in
-                            NavigationLink {
-                                if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                    PastaView(folderVM: folderVM)
-                                } else {
-                                    Text("ViewModel não encontrada para esta pasta")
-                                }
-                            } label: {
-                                SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
-                                    .onHover { hovering in
-                                        overText = hovering ? folder.id : nil
-                                        backgroundHighlitedFolder = hovering ? folder.id : nil
+                    if !folders.isEmpty {
+                        ScrollView {
+                            ForEach(folders) { folder in
+                                NavigationLink {
+                                    if let folderVM = presentationVM.foldersViewModels[folder.id] {
+                                        PastaView(folderVM: folderVM)
+                                    } else {
+                                        Text("ViewModel não encontrada para esta pasta")
                                     }
-                                    .contextMenu {
-                                        Group {
-                                            Button {
-                                                withAnimation {
-                                                    presentationVM.deleteFolder(folder)
+                                } label: {
+                                    SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
+                                        .onHover { hovering in
+                                            overText = hovering ? folder.id : nil
+                                            backgroundHighlitedFolder = hovering ? folder.id : nil
+                                        }
+                                        .contextMenu {
+                                            Group {
+                                                Button {
+                                                    withAnimation {
+                                                        presentationVM.deleteFolder(folder)
+                                                    }
+                                                } label: {
+                                                    Text("Apagar")
                                                 }
-                                            } label: {
-                                                Text("Apagar")
-                                            }
-                                            Button {
-                                                print("menu apertado")
-                                            } label: {
-                                                Text("Editar")
-                                            }
-                                            Divider()
-                                            Button {
-                                                print("menu apertado")
-                                            } label: {
-                                                Text("Selecionar")
+                                                Button {
+                                                    print("menu apertado")
+                                                } label: {
+                                                    Text("Editar")
+                                                }
+                                                Divider()
+                                                Button {
+                                                    print("menu apertado")
+                                                } label: {
+                                                    Text("Selecionar")
+                                                }
                                             }
                                         }
-                                    }
                                     
+                                }
+                                .buttonStyle(.plain)
+                                
                             }
-                            .buttonStyle(.plain)
-                            
                         }
+                    } else {
+                        Text("Nenhuma Apresentação")
                     }
-                    
                 }
                 
                 Spacer()
