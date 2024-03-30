@@ -10,24 +10,33 @@ import SwiftSoup
 
 // Classe para gerenciar chamadas de rede
 class NetworkManager {
-    static func fetchData(for word: String, completion: @escaping (Result<Data, Error>) -> Void) {
+    
+    // Possíveis erros ao tentar acessar o site
+    enum NetworkError: Error {
+        case invalidURL
+        case noData
+        case other(Error)
+    }
+    
+    // Buscar dados no site
+    static func fetchData(for word: String, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         // Normaliza a palavra (remove acentuações e converte para minúscula)
         let normalizedWord = word.folding(options: .diacriticInsensitive, locale: nil).lowercased()
         
         guard let url = URL(string: "https://www.sinonimos.com.br/\(normalizedWord)/") else {
-            completion(.failure(NSError(domain: "InvalidURL", code: -1, userInfo: [NSLocalizedDescriptionKey: "URL inválido"])))
+            completion(.failure(.invalidURL))
             return
         }
         
         let session = URLSession.shared
         let task = session.dataTask(with: url) { data, response, error in
             if let error = error {
-                completion(.failure(error))
+                completion(.failure(.other(error)))
                 return
             }
             
             guard let data = data else {
-                completion(.failure(NSError(domain: "NoData", code: -1, userInfo: [NSLocalizedDescriptionKey: "Nenhum dado recebido"])))
+                completion(.failure(.noData))
                 return
             }
             
@@ -37,9 +46,10 @@ class NetworkManager {
     }
 }
 
+
 // Classe para analisar dados HTML
 class HTMLParser {
-    static func parseHTML(data: Data, word: String, completion: @escaping (Result<SynonymsModel, Error>) -> Void) {
+    static func parseHTML(data: Data, word: String, completion: @escaping (Result<RepeatedWordsModel, Error>) -> Void) {
         do {
             let html = String(data: data, encoding: .utf8)!
             let doc: Document = try SwiftSoup.parse(html)
@@ -52,39 +62,47 @@ class HTMLParser {
             var numOfContexts = 0
             var shouldGetContextName = false
             
-            if numbers.count == 2 {
-                numOfContexts = numbers[1]
-                shouldGetContextName = true
-            } else {
-                let contexts = try doc.select(".content-detail--subtitle")
-                numOfContexts = contexts.count - 1
+            // EXISTEM SINONIMOS
+            if numbers.count >= 1 {
+                // SINONIMOS e CONTEXTOS
+                if numbers.count == 2 {
+                    numOfContexts = numbers[1]
+                    shouldGetContextName = true
+                    
+                // SINONIMOS
+                } else {
+                    let contexts = try doc.select(".content-detail--subtitle")
+                    numOfContexts = contexts.count - 1
+                }
             }
             
             let contexts = try doc.select(".content-detail")
-            var synonymsInfo: [String] = []
-            let numOfSynonymsToTake = 3
+            var synonymsInfo: [[String]] = [] // Array de arrays de String
             
             for i in 0..<numOfContexts {
                 let context = contexts[i]
-                var contextName: String?
+                var contextAndSynonyms: [String] = []
+                
+                var contextName = "\(i + 1)" // Nome padrão do contexto
                 
                 if shouldGetContextName, let contextSubtitle = try? context.select(".content-detail--subtitle").first()?.text() {
                     contextName = contextSubtitle.replacingOccurrences(of: ":", with: "")
                 }
                 
-                let contextFinalName = contextName ?? "\(i+1)"
-                synonymsInfo.append(contextFinalName) // PRIMEIRO ELEMENTO DO ARRAY É O CONTEXTO
+                contextAndSynonyms.append(contextName) // Adiciona o nome do contexto ao início do subarray
                 
                 let synonymElements = try context.select("p.syn-list").select("a.sinonimo, span:not([class])")
                 
-                for j in 0..<min(synonymElements.count, numOfSynonymsToTake) {
+                for j in 0..<synonymElements.count {
                     let synonym = try synonymElements.get(j).text()
+                    contextAndSynonyms.append(synonym) // Adiciona cada sinônimo ao subarray
                     numOfSynonyms += 1
-                    synonymsInfo.append(synonym)
                 }
+                
+                synonymsInfo.append(contextAndSynonyms) // Adiciona o subarray ao array de informações de sinônimos
             }
             
-            let synonymsModel = SynonymsModel(word: word, numSynonyms: numOfSynonyms, numContexts: numOfContexts, synonymContexts: synonymsInfo)
+            let synonymsModel = RepeatedWordsModel(word: word, numSynonyms: numOfSynonyms, numContexts: numOfContexts, synonymContexts: synonymsInfo)
             completion(.success(synonymsModel))
             
         } catch {
@@ -92,6 +110,7 @@ class HTMLParser {
         }
     }
 }
+
 
 
 

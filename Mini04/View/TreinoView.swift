@@ -43,27 +43,22 @@ struct TreinoView: View {
                     .frame(height: size.height / 5)
                 
                 // Verifica se o feedback está disponível
-                if let feedback = folderVM.folder.treinos.first?.feedback {
-                    // Feedbacks
-                    Text(String("TempoVideo: \(trainingVM.treino.video!.videoTime)"))
-                    Text(String("TOPICS: \(trainingVM.treino.video!.videoTopics)"))
-                    ForEach((trainingVM.treino.video?.topicsDuration.indices)!, id: \.self) { index in
-                        Text(String((trainingVM.treino.video?.topicsDuration[index])!))
-                    }
-                    Text("SCRIPT: \(trainingVM.treino.video?.script ?? "nao achou o script")")
-                    
-                    // Exibir a lista de sinônimos se disponível
-                    if !feedback.RepeatedWords.isEmpty {
-                        ForEach(feedback.RepeatedWords, id: \.word) { synonymsModel in
-                            SynonymsListView(synonymsInfo: synonymsModel)
-                        }
-                    } else {
-                        Text("Não há feedback disponível")
+                // Feedbacks
+                Text(String("TempoVideo: \(trainingVM.treino.video!.videoTime)"))
+                Text(String("TOPICS: \(trainingVM.treino.video!.videoTopics)"))
+                ForEach((trainingVM.treino.video?.topicsDuration.indices)!, id: \.self) { index in
+                    Text(String((trainingVM.treino.video?.topicsDuration[index])!))
+                }
+                Text("SCRIPT: \(trainingVM.treino.video?.script ?? "nao achou o script")")
+                
+                // Tem feedbacks
+                if let feedback = trainingVM.treino.feedback {
+                    ForEach(feedback.repeatedWords, id: \.word) { synonymsModel in
+                        SynonymsListView(synonymsInfo: synonymsModel)
                     }
                 } else {
-                    ProgressView("Carregando feedback...")
+                    ProgressView("Carregando Feedback")
                 }
-
             }
         }
         .onAppear {
@@ -80,22 +75,25 @@ struct TreinoView: View {
 
 // LISTA DE SINONIMOS
 struct SynonymsListView: View {
-    let synonymsInfo: SynonymsModel
+    let synonymsInfo: RepeatedWordsModel
 
     var body: some View {
         List {
             Section(header: Text("Palavra: \(synonymsInfo.word)").font(.headline)) {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Número de Sinônimos: \(synonymsInfo.numSynonyms)")
-                    Text("Número de Contextos: \(synonymsInfo.numContexts)")
-
-                    Text("Contexto: \(synonymsInfo.synonymContexts[0])")
-                    ForEach(1..<synonymsInfo.synonymContexts.count) { index in
-                        Text("Sinônimo: \(synonymsInfo.synonymContexts[index])")
+                ForEach(synonymsInfo.synonymContexts, id: \.self.first) { contextAndSynonyms in
+                    VStack(alignment: .leading, spacing: 10) {
+                        if let context = contextAndSynonyms.first {
+                            Text("Contexto: \(context)").font(.subheadline)
+                        }
+                        ForEach(contextAndSynonyms.dropFirst(), id: \.self) { synonym in
+                            Text("Sinônimo: \(synonym)").font(.subheadline)
+                        }
                     }
+                    .padding(.vertical, 5)
+                    .background(Color.gray.opacity(0.2))
                 }
-                .padding(.vertical, 10)
             }
+            .padding(.vertical, 10)
         }
     }
 }

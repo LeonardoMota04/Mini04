@@ -21,7 +21,7 @@ struct Mini04App: App {
             ApresentacaoModel.self,
             TreinoModel.self,
             FeedbackModel.self,
-            SynonymsModel.self
+            RepeatedWordsModel.self
             //SynonymContext.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)

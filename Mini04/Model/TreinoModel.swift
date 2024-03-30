@@ -27,22 +27,22 @@ class TreinoModel: Identifiable {
 @Model
 class FeedbackModel {
     var coerencia: Int
-    var RepeatedWords: [SynonymsModel] = [] // palavras repetidas com seus sinonimos
+    var repeatedWords: [RepeatedWordsModel] = [] // palavras repetidas com seus sinonimos
 
-    init(coherence: Int, palavrasRepetidas5vezes: [SynonymsModel]) {
+    init(coherence: Int, repeatedWords: [RepeatedWordsModel]) {
         self.coerencia = coherence
-        self.RepeatedWords = palavrasRepetidas5vezes
+        self.repeatedWords = repeatedWords
     }
 }
 
 @Model
-class SynonymsModel {
+class RepeatedWordsModel {
     let word: String // palavra repetida
     let numSynonyms: Int
     let numContexts: Int
-    var synonymContexts: [String]
+    var synonymContexts: [[String]] // Array de arrays de String
 
-    init(word: String, numSynonyms: Int, numContexts: Int, synonymContexts: [String] = []) {
+    init(word: String, numSynonyms: Int, numContexts: Int, synonymContexts: [[String]] = []) {
         self.word = word
         self.numSynonyms = numSynonyms
         self.numContexts = numContexts

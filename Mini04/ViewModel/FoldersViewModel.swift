@@ -59,51 +59,45 @@ class FoldersViewModel: ObservableObject {
     func processFeedbacks(videoScript: String, completion: @escaping (FeedbackModel) -> Void) {
         let repeatedWords = filterRepeatedWordsOverFiveTimes(videoScript: videoScript)
         
-        var repeatedWordFeedbacks: [SynonymsModel] = []
+        var repeatedWordFeedbacks: [RepeatedWordsModel] = []
         let group = DispatchGroup()
         
         for word in repeatedWords {
             group.enter()
             
-            fetchSynonyms(for: word)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { _ in }) { synonymsModel in
-                    if let synonymsModel = synonymsModel {
-                        repeatedWordFeedbacks.append(synonymsModel)
-                    }
-                    group.leave()
+            fetchSynonyms(for: word) { synonymsModel in
+                if let synonymsModel = synonymsModel {
+                    repeatedWordFeedbacks.append(synonymsModel)
                 }
-                .store(in: &cancellables)
+                group.leave()
+            }
         }
         
         group.notify(queue: .main) {
-            let feedback = FeedbackModel(coherence: 0, palavrasRepetidas5vezes: repeatedWordFeedbacks)
+            let feedback = FeedbackModel(coherence: 0, repeatedWords: repeatedWordFeedbacks)
             completion(feedback)
         }
     }
+
     
     // Função para buscar os sinônimos de uma palavra
-    func fetchSynonyms(for word: String) -> AnyPublisher<SynonymsModel?, Never> {
-        return Future<SynonymsModel?, Never> { promise in
-            NetworkManager.fetchData(for: word) { result in
-                switch result {
-                case .success(let data):
-                    HTMLParser.parseHTML(data: data, word: word.lowercased()) { result in
-                        switch result {
-                        case .success(let synonymsInfo):
-                            promise(.success(synonymsInfo))
-                        case .failure:
-                            promise(.success(nil))
-                        }
+    func fetchSynonyms(for word: String, completion: @escaping (RepeatedWordsModel?) -> Void) {
+        NetworkManager.fetchData(for: word) { result in
+            switch result {
+            case .success(let data):
+                HTMLParser.parseHTML(data: data, word: word) { result in
+                    switch result {
+                    case .success(let synonymsInfo):
+                        completion(synonymsInfo)
+                    case .failure:
+                        completion(nil)
                     }
-                case .failure:
-                    promise(.success(nil))
                 }
+            case .failure:
+                completion(nil)
             }
         }
-        .eraseToAnyPublisher()
     }
-
 
     // filtra palavras e separa as repetidas 5 vezes
     func filterRepeatedWordsOverFiveTimes(videoScript: String) -> [String] {
@@ -203,7 +197,6 @@ class FoldersViewModel: ObservableObject {
     
     // Formata uma string com segundo minutos e horas
     func formatVideoDuration(time: TimeInterval) -> String {
-            
             let totalSeconds = time
         guard !(totalSeconds.isNaN || totalSeconds.isInfinite) else {
             return "00:00" // or do some error handling - cai aqui primeira vez que a pasta é criada
