@@ -19,6 +19,7 @@ struct HUDCameraView: View {
     @State var isSaveButtonDisabled = true
     
     
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -53,6 +54,7 @@ struct HUDCameraView: View {
                                        videoTime: cameraVC.getVideoDuration(from: newVideoURL),
                                        videoTopics: cameraVC.speechTopicText.components(separatedBy: "//"),
                                        topicsDuration: cameraVC.videoTopicDuration)
+            
             presentationMode.wrappedValue.dismiss()
         }
         .onReceive(cameraVC.$finalModelDetection, perform: { result in

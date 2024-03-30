@@ -9,24 +9,35 @@ import SwiftUI
 
 struct CameraPreview : View {
     @EnvironmentObject var cameraVC: CameraViewModel
+    @State private var isCameraConfigured = false
+
     var body: some View {
         GeometryReader { proxy in
             let size = proxy.size
             ZStack {
                 CameraRepresentable(size: size)
-                CameraOverlayView(size: size)
                 //pverlay em cima da mao
-                
-                if cameraVC.countdownNumber > 0 {
-                    Text("\(cameraVC.countdownNumber)")
-                        .font(.largeTitle)
+                CameraOverlayView(size: size)
+                if isCameraConfigured {
+                    if cameraVC.countdownNumber > 0 {
+                        Text("\(cameraVC.countdownNumber)")
+                            .font(.largeTitle)
+                            .bold()
+                            .scaleEffect(2)
+                    }
+                } else {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
                 }
             }
         }
-        .onAppear(perform: cameraVC.configureSession)
         
         .onAppear {
-            cameraVC.startSession()
+            // depois que condigure session é rodada que incia a sessao
+            cameraVC.configureSession {
+                isCameraConfigured = true
+                cameraVC.startSession()
+            }
         }
         .onDisappear {
             cameraVC.stopSession()

@@ -88,7 +88,7 @@ class CameraViewModel: NSObject, ObservableObject {
     }
     
     // MARK: - Session Configuration
-    func configureSession() {
+    func configureSession(completion: @escaping () -> Void) {
         captureSession.beginConfiguration()
         
         // Remove existing inputs and outputs before reconfiguring
@@ -118,6 +118,10 @@ class CameraViewModel: NSObject, ObservableObject {
         self.videoDataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
         
         captureSession.commitConfiguration()
+        
+        DispatchQueue.main.async {
+            completion()
+        }
     }
     
     func setupInputs(){

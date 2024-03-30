@@ -18,6 +18,7 @@
 		2692A1FA2BB25F4000EEF9AB /* SynonymModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2692A1F92BB25F4000EEF9AB /* SynonymModel.swift */; };
 		370655E22BB1F32100B22AB0 /* HandPoseDoVH.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */; };
 		370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */; };
+		370655E62BB5009F00B22AB0 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E52BB5009F00B22AB0 /* Extras.swift */; };
 		370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */; };
 		370E91E12BA8AFC400D39C27 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E02BA8AFC400D39C27 /* CameraPreview.swift */; };
 		370E91E32BA8B78300D39C27 /* HUDCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91E22BA8B78300D39C27 /* HUDCameraView.swift */; };
@@ -70,6 +71,7 @@
 		2692A1F92BB25F4000EEF9AB /* SynonymModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynonymModel.swift; sourceTree = "<group>"; };
 		370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandPoseDoVH.mlmodel; sourceTree = "<group>"; };
 		370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiderbarFolderComponent.swift; sourceTree = "<group>"; };
+		370655E52BB5009F00B22AB0 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		370E91E02BA8AFC400D39C27 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		370E91E22BA8B78300D39C27 /* HUDCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDCameraView.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				263D73E72BA4C56F002190F4 /* SwiftDataView.swift */,
 				263D73EB2BA4C571002190F4 /* Assets.xcassets */,
 				263D73F02BA4C571002190F4 /* Mini04.entitlements */,
+				370655E52BB5009F00B22AB0 /* Extras.swift */,
 				263D73ED2BA4C571002190F4 /* Preview Content */,
 			);
 			path = Mini04;
@@ -340,6 +343,7 @@
 				370E91EE2BA8D78100D39C27 /* ApresentacaoModel.swift in Sources */,
 				370655E22BB1F32100B22AB0 /* HandPoseDoVH.mlmodel in Sources */,
 				BA8571092BAB4FE6000FF83B /* SpeechManager.swift in Sources */,
+				370655E62BB5009F00B22AB0 /* Extras.swift in Sources */,
 				2692A1F82BB1EC1600EEF9AB /* CameraOverlayView.swift in Sources */,
 				BA5E1A1D2BB36ECD00B9528B /* ViewComponetns.swift in Sources */,
 				F196321C2BA9C3810086D159 /* ChatViewModel.swift in Sources */,
