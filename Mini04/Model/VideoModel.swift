@@ -26,4 +26,18 @@ class VideoModel: Identifiable {
         self.videoTopics = videoTopics
         self.topicsDuration = topicsDuration
     }
+    
+    // Formata duração do treino para: "10:55"
+    func formattedTime() -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .positional
+        formatter.allowedUnits = [.minute, .second]
+        formatter.zeroFormattingBehavior = .pad
+        
+        if let formattedString = formatter.string(from: videoTime) {
+            return formattedString
+        } else {
+            return "00:00"
+        }
+    }
 }

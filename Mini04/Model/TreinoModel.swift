@@ -10,6 +10,7 @@ import SwiftData
 @Model
 class TreinoModel: Identifiable {
     var id = UUID()
+    var isFavorite: Bool = false
     var feedback: FeedbackModel?
     var data: Date = Date()
     var nome: String = ""
@@ -21,6 +22,14 @@ class TreinoModel: Identifiable {
         self.changedTrainingName = changedTrainingName
         self.video = video
         self.feedback = feedback
+    }
+    
+    // Formata data de criação para: "12 de out. de 2023"
+    func formattedCreationDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "d 'de' MMM. 'de' yyyy"
+        let formattedDate = dateFormatter.string(from: data)
+        return formattedDate
     }
 }
 

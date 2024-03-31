@@ -35,7 +35,7 @@ class FoldersViewModel: ObservableObject {
         
         DispatchQueue.main.async {
             self.processFeedbacks(videoScript: videoScript) { [self] feedback in
-                let newTraining = TreinoModel(name: "\(folder.nome) - Treino \(folder.treinos.count + 1)",
+                let newTraining = TreinoModel(name: "Treino \(folder.treinos.count + 1)",
                                               video: VideoModel(videoURL: videoURL,
                                                                 script: videoScript,
                                                                 videoTime: videoTime,

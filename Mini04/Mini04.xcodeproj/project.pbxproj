@@ -16,6 +16,7 @@
 		263D74102BAA2CD3002190F4 /* WebScraping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D740F2BAA2CD3002190F4 /* WebScraping.swift */; };
 		2692A1F82BB1EC1600EEF9AB /* CameraOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2692A1F72BB1EC1600EEF9AB /* CameraOverlayView.swift */; };
 		2692A1FA2BB25F4000EEF9AB /* SynonymModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2692A1F92BB25F4000EEF9AB /* SynonymModel.swift */; };
+		269DF63F2BB8E47B00B0C629 /* MyTrainingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF63E2BB8E47B00B0C629 /* MyTrainingsView.swift */; };
 		370655E22BB1F32100B22AB0 /* HandPoseDoVH.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */; };
 		370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */; };
 		370655E62BB5009F00B22AB0 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E52BB5009F00B22AB0 /* Extras.swift */; };
@@ -69,6 +70,7 @@
 		263D740F2BAA2CD3002190F4 /* WebScraping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebScraping.swift; sourceTree = "<group>"; };
 		2692A1F72BB1EC1600EEF9AB /* CameraOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraOverlayView.swift; sourceTree = "<group>"; };
 		2692A1F92BB25F4000EEF9AB /* SynonymModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynonymModel.swift; sourceTree = "<group>"; };
+		269DF63E2BB8E47B00B0C629 /* MyTrainingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTrainingsView.swift; sourceTree = "<group>"; };
 		370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandPoseDoVH.mlmodel; sourceTree = "<group>"; };
 		370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiderbarFolderComponent.swift; sourceTree = "<group>"; };
 		370655E52BB5009F00B22AB0 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				2692A1F72BB1EC1600EEF9AB /* CameraOverlayView.swift */,
 				BA5E1A1C2BB36ECD00B9528B /* ViewComponetns.swift */,
 				370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */,
+				269DF63E2BB8E47B00B0C629 /* MyTrainingsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 				263D73E82BA4C56F002190F4 /* SwiftDataView.swift in Sources */,
 				370E91FA2BA8D86D00D39C27 /* PastaView.swift in Sources */,
 				370E91F42BA8D7BA00D39C27 /* TreinoModel.swift in Sources */,
+				269DF63F2BB8E47B00B0C629 /* MyTrainingsView.swift in Sources */,
 				370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */,
 				370E91EE2BA8D78100D39C27 /* ApresentacaoModel.swift in Sources */,
 				370655E22BB1F32100B22AB0 /* HandPoseDoVH.mlmodel in Sources */,
