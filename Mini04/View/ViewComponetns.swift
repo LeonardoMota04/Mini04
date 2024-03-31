@@ -43,7 +43,7 @@ struct TimeFeedBackView: View {
                                             .foregroundStyle(Double(treino.video?.videoTime ?? 0) > Double(wishTime) ? .red : .blue)
                                         
                                     }
-                                    Text("T\(treinos.count + 1)")
+                                    Text("\(treinos.count + 1)")
                                         .foregroundStyle(.black)
                                 }
                             }
@@ -96,7 +96,7 @@ struct TimeFeedBackViewExpand: View {
                                                 .foregroundStyle(Double(treino.video?.videoTime ?? 0) > Double(wishTime) ? .red : .blue)
                                             
                                         }
-                                        Text("T\(treinos.count + 1)")
+                                        Text("\(treinos.count + 1)")
                                             .foregroundStyle(.black)
                                     }
                                 }

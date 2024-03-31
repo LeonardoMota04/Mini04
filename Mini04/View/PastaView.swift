@@ -26,7 +26,8 @@ struct PastaView: View {
                 // infos da pasta
                 // NOME DA PASTA
                 HStack {
-                    TextField("Nome da pasta", text: $editedName)
+                    //TextField("Nome da pasta", text: $editedName)
+                    Text(folderVM.folder.nome)
                         .font(.title)
                     Spacer()
                     Button("Salvar Alterações") {
@@ -61,7 +62,6 @@ struct PastaView: View {
 //                        WordRepetitionView(folderVM: folderVM)
 //                    }))
                 }
-                
               
                 Spacer()
                 
@@ -89,7 +89,7 @@ struct PastaView: View {
             } catch {
                 print("Nao salvou")
             }
-            editedName = folderVM.folder.nome
+            //editedName = folderVM.folder.nome
             folderVM.calculateAvarageTime()
         }
         .onChange(of: folderVM.folder) {
@@ -103,12 +103,12 @@ struct PastaView: View {
     // UPDATE Nome da pasta e seus treinos
     func saveChanges() {
         // Atualiza o nome da pasta
-        folderVM.folder.nome = editedName
+        //folderVM.folder.nome = editedName
         
         for training in folderVM.folder.treinos {
             if !training.changedTrainingName {
                 if let index = folderVM.folder.treinos.firstIndex(where: { $0.id == training.id }) {
-                    training.nome = "\(editedName) - Treino \(index + 1)"
+                    training.nome = "Treino \(index + 1)"
                 }
             }
             

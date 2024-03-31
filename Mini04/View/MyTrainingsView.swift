@@ -87,6 +87,11 @@ struct TrainingCellsView: View {
                             }
                         
                     }
+                    .contextMenu {
+                        Button("Apagar") {
+                            folderVM.deleteTraining(training)
+                        }
+                    }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .foregroundStyle(.black)
                     .padding(.horizontal, 25)
@@ -111,6 +116,12 @@ struct TrainingCellsView: View {
     }
     
     private func updateFilteredTrainings() {
+        guard !selectedFilter.isEmpty else {
+            // Se nenhum filtro estiver selecionado, listar todos os treinos
+            filteredTrainings = folderVM.folder.treinos
+            return
+        }
+
         switch selectedFilter {
         case "Mais antigo para mais novo":
             filteredTrainings = folderVM.folder.treinos.sorted(by: { $0.data < $1.data })
@@ -124,6 +135,7 @@ struct TrainingCellsView: View {
             filteredTrainings = folderVM.folder.treinos
         }
     }
+
 }
 
 
