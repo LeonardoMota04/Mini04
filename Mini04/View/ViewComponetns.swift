@@ -195,57 +195,6 @@ struct WordRepetitionView: View {
             }
     }
 }
-
-
-
-struct ViewQueCresceTeste: View {
-    @State private var isExpanded = false
-    
-    var body: some View {
-        VStack {
-            // Conteúdo superior
-            VStack {
-                Text("Conteúdo Superior")
-                    .font(.title)
-                    .padding()
-                
-            }
-            
-            // Conteúdo inferior condicionalmente visível
-            GeometryReader { geometry in
-                VStack {
-                    if isExpanded {
-                        Text("Conteúdo Inferior")
-                            .font(.title)
-                            .padding()
-                    }
-                    Spacer()
-                }
-            }
-        }
-        .frame(height: isExpanded ? 280 : 140)
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(16)
-        .padding()
-        .onTapGesture {
-            withAnimation(.easeInOut(duration: 0.5)) {
-                isExpanded.toggle()
-            }
-        }
-    }
-}
-
-
-
-
-#Preview {
-    ViewQueCresceTeste()
-}
-
-
-
-
-
 struct ExpandableView: View {
     @Namespace private var namespace // usada para criar animacoes mais suaves
     @State private var show: Bool = false
