@@ -16,7 +16,6 @@ class FoldersViewModel: ObservableObject {
     // MARK: - Modelo
     var folder: PastaModel
     var modelContext: ModelContext?
-    private var cancellables = Set<AnyCancellable>()
     
     // variaveis utilizaveis para salvar os dados
     var objetiveApresentation: String = ""
@@ -67,7 +66,12 @@ class FoldersViewModel: ObservableObject {
             
             fetchSynonyms(for: word) { synonymsModel in
                 if let synonymsModel = synonymsModel {
-                    repeatedWordFeedbacks.append(synonymsModel)
+                    // Formatando a palavra para a primeira maiúscula sempre
+                    let formattedWord = word.prefix(1).uppercased() + word.lowercased().dropFirst()
+                
+                    // Criando uma instância de RepeatedWordsModel com a palavra formatada
+                    let repeatedWordModel = RepeatedWordsModel(word: formattedWord, numSynonyms: synonymsModel.numSynonyms, numContexts: synonymsModel.numContexts, synonymContexts: synonymsModel.synonymContexts)
+                    repeatedWordFeedbacks.append(repeatedWordModel)
                 }
                 group.leave()
             }

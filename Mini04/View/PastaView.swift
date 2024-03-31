@@ -84,11 +84,21 @@ struct PastaView: View {
 //                        }
 //                    }
 //                }
-                ExpandableView(thumbnail: ThumbnailView(content: {
-                    TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-                }), expanded: ExpandedView(content: {
-                    TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-                }))
+                
+                HStack {
+                    ExpandableView(thumbnail: ThumbnailView(content: {
+                        TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                    }), expanded: ExpandedView(content: {
+                        TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                    }))
+                    WordRepetitionView(folderVM: folderVM)
+//                    ExpandableView(thumbnail: ThumbnailView(content: {
+//                        TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+//                    }), expanded: ExpandedView(content: {
+//                        WordRepetitionView(folderVM: folderVM)
+//                    }))
+                }
+                
               
                 Spacer()
                 

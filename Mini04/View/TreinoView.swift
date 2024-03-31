@@ -51,10 +51,12 @@ struct TreinoView: View {
                 }
                 Text("SCRIPT: \(trainingVM.treino.video?.script ?? "nao achou o script")")
                 
-                // Tem feedbacks
+                // Tem feedbacks ACHO QUE NAO PRECISA, POIS PARA ENTRAR AQUI ELES DEVEM ESTAR CARREGADOS JÁ
+                Text("Palavras repetidas:")
                 if let feedback = trainingVM.treino.feedback {
                     ForEach(feedback.repeatedWords, id: \.word) { synonymsModel in
                         SynonymsListView(synonymsInfo: synonymsModel)
+                        Text(synonymsModel.word)
                     }
                 } else {
                     ProgressView("Carregando Feedback")

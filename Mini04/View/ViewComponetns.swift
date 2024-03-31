@@ -117,6 +117,134 @@ struct TimeFeedBackViewExpand: View {
     }
 }
 
+// MARK: - PALAVRAS REPETIDAS
+struct WordRepetitionView: View {
+    @ObservedObject var folderVM: FoldersViewModel
+    @State private var isExpanded = false
+    
+    var body: some View {
+        let allRepeatedWords = folderVM.folder.treinos.flatMap { $0.feedback?.repeatedWords ?? [] }.map { $0.word }
+        let allSynonyms = folderVM.folder.treinos.flatMap { $0.feedback?.repeatedWords ?? [] }.map { $0.synonymContexts }
+        let uniqueSynonyms = Set(allSynonyms)
+        let uniqueWords = Set(allRepeatedWords)
+        
+        RoundedRectangle(cornerRadius: 16)
+            .overlay {
+                HStack {
+                    VStack(alignment: .leading) {
+                        VStack(alignment: .leading) {
+                            // titulo e seta
+                            HStack {
+                                // Titulo e subtitulo
+                                let palavra = uniqueWords.count > 1 ? "Palavras" : "Palavra"
+                                Text("\(uniqueWords.count) \(palavra)")
+                                    .font(.title2)
+                                    .bold()
+                                    .foregroundStyle(.black)
+                                Spacer()
+                                Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                                    .foregroundColor(.black)
+                                    .font(.title2)
+                                    .padding(.trailing, 4) // Espaçamento entre o texto e a seta
+                            }
+                            Text("Repetidas em excesso")
+                               .font(.caption)
+                               .foregroundStyle(.gray)
+                        }
+                        
+                        // Lista de palavras repetidas
+                        HStack {
+                            ForEach(uniqueWords.sorted(), id: \.self) { word in
+                                Text(word)
+                                    .foregroundColor(.black)
+                                    .padding(5)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .foregroundStyle(.white)
+                                    }
+                            }
+                        }
+                        
+                        // Conteúdo inferior condicionalmente visível
+                        if isExpanded {
+                            HStack {
+                                ForEach(uniqueWords.sorted(), id: \.self) { word in
+                                    Text(word)
+                                        .foregroundColor(.white)
+                                        .padding(5)
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 6)
+                                                .foregroundStyle(.black.opacity(0.7))
+                                        }
+                                }
+                            }
+                            .padding(.vertical, 20)
+                        }
+                        Spacer() // vstack
+                    }
+                    .padding()
+                    
+                    Spacer() // hstack
+                }
+            }
+            .frame(width: 350, height: isExpanded ? 280 : 140)
+            .onTapGesture {
+                withAnimation(.spring(duration: 0.3)) {
+                    isExpanded.toggle()
+                }
+            }
+    }
+}
+
+
+
+struct ViewQueCresceTeste: View {
+    @State private var isExpanded = false
+    
+    var body: some View {
+        VStack {
+            // Conteúdo superior
+            VStack {
+                Text("Conteúdo Superior")
+                    .font(.title)
+                    .padding()
+                
+            }
+            
+            // Conteúdo inferior condicionalmente visível
+            GeometryReader { geometry in
+                VStack {
+                    if isExpanded {
+                        Text("Conteúdo Inferior")
+                            .font(.title)
+                            .padding()
+                    }
+                    Spacer()
+                }
+            }
+        }
+        .frame(height: isExpanded ? 280 : 140)
+        .background(Color.gray.opacity(0.1))
+        .cornerRadius(16)
+        .padding()
+        .onTapGesture {
+            withAnimation(.easeInOut(duration: 0.5)) {
+                isExpanded.toggle()
+            }
+        }
+    }
+}
+
+
+
+
+#Preview {
+    ViewQueCresceTeste()
+}
+
+
+
+
 
 struct ExpandableView: View {
     @Namespace private var namespace // usada para criar animacoes mais suaves

@@ -49,27 +49,3 @@ class RepeatedWordsModel {
         self.synonymContexts = synonymContexts
     }
 }
-
-//@Model
-//class SynonymContext {
-//    let synonymsWithContext: [String]
-//
-//    init(synonymsWithContext: [String]) {
-//        self.synonymsWithContext = synonymsWithContext
-//    }
-//}
-
-//@Model
-//class SynonymsModel {
-//    let word: String // palavra repetida
-//    let numSynonyms: Int
-//    let numContexts: Int
-//    var synonymContexts: [(context: String, synonyms: [String])] // Array de tuplas
-//
-//    init(word: String, numSynonyms: Int, numContexts: Int, synonymContexts: [(context: String, synonyms: [String])] = []) {
-//        self.word = word
-//        self.numSynonyms = numSynonyms
-//        self.numContexts = numContexts
-//        self.synonymContexts = synonymContexts
-//    }
-//}
