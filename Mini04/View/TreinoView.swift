@@ -115,7 +115,7 @@ struct TreinoView: View {
                 Text("Você está treinando na pasta \(folderVM.folder.nome)")
                 Text("Data de criação: \(trainingVM.treino.data)")
                 
-
+                TimeCircularFeedback(title: trainingVM.treino.video?.formattedTime() ?? "", subtitle: "Tempo Total", objetiveTime: folderVM.folder.tempoDesejado, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", frameWidth: 442, frameHeight: 154, progress: CGFloat(trainingVM.treino.video?.videoTime ?? 1), totalProgress: CGFloat(folderVM.folder.tempoDesejado * 60))
                 
                 // Verifica se o feedback está disponível
                 // Feedbacks

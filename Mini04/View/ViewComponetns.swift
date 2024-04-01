@@ -272,3 +272,83 @@ struct ExpandedView: View {
     }
 }
 
+struct CircularProgress: View {
+    var sizeCircle: CGFloat
+    var progress: CGFloat
+    var totalProgress: CGFloat
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(.white.opacity(0.72), style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
+            
+            Circle()
+                .trim(from: 0.0, to:
+                        withAnimation {
+                    CGFloat(progress)/totalProgress
+                })
+                .stroke(.blue, style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
+                .rotationEffect(.degrees(-90))
+            Image(systemName: "timer")
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(.black)
+                .bold()
+                .frame(maxWidth: sizeCircle * 0.3)
+        }
+        .frame(maxWidth: sizeCircle)
+    }
+}
+
+struct TimeCircularFeedback: View {
+    var title: String
+    var subtitle: String
+    var objetiveTime: Int
+    var bodyText: String
+    @State var frameWidth: CGFloat
+    @State var frameHeight: CGFloat
+    var progress: CGFloat
+    var totalProgress: CGFloat
+    var body: some View {
+        GeometryReader { proxy in
+            RoundedRectangle(cornerRadius: 16, style: /*@START_MENU_TOKEN@*/.continuous/*@END_MENU_TOKEN@*/)
+                .overlay {
+                    HStack(alignment: .top) {
+                       CircularProgress(sizeCircle: proxy.size.height * 0.7, progress: progress, totalProgress: totalProgress)
+                               .padding()
+                        VStack(alignment: .leading) {
+                            HStack(alignment: .top) {
+                                VStack(alignment: .leading) {
+                                    Text(title)
+                                        .font(.title2)
+                                        .bold()
+                                        .foregroundStyle(.black)
+                                        .padding(.top, 10)
+                                    Text(subtitle)
+                                        .font(.footnote)
+                                        .foregroundStyle(.black)
+                                        .padding(.bottom, 10)
+                                }
+                                Spacer()
+                                Text("Objetivo: \(objetiveTime) min")
+                                    .foregroundStyle(.black)
+                                    .opacity(0.7)
+                                    .padding(.top, 10)
+                            }
+                            Text(bodyText)
+                            // .font(.caption)
+                                .multilineTextAlignment(.leading)
+                                .lineLimit(.bitWidth)
+                                .foregroundStyle(.black)
+                                .opacity(0.6)
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+        }
+        .frame(width: frameWidth, height: frameHeight)
+    }
+}
+
+#Preview {
+    TimeCircularFeedback(title: "5:37", subtitle: "Tempo total", objetiveTime: 6, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", frameWidth: 442, frameHeight: 154, progress: 80, totalProgress: 100)
+}
