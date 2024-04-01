@@ -25,9 +25,17 @@ struct PastaView: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                // quando clicar no botao abre uma zstack sobre toda a pastaview, ou seja, a "modal"
                 if isShowingModal {
                     ZStack(alignment: .top) {
-                        
+                        //sombra
+                        Color.black
+                            .frame(maxHeight: .infinity)
+                            .frame(width: 800)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .offset(y:25)
+                            .blur(radius: 3)
+
                         TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: selectedTraining!), isShowingModal: $isShowingModal)
                             .frame(maxHeight: .infinity)
                             .frame(width: 800)
