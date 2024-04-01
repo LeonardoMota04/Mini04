@@ -37,14 +37,30 @@ struct Mini04App: App {
     var body: some Scene {
         WindowGroup {
 //            SwiftDataView()
-            ContentView()
+            GeometryReader { proxy in
+                ContentView()
+                    .environment(\.mainWindowSize, proxy.size)
+                    .environmentObject(camVM)
+                    .frame(minWidth: (screenSize?.width ?? 800) * (2/3), minHeight: (screenSize?.height ?? 600) * (2/3)) // Define o tamanho mínimo da janela
+            }
+
 //            RecordingVideoView()
-                .environmentObject(camVM)
 //            WebScrappingView()
-                .frame(minWidth: (screenSize?.width ?? 800) * (2/3), minHeight: (screenSize?.height ?? 600) * (2/3)) // Define o tamanho mínimo da janela
 
         }
         .modelContainer(modelContainer)
         //.modelContainer(sharedModelContainer)
+    }
+}
+
+
+private struct MainWindowSizeKey: EnvironmentKey {
+    static let defaultValue: CGSize = .zero
+}
+
+extension EnvironmentValues {
+    var mainWindowSize: CGSize {
+        get { self[MainWindowSizeKey.self] }
+        set { self[MainWindowSizeKey.self] = newValue }
     }
 }

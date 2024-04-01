@@ -34,6 +34,7 @@
 		370E91FA2BA8D86D00D39C27 /* PastaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91F92BA8D86D00D39C27 /* PastaView.swift */; };
 		370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */; };
 		370E91FE2BA8D9F200D39C27 /* ApresentacaoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */; };
+		37144B922BB79A4D000870D0 /* teste.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37144B912BB79A4D000870D0 /* teste.swift */; };
 		377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */; };
 		BA5E1A1D2BB36ECD00B9528B /* ViewComponetns.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E1A1C2BB36ECD00B9528B /* ViewComponetns.swift */; };
 		BA5E1A202BB3724700B9528B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73F62BA4C865002190F4 /* ContentView.swift */; };
@@ -87,6 +88,7 @@
 		370E91F92BA8D86D00D39C27 /* PastaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastaView.swift; sourceTree = "<group>"; };
 		370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreinoView.swift; sourceTree = "<group>"; };
 		370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApresentacaoViewModel.swift; sourceTree = "<group>"; };
+		37144B912BB79A4D000870D0 /* teste.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = teste.swift; sourceTree = "<group>"; };
 		377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingVideoView.swift; sourceTree = "<group>"; };
 		BA5E1A1C2BB36ECD00B9528B /* ViewComponetns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewComponetns.swift; sourceTree = "<group>"; };
 		BA8571082BAB4FE6000FF83B /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				2692A1F72BB1EC1600EEF9AB /* CameraOverlayView.swift */,
 				BA5E1A1C2BB36ECD00B9528B /* ViewComponetns.swift */,
 				370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */,
+				37144B912BB79A4D000870D0 /* teste.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -350,6 +353,7 @@
 				2692A1FA2BB25F4000EEF9AB /* SynonymModel.swift in Sources */,
 				370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */,
 				F196321A2BA8E1670086D159 /* Constants.swift in Sources */,
+				37144B922BB79A4D000870D0 /* teste.swift in Sources */,
 				370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */,
 				377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */,
 				370E91E12BA8AFC400D39C27 /* CameraPreview.swift in Sources */,

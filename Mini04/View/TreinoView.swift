@@ -17,11 +17,26 @@ struct TreinoView: View {
     @State private var editedName: String = ""
     @State private var avPlayer: AVPlayer = AVPlayer()
     
+    @Binding var isShowingModal : Bool
     var body: some View {
-        GeometryReader { geometry in
-            let size = geometry.size
-            
-            VStack {
+        VStack {
+            ZStack {
+                Text(trainingVM.treino.nome)
+                    .font(.title)
+                HStack {
+                    Button {
+                        isShowingModal.toggle()
+                        
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                    }
+                    .buttonStyle(.plain)
+                    Spacer()
+                }
+            }
+            .frame(height: 30)
+            .padding(.horizontal)
+            ScrollView {
                 // NOME DO TREINO
                 HStack {
                     TextField("Nome", text: $editedName)
@@ -40,7 +55,6 @@ struct TreinoView: View {
                             avPlayer.replaceCurrentItem(with: AVPlayerItem(url: videoURL))
                         }
                     }
-                    .frame(height: size.height / 5)
                 
                 // Verifica se o feedback está disponível
                 if let feedback = folderVM.folder.treinos.first?.feedback {
@@ -64,7 +78,13 @@ struct TreinoView: View {
                     ProgressView("Carregando feedback...")
                 }
 
+                ForEach(1...50, id: \.self) { _ in
+                    VStack {
+                        Text("preenchimento de espaço pra ver como o heigh dessa view se comporta")
+                    }
+                }
             }
+            
         }
         .onAppear {
             editedName = trainingVM.treino.nome

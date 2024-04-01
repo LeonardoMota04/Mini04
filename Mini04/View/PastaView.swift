@@ -19,118 +19,85 @@ struct PastaView: View {
     
     // EDITAR NOME DA PASTA
     @State private var editedName: String = ""
+    
+    @State private var isShowingModal = false
+    
+    @State private var selectedTraining: TreinoModel?
 
+    
     var body: some View {
         NavigationStack {
-            VStack {
-                // infos da pasta
-                // NOME DA PASTA
-                HStack {
-                    TextField("Nome da pasta", text: $editedName)
-                        .font(.title)
-                    Spacer()
-                    Button("Salvar Alterações") {
-                        saveChanges()
+            ZStack {
+                if isShowingModal {
+                    ZStack(alignment: .top) {
+                        
+                        TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: selectedTraining!), isShowingModal: $isShowingModal)
+                            .frame(maxHeight: .infinity)
+                            .frame(width: 600)
+                            .background(.gray)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
+                    .zIndex(1)
                 }
-                HStack {
+                VStack {
+                    // infos da pasta
+                    // NOME DA PASTA
                     HStack {
-                        Image(systemName: "calendar")
-                        Text("\(folderVM.folder.data)")
-                    }
-                    HStack {
-                        Image(systemName: "video.badge.waveform.fill")
-                        Text("\(folderVM.folder.treinos.count) Treinos")
-                    }
-                    HStack {
-                        Image(systemName: "handbag.fill")
-                        Text("Objetivo: \(folderVM.folder.objetivoApresentacao)")
-                    }
-                    Text("Tempo Desejado: \(folderVM.folder.tempoDesejado)")
-                }
-//                ZStack {
-//                    RoundedRectangle(cornerRadius: 16)
-//                        .frame(width: 350, height: 140)
-//                    HStack{
-//                        VStack(alignment: .leading) {
-//                            Text("\(folderVM.folder.avaregeTime)")
-//                                .font(.title2)
-//                                .bold()
-//                                .foregroundStyle(.black)
-//                            Text("Tempo médio próximo do desejado. ")
-//                                .multilineTextAlignment(.leading)
-//                                .frame(maxWidth: 135)
-//                                .foregroundStyle(.black)
-//                            Spacer()
-//                        }
-//                        Spacer()
-//                        VStack(alignment: .leading) {
-//                            Text("Tempo desejado - \(folderVM.folder.tempoDesejado)")
-//                            HStack {
-//                                ForEach(folderVM.folder.treinos.suffix(8)) { treino in // sufix 8 para mostrar os ultimos 8 treinos
-//                                    VStack {
-//                                        ZStack(alignment: .bottom) {
-//                                            RoundedRectangle(cornerRadius: 10)
-//                                                .frame(width: 10, height: 54)
-//                                            RoundedRectangle(cornerRadius: 10)
-//                                                .frame(width: 10, height: Double(treino.video?.videoTime ?? 0) > Double(folderVM.folder.tempoDesejado) ? 54 :  folderVM.calculateTreinoTime(videoTime: treino.video?.videoTime ?? 1))
-//                                                .foregroundStyle(Double(treino.video?.videoTime ?? 0) > Double(folderVM.folder.tempoDesejado) ? .red : .blue)
-//                                            
-//                                        }
-//                                        Text("T\(folderVM.folder.treinos.count + 1)")
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-                ExpandableView(thumbnail: ThumbnailView(content: {
-                    TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-                }), expanded: ExpandedView(content: {
-                    TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-                }))
-              
-                Spacer()
-                
-                if folderVM.folder.treinos.isEmpty {
-                    Text("Adicione um treino para começar")
-                }
-                
-                Spacer()
-            
-                // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
-                NavigationLink {
-                    RecordingVideoView(folderVM: folderVM)
-                } label: {
-                    Text("Novo Treino")
-                }
-//                NavigationLink("Criar treino") {
-//                    let newTraining = TreinoModel(name: "\(folderVM.folder.nome) - Treino \(folderVM.folder.treinos.count + 1)")
-//                    TreinoView(trainingVM: TreinoViewModel(treino: newTraining), folder: folderVM.folder)
-//                }
-                
-                // exibe todos os treinos
-//                ForEach(trainings) { training in
-//                    // treinos + apagar
-//                    HStack {
-//                        NavigationLink(training.nome) {
-//                            TreinoView(trainingVM: TreinoViewModel(treino: training))
-//                        }
-//                        Button("Apagar \(training.nome)") {
-//                            folderVM.deleteTraining(training)
-//                        }
-//                    }
-//                }
-          
-                Divider()
-                ForEach(folderVM.folder.treinos) { training in
-                    // treinos + apagar
-                    HStack {
-                        NavigationLink(training.nome) {
-                            TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: training))
+                        TextField("Nome da pasta", text: $editedName)
+                            .font(.title)
+                        Spacer()
+                        Button("Salvar Alterações") {
+                            saveChanges()
                         }
-                        Button("Apagar \(training.nome)") {
-                            folderVM.deleteTraining(training)
+                    }
+                    HStack {
+                        HStack {
+                            Image(systemName: "calendar")
+                            Text("\(folderVM.folder.data)")
+                        }
+                        HStack {
+                            Image(systemName: "video.badge.waveform.fill")
+                            Text("\(folderVM.folder.treinos.count) Treinos")
+                        }
+                        HStack {
+                            Image(systemName: "handbag.fill")
+                            Text("Objetivo: \(folderVM.folder.objetivoApresentacao)")
+                        }
+                        Text("Tempo Desejado: \(folderVM.folder.tempoDesejado)")
+                    }
+                    
+                    ExpandableView(thumbnail: ThumbnailView(content: {
+                        TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                    }), expanded: ExpandedView(content: {
+                        TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                    }))
+                    
+                    Spacer()
+                    
+                    if folderVM.folder.treinos.isEmpty {
+                        Text("Adicione um treino para começar")
+                    }
+                    
+                    Spacer()
+                    
+                    // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
+                    NavigationLink {
+                        RecordingVideoView(folderVM: folderVM)
+                    } label: {
+                        Text("Novo Treino")
+                    }
+                    
+                    Divider()
+                    ForEach(folderVM.folder.treinos) { training in
+                        // treinos + apagar
+                        HStack {
+                            Button(training.nome) {
+                                selectedTraining = training
+                                isShowingModal.toggle()
+                            }
+                            Button("Apagar \(training.nome)") {
+                                folderVM.deleteTraining(training)
+                            }
                         }
                     }
                 }
@@ -169,7 +136,7 @@ struct PastaView: View {
             
         }
     }
-
+    
 }
 
 // MARK: - MODAL DE INFORMACOES
@@ -180,10 +147,10 @@ struct FolderInfoModalView: View {
             Text("Instruções:")
                 .font(.title)
                 .padding()
-
+            
             Text("pipipipi")
                 .padding()
-
+            
             Button("Fechar") {
                 isModalPresented = false
             }
