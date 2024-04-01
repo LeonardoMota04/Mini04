@@ -10,12 +10,9 @@ import SwiftUI
 struct MyTrainingsView: View {
     @ObservedObject var folderVM: FoldersViewModel
     
-    let trainingFilters = ["Mais antigo para mais novo", 
-                           "Mais rápido para mais longo",
-                           "Mais longo para mais rápido",
-                           "Favoritos"]
-    @State private var selectedFilter: String = ""
-
+    let trainingFilters: [TreinoModel.TrainingFilter] =  TreinoModel.TrainingFilter.allCases
+    @State private var selectedFilter: TreinoModel.TrainingFilter = .newerToOlder
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -24,15 +21,11 @@ struct MyTrainingsView: View {
                     .bold()
                 Spacer()
                 Picker("", selection: $selectedFilter) {
-                    ForEach(trainingFilters, id: \.self) { objetivo in
-                        Text(objetivo)
+                    ForEach(trainingFilters, id: \.self) { filter in
+                        Text(filter.rawValue)
                     }
                 }
                 .frame(maxWidth: 220)
-                .onChange(of: selectedFilter) { _, _ in
-                    // Recarregar a view quando o filtro é alterado
-                    folderVM.objectWillChange.send()
-                }
             }
             TrainingCellsView(folderVM: folderVM, selectedFilter: selectedFilter)
         }
@@ -42,7 +35,7 @@ struct MyTrainingsView: View {
 
 struct TrainingCellsView: View {
     @ObservedObject var folderVM: FoldersViewModel
-    var selectedFilter: String
+    var selectedFilter: TreinoModel.TrainingFilter?
     @State private var filteredTrainings: [TreinoModel] = []
     
     var body: some View {
@@ -87,11 +80,6 @@ struct TrainingCellsView: View {
                             }
                         
                     }
-                    .contextMenu {
-                        Button("Apagar") {
-                            folderVM.deleteTraining(training)
-                        }
-                    }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .foregroundStyle(.black)
                     .padding(.horizontal, 25)
@@ -102,13 +90,27 @@ struct TrainingCellsView: View {
                     }
                 }
                 .buttonStyle(PlainButtonStyle())
+                .contextMenu {
+                    Button("Apagar") {
+                        folderVM.deleteTraining(training)
+                    }
+                }
             }
         }
         .padding(.top, 25)
+        // ATUALIZAR A LISTA FILTRADA DE TREINOS
+        /// ao abrir, ele atualiza a lista de treinos
         .onAppear {
             updateFilteredTrainings()
         }
+        /// ao trocar de filtro, ele atualiza a lista de treinos
         .onChange(of: selectedFilter) { _, _ in
+            withAnimation {
+                updateFilteredTrainings()
+            }
+        }
+        /// ao trocar de pasta ele atualiza a lista de treinos
+        .onChange(of: folderVM.folder) { _, _ in
             withAnimation {
                 updateFilteredTrainings()
             }
@@ -116,26 +118,30 @@ struct TrainingCellsView: View {
     }
     
     private func updateFilteredTrainings() {
-        guard !selectedFilter.isEmpty else {
-            // Se nenhum filtro estiver selecionado, listar todos os treinos
-            filteredTrainings = folderVM.folder.treinos
-            return
-        }
-
         switch selectedFilter {
-        case "Mais antigo para mais novo":
+        // Mais recente para mais antigo
+        case .newerToOlder:
+            filteredTrainings = folderVM.folder.treinos.sorted(by: { $0.data > $1.data })
+    
+        // Mais antigo para mais recente
+        case .olderToNewer:
             filteredTrainings = folderVM.folder.treinos.sorted(by: { $0.data < $1.data })
-        case " Mais longo para mais rápido":
-            filteredTrainings = folderVM.folder.treinos.sorted(by: { ($0.video?.videoTime ?? 0) < ($1.video?.videoTime ?? 0) })
-        case "Mais rápido para mais longo":
+            
+        // Mais longo para mais rápido
+        case .longerToFaster:
             filteredTrainings = folderVM.folder.treinos.sorted(by: { ($0.video?.videoTime ?? 0) > ($1.video?.videoTime ?? 0) })
-        case "Favoritos":
+    
+        // Mais rápido para mais longo
+        case .fasterToLonger:
+            filteredTrainings = folderVM.folder.treinos.sorted(by: { ($0.video?.videoTime ?? 0) < ($1.video?.videoTime ?? 0) })
+        
+        // Favoritos
+        case .favorites:
             filteredTrainings = folderVM.folder.treinos.filter { $0.isFavorite }
         default:
             filteredTrainings = folderVM.folder.treinos
         }
     }
-
 }
 
 

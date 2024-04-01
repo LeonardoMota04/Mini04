@@ -172,6 +172,9 @@ class FoldersViewModel: ObservableObject {
         }
     }
     
+    
+    
+    
     // coloca o objetivo da pessoa (pitch, vendas, etc)
     func folderObjectiveSet(objetive: String) {
         self.objetiveApresentation = objetive

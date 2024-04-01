@@ -15,7 +15,6 @@ struct PastaView: View {
     
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
-    @Query private var trainings: [TreinoModel] // read de treinos
     
     // EDITAR NOME DA PASTA
     @State private var editedName: String = ""

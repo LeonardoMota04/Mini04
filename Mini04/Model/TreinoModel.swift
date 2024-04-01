@@ -9,6 +9,7 @@ import SwiftData
 
 @Model
 class TreinoModel: Identifiable {
+    
     var id = UUID()
     var isFavorite: Bool = false
     var feedback: FeedbackModel?
@@ -30,6 +31,15 @@ class TreinoModel: Identifiable {
         dateFormatter.dateFormat = "d 'de' MMM. 'de' yyyy"
         let formattedDate = dateFormatter.string(from: data)
         return formattedDate
+    }
+    
+    // Filtros para treinos
+    enum TrainingFilter: String, CaseIterable {
+        case newerToOlder = "Mais recente para mais antigo"
+        case olderToNewer = "Mais antigo para mais recente"
+        case fasterToLonger = "Mais rápido para mais longo"
+        case longerToFaster = "Mais longo para mais rápido"
+        case favorites = "Favoritos"
     }
 }
 
