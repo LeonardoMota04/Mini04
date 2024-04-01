@@ -117,15 +117,76 @@ struct TimeFeedBackViewExpand: View {
     }
 }
 
-// MARK: - PALAVRAS REPETIDAS
+// MARK: - TEMPO MÉDIO DA PASTA
+struct TimeFeedbackView: View {
+    @ObservedObject var folderVM: FoldersViewModel
+    @State private var isExpanded = false
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: 16)
+            .overlay {
+                VStack {
+                    HStack{
+                        VStack(alignment: .leading) {
+                            Text("\(folderVM.formatedAvareTime)")
+                                .font(.title2)
+                                .bold()
+                                .foregroundStyle(.black)
+                            Text("Tempo médio próximo do desejado. ")
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: 135)
+                                .foregroundStyle(.black)
+                            Spacer()
+                        }
+                        Spacer()
+                        VStack(alignment: .leading) {
+                            Text("Tempo desejado - " + String(format: "%.2f", Double(folderVM.folder.tempoDesejado)))
+                                .foregroundStyle(.black)
+                            HStack {
+                                ForEach(folderVM.folder.treinos.suffix(8)) { treino in // sufix 8 para mostrar os ultimos 8 treinos
+                                    VStack {
+                                        ZStack(alignment: .bottom) {
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .frame(width: 10, height: 54)
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .frame(width: 10, height: Double(treino.video?.videoTime ?? 0) > Double(folderVM.folder.tempoDesejado) ? 54 :  treino.video?.videoTime ?? 1)
+                                                .foregroundStyle(Double(treino.video?.videoTime ?? 0) > Double(folderVM.folder.tempoDesejado) ? .red : .blue)
+                                            
+                                        }
+                                        Text("\(folderVM.folder.treinos.count + 1)")
+                                            .foregroundStyle(.black)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    Text("Se manter dentro do tempo proposto é crucial para garantir a clareza e o impacto de sua mensagem!")
+                        .frame(maxWidth: .infinity)
+                        .foregroundStyle(.black)
+                        .padding(.vertical)
+                    Text("Saber aproveita-lo demonstra profissionalismo, mantém o interesse do público e permite uma melhor absorção das informações apresentadas.")
+                        .frame(maxWidth: .infinity)
+                        .foregroundStyle(.black)
+                        .padding(.vertical)
+                }
+                .padding()
+            }
+            .frame(width: 350, height: isExpanded ? 422 : 272)
+            .onTapGesture {
+                withAnimation(.spring(duration: 0.3)) {
+                    isExpanded.toggle()
+                }
+            }
+    }
+}
+
+// MARK: - PALAVRAS REPETIDAS DA PASTA
 struct WordRepetitionView: View {
     @ObservedObject var folderVM: FoldersViewModel
     @State private var isExpanded = false
     
     var body: some View {
         let allRepeatedWords = folderVM.folder.treinos.flatMap { $0.feedback?.repeatedWords ?? [] }.map { $0.word }
-        let allSynonyms = folderVM.folder.treinos.flatMap { $0.feedback?.repeatedWords ?? [] }.map { $0.synonymContexts }
-        let uniqueSynonyms = Set(allSynonyms)
         let uniqueWords = Set(allRepeatedWords)
         
         RoundedRectangle(cornerRadius: 16)
@@ -195,6 +256,7 @@ struct WordRepetitionView: View {
             }
     }
 }
+
 struct ExpandableView: View {
     @Namespace private var namespace // usada para criar animacoes mais suaves
     @State private var show: Bool = false

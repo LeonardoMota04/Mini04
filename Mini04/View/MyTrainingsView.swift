@@ -12,7 +12,8 @@ struct MyTrainingsView: View {
     
     let trainingFilters: [TreinoModel.TrainingFilter] =  TreinoModel.TrainingFilter.allCases
     @State private var selectedFilter: TreinoModel.TrainingFilter = .newerToOlder
-    
+    @State private var selectedFavoriteOption: Bool = false
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -20,12 +21,9 @@ struct MyTrainingsView: View {
                     .font(.title2)
                     .bold()
                 Spacer()
-                Picker("", selection: $selectedFilter) {
-                    ForEach(trainingFilters, id: \.self) { filter in
-                        Text(filter.rawValue)
-                    }
-                }
-                .frame(maxWidth: 220)
+                
+                CustomPickerView(selectedSortByOption: $selectedFilter, selectedFavoriteOption: $selectedFavoriteOption)
+                    .frame(maxWidth: 220)
             }
             TrainingCellsView(folderVM: folderVM, selectedFilter: selectedFilter)
         }
@@ -50,7 +48,7 @@ struct TrainingCellsView: View {
                     Spacer()
             }
             .font(.footnote)
-            .padding(.horizontal, 30)
+            .padding(.leading, 40)
             .padding(.bottom, 10)
             
             ForEach(filteredTrainings, id: \.self) { training in
@@ -75,9 +73,8 @@ struct TrainingCellsView: View {
                         Spacer()
                         
                         Image(systemName: training.isFavorite ? "heart.fill" : "heart")
-                            .onTapGesture {
-                                training.isFavorite.toggle()
-                            }
+                            .onTapGesture { training.isFavorite.toggle() }
+                            .font(.system(size: 15))
                         
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -85,7 +82,7 @@ struct TrainingCellsView: View {
                     .padding(.horizontal, 25)
                     .padding(.vertical, 15)
                     .background {
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: 10)
                             .foregroundStyle(.gray)
                     }
                 }
@@ -101,7 +98,9 @@ struct TrainingCellsView: View {
         // ATUALIZAR A LISTA FILTRADA DE TREINOS
         /// ao abrir, ele atualiza a lista de treinos
         .onAppear {
-            updateFilteredTrainings()
+            withAnimation {
+                updateFilteredTrainings()
+            }
         }
         /// ao trocar de filtro, ele atualiza a lista de treinos
         .onChange(of: selectedFilter) { _, _ in
@@ -111,6 +110,11 @@ struct TrainingCellsView: View {
         }
         /// ao trocar de pasta ele atualiza a lista de treinos
         .onChange(of: folderVM.folder) { _, _ in
+            withAnimation {
+                updateFilteredTrainings()
+            }
+        }
+        .onChange(of: folderVM.folder.treinos.count) { oldValue, newValue in
             withAnimation {
                 updateFilteredTrainings()
             }

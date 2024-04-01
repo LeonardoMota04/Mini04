@@ -48,18 +48,14 @@ struct PastaView: View {
                     }
                     Text("Tempo Desejado: \(folderVM.folder.tempoDesejado)")
                 }
-                HStack {
+                HStack(alignment: .top){
                     ExpandableView(thumbnail: ThumbnailView(content: {
                         TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
                     }), expanded: ExpandedView(content: {
                         TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
                     }))
+                    //TimeFeedbackView(folderVM: folderVM)
                     WordRepetitionView(folderVM: folderVM)
-//                    ExpandableView(thumbnail: ThumbnailView(content: {
-//                        TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-//                    }), expanded: ExpandedView(content: {
-//                        WordRepetitionView(folderVM: folderVM)
-//                    }))
                 }
               
                 Spacer()
