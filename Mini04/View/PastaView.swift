@@ -45,6 +45,9 @@ struct PastaView: View {
                     }
                     .zIndex(1)
                 }
+                
+                
+                
                 VStack {
                     // infos da pasta
                     // NOME DA PASTA
@@ -104,6 +107,7 @@ struct PastaView: View {
                     MyTrainingsView(folderVM: folderVM, isShowingModal: $isShowingModal, selectedTraining: $selectedTraining)
                 }
                 .blur(radius: isShowingModal ? 3 : 0)
+                .disabled(isShowingModal ? true : false)
             }
         }
         .padding()

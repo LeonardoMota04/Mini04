@@ -16,13 +16,94 @@ struct TreinoView: View {
     @Binding var isShowingModal: Bool
     @State private var editedName: String = ""
     @State private var avPlayer: AVPlayer = AVPlayer()
+
+     // Define outro DateFormatter para formatar a data de outra maneira
+
     
     var body: some View {
         GeometryReader { geometry in
             let size = geometry.size
             
             VStack {
-                // NOME DO TREINO
+                // BOTAO FECHAR A MODAL
+                HStack {
+                    Button {
+                        isShowingModal.toggle()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                    .buttonStyle(.plain)
+                    
+                    Spacer()
+                }
+                .padding(.bottom)
+                .padding(.leading, -5)
+
+                
+                    //DATA DO TREINO
+                    HStack {
+                        let formatedDate: DateFormatter = {
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "EEEE, MMM d, yyyy"
+                            return formatter
+                        }()
+                        Text(formatedDate.string(from: trainingVM.treino.data))
+                            .foregroundStyle(.black)
+                            .font(.callout)
+                        Spacer()
+                    }
+                    //NOME DO TREINO
+                    HStack {
+                        Text(trainingVM.treino.nome)
+                            .foregroundStyle(.black)
+                            .font(.largeTitle)
+                            .bold()
+                        Spacer()
+                    }
+                
+                    VStack {
+                        HStack {
+                            Text("Gravaçao")
+                                .foregroundStyle(.black)
+                                .font(.title3)
+                                .bold()
+                            Spacer()
+                        }
+                        HStack {
+                            // PLAYER DE VÍDEO
+                            VideoPlayer(player: avPlayer)
+                                .onAppear {
+                                    if let videoURL = trainingVM.treino.video?.videoURL {
+                                        avPlayer.replaceCurrentItem(with: AVPlayerItem(url: videoURL))
+                                    }
+                                }
+                                .frame(width: 400)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                            VStack {
+                                HStack {
+                                    Text("Transcrição")
+                                        .foregroundStyle(.black)
+                                        .font(.title3)
+                                        .bold()
+                                    Spacer()
+                                }
+                                RoundedRectangle(cornerRadius: 10)
+                            }
+                                .foregroundStyle(.white)
+                        }
+                        .frame( height: 225)
+                        
+                        //feedbacks
+                        HStack {
+                            Text("Feedbacks")
+                                .foregroundStyle(.black)
+                                .font(.title3)
+                                .bold()
+                            Spacer()
+                        }
+                    }
+                    .padding()
+                    
                 HStack {
                     TextField("Nome", text: $editedName)
                         .font(.title)
@@ -34,13 +115,7 @@ struct TreinoView: View {
                 Text("Você está treinando na pasta \(folderVM.folder.nome)")
                 Text("Data de criação: \(trainingVM.treino.data)")
                 
-                VideoPlayer(player: avPlayer)
-                    .onAppear {
-                        if let videoURL = trainingVM.treino.video?.videoURL {
-                            avPlayer.replaceCurrentItem(with: AVPlayerItem(url: videoURL))
-                        }
-                    }
-                    .frame(height: size.height / 5)
+
                 
                 // Verifica se o feedback está disponível
                 // Feedbacks
@@ -62,6 +137,7 @@ struct TreinoView: View {
                     ProgressView("Carregando Feedback")
                 }
             }
+            .padding()
         }
         .onAppear {
             editedName = trainingVM.treino.nome
