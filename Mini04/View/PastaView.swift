@@ -75,7 +75,7 @@ struct PastaView: View {
                         }
                         Text("Tempo Desejado: \(folderVM.folder.tempoDesejado)")
                     }
-                    HStack {
+                    HStack(alignment: .top){
                         ExpandableView(thumbnail: ThumbnailView(content: {
                             TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
                         }), expanded: ExpandedView(content: {
@@ -108,32 +108,6 @@ struct PastaView: View {
                 }
                 .blur(radius: isShowingModal ? 3 : 0)
                 .disabled(isShowingModal ? true : false)
-                HStack(alignment: .top){
-                    ExpandableView(thumbnail: ThumbnailView(content: {
-                        TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-                    }), expanded: ExpandedView(content: {
-                        TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-                    }))
-                    //TimeFeedbackView(folderVM: folderVM)
-                    WordRepetitionView(folderVM: folderVM)
-                }
-              
-                Spacer()
-                
-                if folderVM.folder.treinos.isEmpty {
-                    Text("Adicione um treino para começar")
-                }
-                
-                Spacer()
-            
-                // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
-                NavigationLink {
-                    RecordingVideoView(folderVM: folderVM)
-                } label: {
-                    Text("Novo Treino")
-                }
-                // exibe todos os treinos
-                MyTrainingsView(folderVM: folderVM)
             }
         }
         .padding()
