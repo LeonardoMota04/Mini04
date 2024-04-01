@@ -36,15 +36,18 @@ struct PastaView: View {
                 HStack {
                     HStack {
                         Image(systemName: "calendar")
-                        Text("\(folderVM.folder.data)")
+                        Text("\(folderVM.folder.data.formatted())")
+                        Text("|")
                     }
                     HStack {
                         Image(systemName: "video.badge.waveform.fill")
                         Text("\(folderVM.folder.treinos.count) Treinos")
+                        Text("|")
                     }
                     HStack {
                         Image(systemName: "handbag.fill")
                         Text("Objetivo: \(folderVM.folder.objetivoApresentacao)")
+                        
                     }
                     Text("Tempo Desejado: \(folderVM.folder.tempoDesejado)")
                 }
@@ -84,20 +87,55 @@ struct PastaView: View {
 //                        }
 //                    }
 //                }
-                ExpandableView(thumbnail: ThumbnailView(content: {
-                    TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-                }), expanded: ExpandedView(content: {
-                    TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-                }))
-              
+                HStack(alignment: .top) {
+                    ExpandableView(thumbnail: ThumbnailView(content: {
+                        TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 135)
+                    }), expanded: ExpandedView(content: {
+                        TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 280)
+                    }))
+                    ExpandableView(thumbnail: ThumbnailView(content: {
+                        TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 135)
+                    }), expanded: ExpandedView(content: {
+                        TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 280)
+                    }))
+                    ExpandableView(thumbnail: ThumbnailView(content: {
+                        TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 135)
+                    }), expanded: ExpandedView(content: {
+                        TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 280)
+                    }))
+                }
+                HStack {
+                    ObjetiveFeedBackView()
+                        .frame(minWidth: 300, maxWidth: 400)
+                        .frame(height: 135)
+                        Spacer()
+                }
                 Spacer()
-                
                 if folderVM.folder.treinos.isEmpty {
                     Text("Adicione um treino para começar")
                 }
-                
                 Spacer()
-            
+                // ScrollView dos treinos
+                VStack {
+                    ScrollView() {
+                        ForEach(folderVM.folder.treinos) { treino in
+                            TreinoVisualComponent(treinoName: treino.nome, treinoDate: "MUDAR", treinoDuration: "06:66")
+                            
+                        }
+                    }
+                }
                 // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
                 NavigationLink {
                     RecordingVideoView(folderVM: folderVM)
@@ -186,3 +224,9 @@ struct FolderInfoModalView: View {
         }
     }
 }
+
+
+#Preview{
+    PastaView(folderVM: FoldersViewModel(folder: PastaModel(nome: "Euu", tempoDesejado: 10, objetivoApresentacao: "pitch")))
+}
+    
