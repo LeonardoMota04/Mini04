@@ -13,6 +13,9 @@ struct MyTrainingsView: View {
     let trainingFilters: [TreinoModel.TrainingFilter] =  TreinoModel.TrainingFilter.allCases
     @State private var selectedFilter: TreinoModel.TrainingFilter = .newerToOlder
     
+    @Binding var isShowingModal: Bool
+    @Binding var selectedTraining: TreinoModel?
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -27,7 +30,7 @@ struct MyTrainingsView: View {
                 }
                 .frame(maxWidth: 220)
             }
-            TrainingCellsView(folderVM: folderVM, selectedFilter: selectedFilter)
+            TrainingCellsView(folderVM: folderVM, selectedFilter: selectedFilter, isShowingModal: $isShowingModal, selectedTraining: $selectedTraining)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -38,6 +41,9 @@ struct TrainingCellsView: View {
     var selectedFilter: TreinoModel.TrainingFilter?
     @State private var filteredTrainings: [TreinoModel] = []
     
+    @Binding var isShowingModal: Bool
+    @Binding var selectedTraining: TreinoModel?
+
     var body: some View {
         ScrollView {
             HStack {
@@ -54,8 +60,10 @@ struct TrainingCellsView: View {
             .padding(.bottom, 10)
             
             ForEach(filteredTrainings, id: \.self) { training in
-                NavigationLink {
-                    TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: training))
+                Button {
+                    selectedTraining = training
+                    isShowingModal.toggle()
+
                 } label: {
                     HStack {
                         Image(systemName: "video.badge.waveform.fill")
@@ -144,8 +152,8 @@ struct TrainingCellsView: View {
     }
 }
 
-
-#Preview {
-    MyTrainingsView(folderVM: FoldersViewModel(folder: PastaModel(nome: "Nome Pasta", tempoDesejado: 10, objetivoApresentacao: "Objetivo")))
-    //TrainingCellsView()
-}
+//
+//#Preview {
+//    MyTrainingsView(folderVM: FoldersViewModel(folder: PastaModel(nome: "Nome Pasta", tempoDesejado: 10, objetivoApresentacao: "Objetivo")))
+//    //TrainingCellsView()
+//}

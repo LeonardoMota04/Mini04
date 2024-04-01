@@ -18,66 +18,84 @@ struct PastaView: View {
     
     // EDITAR NOME DA PASTA
     @State private var editedName: String = ""
+    @State private var isShowingModal = false
+    
+    @State private var selectedTraining: TreinoModel?
 
     var body: some View {
         NavigationStack {
-            VStack {
-                // infos da pasta
-                // NOME DA PASTA
-                HStack {
-                    //TextField("Nome da pasta", text: $editedName)
-                    Text(folderVM.folder.nome)
-                        .font(.title)
+            ZStack {
+                if isShowingModal {
+                    ZStack(alignment: .top) {
+                        
+                        TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: selectedTraining!), isShowingModal: $isShowingModal)
+                            .frame(maxHeight: .infinity)
+                            .frame(width: 800)
+                            .background(.gray)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .offset(y:25)
+                    }
+                    .zIndex(1)
+                }
+                VStack {
+                    // infos da pasta
+                    // NOME DA PASTA
+                    HStack {
+                        //TextField("Nome da pasta", text: $editedName)
+                        Text(folderVM.folder.nome)
+                            .font(.title)
+                        Spacer()
+                        Button("Salvar Alterações") {
+                            saveChanges()
+                        }
+                    }
+                    HStack {
+                        HStack {
+                            Image(systemName: "calendar")
+                            Text("\(folderVM.folder.data)")
+                        }
+                        HStack {
+                            Image(systemName: "video.badge.waveform.fill")
+                            Text("\(folderVM.folder.treinos.count) Treinos")
+                        }
+                        HStack {
+                            Image(systemName: "handbag.fill")
+                            Text("Objetivo: \(folderVM.folder.objetivoApresentacao)")
+                        }
+                        Text("Tempo Desejado: \(folderVM.folder.tempoDesejado)")
+                    }
+                    HStack {
+                        ExpandableView(thumbnail: ThumbnailView(content: {
+                            TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                        }), expanded: ExpandedView(content: {
+                            TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                        }))
+                        WordRepetitionView(folderVM: folderVM)
+                        //                    ExpandableView(thumbnail: ThumbnailView(content: {
+                        //                        TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
+                        //                    }), expanded: ExpandedView(content: {
+                        //                        WordRepetitionView(folderVM: folderVM)
+                        //                    }))
+                    }
+                    
                     Spacer()
-                    Button("Salvar Alterações") {
-                        saveChanges()
+                    
+                    if folderVM.folder.treinos.isEmpty {
+                        Text("Adicione um treino para começar")
                     }
-                }
-                HStack {
-                    HStack {
-                        Image(systemName: "calendar")
-                        Text("\(folderVM.folder.data)")
+                    
+                    Spacer()
+                    
+                    // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
+                    NavigationLink {
+                        RecordingVideoView(folderVM: folderVM)
+                    } label: {
+                        Text("Novo Treino")
                     }
-                    HStack {
-                        Image(systemName: "video.badge.waveform.fill")
-                        Text("\(folderVM.folder.treinos.count) Treinos")
-                    }
-                    HStack {
-                        Image(systemName: "handbag.fill")
-                        Text("Objetivo: \(folderVM.folder.objetivoApresentacao)")
-                    }
-                    Text("Tempo Desejado: \(folderVM.folder.tempoDesejado)")
+                    // exibe todos os treinos
+                    MyTrainingsView(folderVM: folderVM, isShowingModal: $isShowingModal, selectedTraining: $selectedTraining)
                 }
-                HStack {
-                    ExpandableView(thumbnail: ThumbnailView(content: {
-                        TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-                    }), expanded: ExpandedView(content: {
-                        TimeFeedBackViewExpand(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-                    }))
-                    WordRepetitionView(folderVM: folderVM)
-//                    ExpandableView(thumbnail: ThumbnailView(content: {
-//                        TimeFeedBackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos)
-//                    }), expanded: ExpandedView(content: {
-//                        WordRepetitionView(folderVM: folderVM)
-//                    }))
-                }
-              
-                Spacer()
-                
-                if folderVM.folder.treinos.isEmpty {
-                    Text("Adicione um treino para começar")
-                }
-                
-                Spacer()
-            
-                // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
-                NavigationLink {
-                    RecordingVideoView(folderVM: folderVM)
-                } label: {
-                    Text("Novo Treino")
-                }
-                // exibe todos os treinos
-                MyTrainingsView(folderVM: folderVM)
+                .blur(radius: isShowingModal ? 3 : 0)
             }
         }
         .padding()
@@ -135,3 +153,5 @@ struct FolderInfoModalView: View {
         }
     }
 }
+
+

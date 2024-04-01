@@ -13,7 +13,7 @@ struct TreinoView: View {
     @ObservedObject var folderVM: FoldersViewModel
     @ObservedObject var trainingVM: TreinoViewModel
     @EnvironmentObject var cameraVC: CameraViewModel
-    
+    @Binding var isShowingModal: Bool
     @State private var editedName: String = ""
     @State private var avPlayer: AVPlayer = AVPlayer()
     
