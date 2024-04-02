@@ -254,7 +254,7 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     }
     
     func startRecording() {
-        isRecording.toggle()
+        isRecording = true
 
 
         // Contagem antes de iniciar a gravar
@@ -298,7 +298,7 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     }
     
     func stopRecording() {
-        isRecording.toggle()
+        isRecording = false
         // variavel para armazenar o scrip (quando da stop ele deixa a string "" e fica impossivel salva-la)
         auxSpeech = speechText
         speechManager.stopRecording()
@@ -308,8 +308,6 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
             return
         }
         videoFileOutput.stopRecording()
-        print("Speech Normal: \(speechText)")
-        print("Speech Topicos: " + speechTopicText)
         
         // parando o timer e reiniciando ele
         timer?.invalidate()

@@ -28,7 +28,7 @@ struct MyTrainingsView: View {
                 CustomPickerView(selectedSortByOption: $selectedFilter, selectedFavoriteOption: $selectedFavoriteOption)
                     .frame(maxWidth: 220)
             }
-            TrainingCellsView(folderVM: folderVM, selectedFilter: selectedFilter, isShowingModal: $isShowingModal, selectedTraining: $selectedTraining)
+            TrainingCellsView(folderVM: folderVM, selectedFilter: selectedFilter, selectedFavoriteOption: $selectedFavoriteOption, isShowingModal: $isShowingModal, selectedTraining: $selectedTraining)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -36,9 +36,12 @@ struct MyTrainingsView: View {
 
 struct TrainingCellsView: View {
     @ObservedObject var folderVM: FoldersViewModel
-    var selectedFilter: TreinoModel.TrainingFilter?
-    @State private var filteredTrainings: [TreinoModel] = []
     
+    // FILTERS
+    @State private var filteredTrainings: [TreinoModel] = []
+    var selectedFilter: TreinoModel.TrainingFilter?
+    @Binding var selectedFavoriteOption: Bool
+
     @Binding var isShowingModal: Bool
     @Binding var selectedTraining: TreinoModel?
 
@@ -122,7 +125,14 @@ struct TrainingCellsView: View {
                 updateFilteredTrainings()
             }
         }
-        .onChange(of: folderVM.folder.treinos.count) { oldValue, newValue in
+        /// ao adicionar um trieno ele atualiza a lista de treinos
+        .onChange(of: folderVM.folder.treinos.count) { _, _ in
+            withAnimation {
+                updateFilteredTrainings()
+            }
+        }
+        /// ao aplicar o filtro de favoritos, ele atualiza a lista de treinos
+        .onChange(of: selectedFavoriteOption) { _, _ in
             withAnimation {
                 updateFilteredTrainings()
             }
@@ -130,34 +140,126 @@ struct TrainingCellsView: View {
     }
     
     private func updateFilteredTrainings() {
-        switch selectedFilter {
-        // Mais recente para mais antigo
-        case .newerToOlder:
-            filteredTrainings = folderVM.folder.treinos.sorted(by: { $0.data > $1.data })
-    
-        // Mais antigo para mais recente
-        case .olderToNewer:
-            filteredTrainings = folderVM.folder.treinos.sorted(by: { $0.data < $1.data })
-            
-        // Mais longo para mais rápido
-        case .longerToFaster:
-            filteredTrainings = folderVM.folder.treinos.sorted(by: { ($0.video?.videoTime ?? 0) > ($1.video?.videoTime ?? 0) })
-    
-        // Mais rápido para mais longo
-        case .fasterToLonger:
-            filteredTrainings = folderVM.folder.treinos.sorted(by: { ($0.video?.videoTime ?? 0) < ($1.video?.videoTime ?? 0) })
+        if selectedFavoriteOption {
+            // Se o filtro de favoritos estiver ativado
+            switch selectedFilter {
+            // Mais recente para mais antigo
+            case .newerToOlder:
+                filteredTrainings = folderVM.folder.treinos.filter { $0.isFavorite }.sorted(by: { $0.data > $1.data })
         
-        // Favoritos
-        case .favorites:
-            filteredTrainings = folderVM.folder.treinos.filter { $0.isFavorite }
-        default:
-            filteredTrainings = folderVM.folder.treinos
+            // Mais antigo para mais recente
+            case .olderToNewer:
+                filteredTrainings = folderVM.folder.treinos.filter { $0.isFavorite }.sorted(by: { $0.data < $1.data })
+                
+            // Mais longo para mais rápido
+            case .longerToFaster:
+                filteredTrainings = folderVM.folder.treinos.filter { $0.isFavorite }.sorted(by: { ($0.video?.videoTime ?? 0) > ($1.video?.videoTime ?? 0) })
+        
+            // Mais rápido para mais longo
+            case .fasterToLonger:
+                filteredTrainings = folderVM.folder.treinos.filter { $0.isFavorite }.sorted(by: { ($0.video?.videoTime ?? 0) < ($1.video?.videoTime ?? 0) })
+            
+            // Favoritos (essa parte não será executada caso selectedFavoriteOption seja true)
+            case .favorites:
+                filteredTrainings = folderVM.folder.treinos.filter { $0.isFavorite }
+            default:
+                break // Caso padrão vazio
+            }
+        } else {
+            // Se o filtro de favoritos estiver desativado, aplicar os filtros padrão
+            switch selectedFilter {
+            // Mais recente para mais antigo
+            case .newerToOlder:
+                filteredTrainings = folderVM.folder.treinos.sorted(by: { $0.data > $1.data })
+        
+            // Mais antigo para mais recente
+            case .olderToNewer:
+                filteredTrainings = folderVM.folder.treinos.sorted(by: { $0.data < $1.data })
+                
+            // Mais longo para mais rápido
+            case .longerToFaster:
+                filteredTrainings = folderVM.folder.treinos.sorted(by: { ($0.video?.videoTime ?? 0) > ($1.video?.videoTime ?? 0) })
+        
+            // Mais rápido para mais longo
+            case .fasterToLonger:
+                filteredTrainings = folderVM.folder.treinos.sorted(by: { ($0.video?.videoTime ?? 0) < ($1.video?.videoTime ?? 0) })
+            
+            // Favoritos (essa parte não será executada caso selectedFavoriteOption seja true)
+            case .favorites:
+                filteredTrainings = folderVM.folder.treinos.filter { $0.isFavorite }
+            default:
+                break // Caso padrão vazio
+            }
         }
     }
 }
 
-//
-//#Preview {
-//    MyTrainingsView(folderVM: FoldersViewModel(folder: PastaModel(nome: "Nome Pasta", tempoDesejado: 10, objetivoApresentacao: "Objetivo")))
-//    //TrainingCellsView()
-//}
+struct CustomPickerView: View {
+
+    let trainingFilters: [TreinoModel.TrainingFilter] =  TreinoModel.TrainingFilter.allCases
+
+
+
+    @Binding var selectedSortByOption: TreinoModel.TrainingFilter
+
+    @Binding var selectedFavoriteOption: Bool
+
+    
+
+    var body: some View {
+
+        Menu {
+
+            Section(header: Text("Classificar por")) {
+
+                ForEach(trainingFilters.filter { $0.rawValue != "Favoritos"}, id: \.self) { filter in
+
+                    Button(filter.rawValue) {
+
+                        selectedSortByOption = filter
+
+                    }
+
+                }
+
+            }
+
+            
+
+            Section(header: Text("Filtrar por")) {
+
+                Toggle(isOn: $selectedFavoriteOption) {
+
+                    Text("Favoritos")
+
+                }
+
+                .toggleStyle(.button)
+
+            }
+
+        } label: {
+
+            Text(selectedSortByOption == .favorites ? "Favoritos" : selectedSortByOption.rawValue)
+
+                .font(.body)
+
+                .foregroundStyle(.primary)
+
+        }
+
+        .menuStyle(.borderlessButton)
+
+        .background {
+
+            RoundedRectangle(cornerRadius: 5)
+
+                .foregroundStyle(.clear)
+
+                .frame(height: 22)
+
+        }
+
+    }
+
+}
