@@ -71,8 +71,12 @@ struct TreinoView: View {
                         }
                         HStack {
                             // PLAYER DE VÍDEO
-                            VideoPlayer(player: AVPlayer(url: trainingVM.treino.video!.videoURL))
-                                
+                            VideoPlayer(player: avPlayer)
+                                .onAppear {
+                                    if let videoURL = trainingVM.treino.video?.videoURL {
+                                        avPlayer.replaceCurrentItem(with: AVPlayerItem(url: videoURL))
+                                    }
+                                }
                                 .frame(width: 400)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                             VStack {
@@ -135,7 +139,6 @@ struct TreinoView: View {
             }
             .padding()
         }
-        .background(.gray)
         .onAppear {
             editedName = trainingVM.treino.nome
         }

@@ -33,7 +33,7 @@ class FoldersViewModel: ObservableObject {
     func createNewTraining(videoURL: URL, videoScript: String, videoTime: TimeInterval, videoTopics: [String], topicsDuration: [TimeInterval]) {
         guard let modelContext = modelContext else { return }
         
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.main.async {
             self.processFeedbacks(videoScript: videoScript) { [self] feedback in
                 let newTraining = TreinoModel(name: "Treino \(folder.treinos.count + 1)",
                                               video: VideoModel(videoURL: videoURL,
@@ -47,7 +47,6 @@ class FoldersViewModel: ObservableObject {
                     folder.treinos.append(newTraining)
                     modelContext.insert(newTraining)
                     try modelContext.save()
-                    print("caiu no do de createnewtraining")
                 } catch {
                     print("Não conseguiu criar e salvar o treino. \(error)")
                 }

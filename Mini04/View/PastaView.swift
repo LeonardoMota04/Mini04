@@ -19,63 +19,29 @@ struct PastaView: View {
     // EDITAR NOME DA PASTA
     @State private var editedName: String = ""
     @State private var isShowingModal = false
-    @State var filteredTrainings: [TreinoModel] = []
+    
     @State private var selectedTraining: TreinoModel?
-    @State private var selectedTrainingIndex: Int?
+
     var body: some View {
         NavigationStack {
             ZStack {
                 // quando clicar no botao abre uma zstack sobre toda a pastaview, ou seja, a "modal"
                 if isShowingModal {
-                    HStack {
-                        Spacer()
-                        //botao de retornar uma view
-                        Button {
-                            if selectedTrainingIndex! < filteredTrainings.count - 1{
-                                selectedTrainingIndex! += 1
-                            }
-//                            folderVM.folder.treinos
-                        } label: {
-                            Image(systemName: "chevron.backward.circle.fill")
-                                .resizable()
-                                .frame(width: 50, height: 50)
+                    ZStack(alignment: .top) {
+                        //sombra
+                        Color.black
+                            .frame(maxHeight: .infinity)
+                            .frame(width: 800)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .offset(y:25)
+                            .blur(radius: 3)
 
-                        }
-                        .disabled(selectedTrainingIndex! == filteredTrainings.count - 1 ? true : false)
-                        .buttonStyle(.plain)
-                        .padding()
-                        ZStack(alignment: .top) {
-                            //sombra
-                            Color.black
-                                .frame(maxHeight: .infinity)
-                                .frame(width: 800)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .offset(y:25)
-                                .blur(radius: 3)
-                            
-                            TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
-                                .frame(maxHeight: .infinity)
-                                .frame(width: 800)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .offset(y:25)
-                            
-                        }
-                        // botao de passar uma view
-                        Button {
-//                            print(selectedTrainingIndex)
-//                            print(filteredTrainings.count)
-                            if selectedTrainingIndex! > 0 {
-                                selectedTrainingIndex! -= 1
-                            }
-                        } label: {
-                            Image(systemName: "chevron.right.circle.fill")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                        }
-                        .buttonStyle(.plain)
-                        .disabled(selectedTrainingIndex == 0  ? true : false)
-                        .padding()
-                        Spacer()
+                        TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: selectedTraining!), isShowingModal: $isShowingModal)
+                            .frame(maxHeight: .infinity)
+                            .frame(width: 800)
+                            .background(.gray)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .offset(y:25)
                     }
                     .zIndex(1)
                 }
@@ -138,21 +104,13 @@ struct PastaView: View {
                         Text("Novo Treino")
                     }
                     // exibe todos os treinos
-                    MyTrainingsView(folderVM: folderVM, filteredTrainings: $filteredTrainings, isShowingModal: $isShowingModal, selectedTraining: $selectedTraining, selectedTrainingIndex: $selectedTrainingIndex)
+                    MyTrainingsView(folderVM: folderVM, isShowingModal: $isShowingModal, selectedTraining: $selectedTraining)
                 }
                 .blur(radius: isShowingModal ? 3 : 0)
                 .disabled(isShowingModal ? true : false)
             }
         }
         .padding()
-        .onTapGesture {
-            if isShowingModal {
-                isShowingModal.toggle()
-            }
-        }
-        .onChange(of: folderVM.folder, { oldValue, newValue in
-            folderVM.modelContext = modelContext
-        })
         .onAppear {
             folderVM.modelContext = modelContext
             do {
