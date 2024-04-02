@@ -114,7 +114,6 @@ struct TreinoView: View {
 
                 
                 // Verifica se o feedback está disponível
-                // Feedbacks
                 Text(String("TempoVideo: \(trainingVM.treino.video!.videoTime)"))
                 Text(String("TOPICS: \(trainingVM.treino.video!.videoTopics)"))
                 ForEach((trainingVM.treino.video?.topicsDuration.indices)!, id: \.self) { index in
