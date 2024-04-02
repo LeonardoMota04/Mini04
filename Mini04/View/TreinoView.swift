@@ -118,7 +118,6 @@ struct TreinoView: View {
                 TimeCircularFeedback(title: trainingVM.treino.video?.formattedTime() ?? "", subtitle: "Tempo Total", objetiveTime: folderVM.folder.tempoDesejado, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", frameWidth: 442, frameHeight: 154, progress: CGFloat(trainingVM.treino.video?.videoTime ?? 1), totalProgress: CGFloat(folderVM.folder.tempoDesejado * 60))
                 
                 // Verifica se o feedback está disponível
-                // Feedbacks
                 Text(String("TempoVideo: \(trainingVM.treino.video!.videoTime)"))
                 Text(String("TOPICS: \(trainingVM.treino.video!.videoTopics)"))
                 ForEach((trainingVM.treino.video?.topicsDuration.indices)!, id: \.self) { index in
