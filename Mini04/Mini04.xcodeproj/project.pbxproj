@@ -46,6 +46,8 @@
 		F196321E2BA9C3C80086D159 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F196321D2BA9C3C80086D159 /* ChatView.swift */; };
 		F19632262BAA07340086D159 /* NetworkCallsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19632252BAA07340086D159 /* NetworkCallsTests.swift */; };
 		F196322D2BAA07F10086D159 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F196322C2BAA07F10086D159 /* TestData.swift */; };
+		F1B51E002BBC3A7F000D0126 /* HumPredictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B51DFF2BBC3A7F000D0126 /* HumPredictor.swift */; };
+		F1B51E022BBC3AA7000D0126 /* HumClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F1B51E012BBC3AA7000D0126 /* HumClassifier.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +102,8 @@
 		F19632232BAA07330086D159 /* NetworkCallsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NetworkCallsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F19632252BAA07340086D159 /* NetworkCallsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCallsTests.swift; sourceTree = "<group>"; };
 		F196322C2BAA07F10086D159 /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
+		F1B51DFF2BBC3A7F000D0126 /* HumPredictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumPredictor.swift; sourceTree = "<group>"; };
+		F1B51E012BBC3AA7000D0126 /* HumClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = HumClassifier.mlmodel; path = ../../../Academy/2024/HumClassifier.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +207,7 @@
 			children = (
 				370E91EB2BA8C46400D39C27 /* HandPose1.mlmodel */,
 				370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */,
+				F1B51E012BBC3AA7000D0126 /* HumClassifier.mlmodel */,
 				370E91F72BA8D7E200D39C27 /* VideoModel.swift */,
 				370E91F32BA8D7BA00D39C27 /* TreinoModel.swift */,
 				2692A1F92BB25F4000EEF9AB /* SynonymModel.swift */,
@@ -211,6 +216,7 @@
 				F19632152BA8DE130086D159 /* ChatGPTModels.swift */,
 				F19632172BA8DE5A0086D159 /* OpenAIService.swift */,
 				F19632192BA8E1670086D159 /* Constants.swift */,
+				F1B51DFF2BBC3A7F000D0126 /* HumPredictor.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -337,6 +343,7 @@
 				370E91E32BA8B78300D39C27 /* HUDCameraView.swift in Sources */,
 				F196321E2BA9C3C80086D159 /* ChatView.swift in Sources */,
 				370E91E52BA8B82D00D39C27 /* FinalPreview.swift in Sources */,
+				F1B51E002BBC3A7F000D0126 /* HumPredictor.swift in Sources */,
 				370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */,
 				370E91F62BA8D7D200D39C27 /* TreinoViewModel.swift in Sources */,
 				263D73E82BA4C56F002190F4 /* SwiftDataView.swift in Sources */,
@@ -357,6 +364,7 @@
 				370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */,
 				377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */,
 				370E91E12BA8AFC400D39C27 /* CameraPreview.swift in Sources */,
+				F1B51E022BBC3AA7000D0126 /* HumClassifier.mlmodel in Sources */,
 				263D73E82BA4C56F002190F4 /* SwiftDataView.swift in Sources */,
 				370E91F82BA8D7E200D39C27 /* VideoModel.swift in Sources */,
 				263D73EA2BA4C56F002190F4 /* Item.swift in Sources */,
