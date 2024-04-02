@@ -12,11 +12,12 @@ struct MyTrainingsView: View {
     
     let trainingFilters: [TreinoModel.TrainingFilter] =  TreinoModel.TrainingFilter.allCases
     @State private var selectedFilter: TreinoModel.TrainingFilter = .newerToOlder
-    
+    @Binding var filteredTrainings: [TreinoModel]
     @Binding var isShowingModal: Bool
     @Binding var selectedTraining: TreinoModel?
     @State private var selectedFavoriteOption: Bool = false
 
+    @Binding var selectedTrainingIndex: Int?
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -28,7 +29,8 @@ struct MyTrainingsView: View {
                 CustomPickerView(selectedSortByOption: $selectedFilter, selectedFavoriteOption: $selectedFavoriteOption)
                     .frame(maxWidth: 220)
             }
-            TrainingCellsView(folderVM: folderVM, selectedFilter: selectedFilter, selectedFavoriteOption: $selectedFavoriteOption, isShowingModal: $isShowingModal, selectedTraining: $selectedTraining)
+            TrainingCellsView(folderVM: folderVM, selectedFilter: selectedFilter, selectedFavoriteOption: $selectedFavoriteOption, isShowingModal: $isShowingModal, selectedTraining: $selectedTraining, selectedTrainingIndex: $selectedTrainingIndex)
+
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -44,6 +46,7 @@ struct TrainingCellsView: View {
 
     @Binding var isShowingModal: Bool
     @Binding var selectedTraining: TreinoModel?
+    @Binding var selectedTrainingIndex: Int?
 
     var body: some View {
         ScrollView {
@@ -60,9 +63,10 @@ struct TrainingCellsView: View {
             .padding(.leading, 40)
             .padding(.bottom, 10)
             
-            ForEach(filteredTrainings, id: \.self) { training in
+            ForEach(Array(filteredTrainings.enumerated()), id: \.element.id) { (index, training) in                
                 Button {
-                    selectedTraining = training
+//                    selectedTraining = training
+                    selectedTrainingIndex = index
                     isShowingModal.toggle()
 
                 } label: {
