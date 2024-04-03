@@ -120,6 +120,10 @@ struct TreinoView: View {
                 }
                 Text("SCRIPT: \(trainingVM.treino.video?.script ?? "nao achou o script")")
                 
+                CohesionFeedback(fluidProgress: trainingVM.treino.feedback?.coherenceValues[0] ?? 1,
+                                                     organizationProgress: trainingVM.treino.feedback?.coherenceValues[1] ?? 1,
+                                                     connectionProgress: trainingVM.treino.feedback?.coherenceValues[2] ?? 1)
+                
                 // Tem feedbacks ACHO QUE NAO PRECISA, POIS PARA ENTRAR AQUI ELES DEVEM ESTAR CARREGADOS JÁ
                 Text("Palavras repetidas:")
                 if let feedback = trainingVM.treino.feedback {

@@ -78,7 +78,7 @@ class FoldersViewModel: ObservableObject {
         }
         
         group.notify(queue: .main) {
-            let feedback = FeedbackModel(coherence: 0, repeatedWords: repeatedWordFeedbacks)
+            let feedback = FeedbackModel(coherence: 0, repeatedWords: repeatedWordFeedbacks, coherenceValues: self.convertPorcentageCohesionFeedback())
             completion(feedback)
         }
     }
@@ -249,7 +249,7 @@ class FoldersViewModel: ObservableObject {
       
         
         // verificando se
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+       
             if retornoGPT.role == "assistant" {
                 // Separando o retorno da API em uma array para pegar o valor de cada %
                 let separeteValues = retornoGPT.content.split(separator: "\n")
@@ -279,7 +279,7 @@ class FoldersViewModel: ObservableObject {
                     }
                 }
             }
-        }
+        
         // Exibe as porcentagens coletadas
         for porcentage in porcentages {
             print(porcentage)

@@ -49,9 +49,10 @@ class FeedbackModel {
     var repeatedWords: [RepeatedWordsModel] = [] // palavras repetidas com seus sinonimos
     var coherenceValues: [CGFloat] = [] // porcentagens da coesao
 
-    init(coherence: Int, repeatedWords: [RepeatedWordsModel]) {
+    init(coherence: Int, repeatedWords: [RepeatedWordsModel], coherenceValues: [CGFloat]) {
         self.coerencia = coherence
         self.repeatedWords = repeatedWords
+        self.coherenceValues = coherenceValues
     }
 }
 
