@@ -71,12 +71,7 @@ struct TreinoView: View {
                         }
                         HStack {
                             // PLAYER DE VÍDEO
-                            VideoPlayer(player: avPlayer)
-                                .onAppear {
-                                    if let videoURL = trainingVM.treino.video?.videoURL {
-                                        avPlayer.replaceCurrentItem(with: AVPlayerItem(url: videoURL))
-                                    }
-                                }
+                            VideoPlayer(player: AVPlayer(url: trainingVM.treino.video!.videoURL))
                                 .frame(width: 400)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                             VStack {
