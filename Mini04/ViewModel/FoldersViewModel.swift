@@ -61,7 +61,7 @@ class FoldersViewModel: ObservableObject {
         var repeatedWordFeedbacks: [RepeatedWordsModel] = []
         let group = DispatchGroup()
         
-        for word in repeatedWords {
+        for (word, _) in repeatedWords {
             group.enter()
             
             fetchSynonyms(for: word) { synonymsModel in
@@ -70,7 +70,7 @@ class FoldersViewModel: ObservableObject {
                     let formattedWord = word.prefix(1).uppercased() + word.lowercased().dropFirst()
                 
                     // Criando uma instância de RepeatedWordsModel com a palavra formatada
-                    let repeatedWordModel = RepeatedWordsModel(word: formattedWord, numSynonyms: synonymsModel.numSynonyms, numContexts: synonymsModel.numContexts, synonymContexts: synonymsModel.synonymContexts)
+                    let repeatedWordModel = RepeatedWordsModel(word: formattedWord, repetitionCount: repeatedWords[word] ?? 0, numSynonyms: synonymsModel.numSynonyms, numContexts: synonymsModel.numContexts, synonymContexts: synonymsModel.synonymContexts)
                     repeatedWordFeedbacks.append(repeatedWordModel)
                 }
                 group.leave()
@@ -103,8 +103,8 @@ class FoldersViewModel: ObservableObject {
         }
     }
 
-    // filtra palavras e separa as repetidas 5 vezes
-    func filterRepeatedWordsOverFiveTimes(videoScript: String) -> [String] {
+    // filtra palavras e separa as repetidas 5 vezes, juntamente com o numero de vezes que foi repetida
+    func filterRepeatedWordsOverFiveTimes(videoScript: String) -> [String: Int] {
         var normalizedText: [String: [String]] = [:]
         var repeatedWords: [String: Int] = [:]
         
@@ -120,20 +120,18 @@ class FoldersViewModel: ObservableObject {
                 }
             }
         }
-
+        
         // Conta as palavras repetidas
         for (_, words) in normalizedText {
             guard let firstWord = words.first else { continue }
             repeatedWords[firstWord, default: 0] += words.count
         }
-
+        
         // Filtra as palavras repetidas mais de 5 vezes
-        let repeatedWords_5 = repeatedWords.filter { $0.value >= 5 }.map { $0.key }
-
+        let repeatedWords_5 = repeatedWords.filter { $0.value >= 5 }
+        
         return repeatedWords_5
     }
-    
-    
     
     // READ
        func fetchTrainings() {

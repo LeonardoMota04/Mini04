@@ -66,7 +66,7 @@ class HTMLParser {
             if numbers.count >= 1 {
                 // SINONIMOS e CONTEXTOS
                 if numbers.count == 2 {
-                    numOfContexts = numbers[1]
+                    numOfContexts = min(numbers[1], 6) // limita o numero de contextos a 6
                     shouldGetContextName = true
                     
                 // SINONIMOS
@@ -93,7 +93,7 @@ class HTMLParser {
                 
                 let synonymElements = try context.select("p.syn-list").select("a.sinonimo, span:not([class])")
                 
-                for j in 0..<synonymElements.count {
+                for j in 0..<min(synonymElements.count, 3) { // LIMITA A 3 SINONIMOS POR CONTEXTO
                     let synonym = try synonymElements.get(j).text()
                     contextAndSynonyms.append(synonym) // Adiciona cada sinônimo ao subarray
                     numOfSynonyms += 1

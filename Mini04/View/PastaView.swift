@@ -38,8 +38,7 @@ struct PastaView: View {
 
                         TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: selectedTraining!), isShowingModal: $isShowingModal)
                             .frame(maxHeight: .infinity)
-                            .frame(width: 800)
-                            .background(.gray)
+                            .background(.black)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .offset(y:25)
                     }
@@ -121,9 +120,12 @@ struct PastaView: View {
             //editedName = folderVM.folder.nome
             folderVM.calculateAvarageTime()
         }
-        .onChange(of: folderVM.folder) {
+        .onChange(of: folderVM.folder) { _, _ in
             // quando adicionar um novo treino atualiza o valor do tempo medio dos treinos
             folderVM.calculateAvarageTime()
+            
+            // quando trocar de pasta, passa de novo o contexto
+            folderVM.modelContext = modelContext
         }
         .sheet(isPresented: $isModalPresented) {
             FolderInfoModalView(isModalPresented: $isModalPresented)

@@ -57,12 +57,14 @@ class FeedbackModel {
 @Model
 class RepeatedWordsModel {
     let word: String // palavra repetida
+    let repetitionCount: Int // conta quantas vezes aquela palavra foi repetida
     let numSynonyms: Int
     let numContexts: Int
     var synonymContexts: [[String]] // Array de arrays de String
 
-    init(word: String, numSynonyms: Int, numContexts: Int, synonymContexts: [[String]] = []) {
+    init(word: String, repetitionCount: Int = 0, numSynonyms: Int, numContexts: Int, synonymContexts: [[String]] = []) {
         self.word = word
+        self.repetitionCount = repetitionCount
         self.numSynonyms = numSynonyms
         self.numContexts = numContexts
         self.synonymContexts = synonymContexts
