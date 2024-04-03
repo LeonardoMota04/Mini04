@@ -96,7 +96,8 @@ class FoldersViewModel: ObservableObject {
         
         for word in repeatedWords {
             group.enter()
-            
+            let coherenceValues = convertPorcentageCohesionFeedback()
+            group.wait()
             fetchSynonyms(for: word) { synonymsModel in
                 if let synonymsModel = synonymsModel {
                     // Formatando a palavra para a primeira maiúscula sempre
@@ -263,29 +264,29 @@ class FoldersViewModel: ObservableObject {
         var porcentages: [CGFloat] = []
         let retornoGPT:Message = Message(role: "assistant", content: "Fluidez do Discurso: 90%\nOrganização Lógica: 95%\nConexão entre Ideias: 100%")
         
-//                self.sendMessage(content: """
-//                                          Considerando que as 3 principais características de uma apresentação coesa são: Fluidez do Discurso, Organização Lógica e Conexão entre Ideias. Me dê somente as porcentagens (sem texto explicativo, apenas as porcentagens) de cada  parâmetro (considerando que cada um vale 100% individualmente) analise a seguinte apresentação: Você sabia que 63.3 bilhões de dólares são perdidos anualmente por doenças ocupacionais como o burnout? É um problema tão grande atualmente que, no Japão, existe até uma palavra específica para descrever morte por estresse intenso no trabalho: Karoshi. Pensando nisso,  nós desenvolvemos o Be Cool!, uma solução digital que busca ajudar na organização das suas tarefas profissionais de uma maneira balanceada.
-//
-//                                          No Be Cool você cria uma meta de trabalho e, de acordo com cada tarefa planejada, sugerimos um tempo especial para suas atividades de lazer, porque ter esse tipo de equilíbrio na sua rotina é uma parte essencial para uma vida mais saudável.
-//
-//                                          Após a criação da sua meta de trabalho o Bico, nosso mascote, te ajuda a visualizar em quais atividades focar no momento - desincentivando a procrastinação ou o trabalho excessivo, já que nenhum extremo é saudável a longo prazo.
-//
-//                                          Quando você completa sua meta, o Be Cool salva essa memória na sua aba de conquistas e te convida a fazer uma reflexão sobre seu desempenho. Para pessoas que tem sintomas de burnout, é muito importante tirar um momento para reconhecer suas vitórias e analisar seu humor, o que pode ajudar a identificar mais cedo os sinais de alerta dessa síndrome.
-//
-//                                          O mais legal do Be Cool é que sua aplicação não fica só restringida ao meio profissional, já que, de acordo com os nossos estudos, ele também pode e deve ser usado durante a carreira acadêmica que, como qualquer outra, demanda um cuidado especial!
-//
-//                                          Pensando em todo potêncial do app, estamos trabalhando em melhorias para deixar a experiência ainda melhor! Em breve chegarão novas funcionalidades com um deisgn totalmente revisado e ainda mais intuitivo.
-//
-//                                          Por isso, baixe agora e fique de olho em nossas atualizações! Use o Be Cool e viva uma vida mais balanceada.
-//                                        """)
+                self.sendMessage(content: """
+                                          Considerando que as 3 principais características de uma apresentação coesa são: Fluidez do Discurso, Organização Lógica e Conexão entre Ideias. Me dê somente as porcentagens (sem texto explicativo, apenas as porcentagens) de cada  parâmetro (considerando que cada um vale 100% individualmente) analise a seguinte apresentação: Você sabia que 63.3 bilhões de dólares são perdidos anualmente por doenças ocupacionais como o burnout? É um problema tão grande atualmente que, no Japão, existe até uma palavra específica para descrever morte por estresse intenso no trabalho: Karoshi. Pensando nisso,  nós desenvolvemos o Be Cool!, uma solução digital que busca ajudar na organização das suas tarefas profissionais de uma maneira balanceada.
+
+                                          No Be Cool você cria uma meta de trabalho e, de acordo com cada tarefa planejada, sugerimos um tempo especial para suas atividades de lazer, porque ter esse tipo de equilíbrio na sua rotina é uma parte essencial para uma vida mais saudável.
+
+                                          Após a criação da sua meta de trabalho o Bico, nosso mascote, te ajuda a visualizar em quais atividades focar no momento - desincentivando a procrastinação ou o trabalho excessivo, já que nenhum extremo é saudável a longo prazo.
+
+                                          Quando você completa sua meta, o Be Cool salva essa memória na sua aba de conquistas e te convida a fazer uma reflexão sobre seu desempenho. Para pessoas que tem sintomas de burnout, é muito importante tirar um momento para reconhecer suas vitórias e analisar seu humor, o que pode ajudar a identificar mais cedo os sinais de alerta dessa síndrome.
+
+                                          O mais legal do Be Cool é que sua aplicação não fica só restringida ao meio profissional, já que, de acordo com os nossos estudos, ele também pode e deve ser usado durante a carreira acadêmica que, como qualquer outra, demanda um cuidado especial!
+
+                                          Pensando em todo potêncial do app, estamos trabalhando em melhorias para deixar a experiência ainda melhor! Em breve chegarão novas funcionalidades com um deisgn totalmente revisado e ainda mais intuitivo.
+
+                                          Por isso, baixe agora e fique de olho em nossas atualizações! Use o Be Cool e viva uma vida mais balanceada.
+                                        """)
         
       
         
         // verificando se
        
-            if retornoGPT.role == "assistant" {
+            if messagePorcentages.role == "assistant" {
                 // Separando o retorno da API em uma array para pegar o valor de cada %
-                let separeteValues = retornoGPT.content.split(separator: "\n")
+                let separeteValues = messagePorcentages.content.split(separator: "\n")
                 for message in separeteValues {
                     // Dividir a mensagem pelo caractere ':'
                     let components = message.split(separator: ":")
