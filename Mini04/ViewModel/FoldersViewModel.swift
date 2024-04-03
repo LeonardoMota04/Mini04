@@ -22,10 +22,43 @@ class FoldersViewModel: ObservableObject {
     var avaregeTime: TimeInterval = 0
     var formatedAvareTime: String = ""
     
+    // Variaveis network
+    private var openAIService = OpenAIService() // TODO: ver se isso aqui pode mesmo
+    var messages: [Message] = []
+    var messagePorcentages: Message = Message(role: "", content: "") // iniciando vazia
+    
     init(folder: PastaModel, modelContext: ModelContext? = nil) {
         self.folder = folder
         self.modelContext = modelContext
         fetchTrainings()
+    }
+    
+    // MARK: Networking -
+    func sendMessage(content: String) {
+        let newMessage = Message(role: "user", content: content) // ROLE CHANGE
+        messages.append(newMessage)
+        
+        Task {
+            // Sends the message and awaits the response
+            guard let response = await openAIService.sendMessage(messages: messages) else {
+                print("\nFailed to receive a valid response from the server.")
+                return
+            }
+            
+            // Verifies if are there any choices in the response
+            guard let firstChoice = response.choices.first else {
+                print("\nNo choices found in the response.")
+                return
+            }
+            
+            // Adds the received message in the message list
+            let receivedMessage = firstChoice.message
+            self.messagePorcentages = receivedMessage
+            print(messagePorcentages)
+            DispatchQueue.main.async {
+                self.messages.append(receivedMessage)
+            }
+        }
     }
     
     // MARK: - CRUD
