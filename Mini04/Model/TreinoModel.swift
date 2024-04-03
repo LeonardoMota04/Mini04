@@ -47,6 +47,7 @@ class TreinoModel: Identifiable {
 class FeedbackModel {
     var coerencia: Int
     var repeatedWords: [RepeatedWordsModel] = [] // palavras repetidas com seus sinonimos
+    var coherenceValues: [CGFloat] = [] // porcentagens da coesao
 
     init(coherence: Int, repeatedWords: [RepeatedWordsModel]) {
         self.coerencia = coherence
