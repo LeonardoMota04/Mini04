@@ -12,7 +12,6 @@
 		263D73EA2BA4C56F002190F4 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73E92BA4C56F002190F4 /* Item.swift */; };
 		263D73EC2BA4C571002190F4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EB2BA4C571002190F4 /* Assets.xcassets */; };
 		263D73EF2BA4C571002190F4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EE2BA4C571002190F4 /* Preview Assets.xcassets */; };
-		263D740E2BAA2C57002190F4 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 263D740D2BAA2C57002190F4 /* SwiftSoup */; };
 		263D74102BAA2CD3002190F4 /* WebScraping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D740F2BAA2CD3002190F4 /* WebScraping.swift */; };
 		2692A1F82BB1EC1600EEF9AB /* CameraOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2692A1F72BB1EC1600EEF9AB /* CameraOverlayView.swift */; };
 		2692A1FA2BB25F4000EEF9AB /* SynonymModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2692A1F92BB25F4000EEF9AB /* SynonymModel.swift */; };
@@ -36,6 +35,7 @@
 		370E91FA2BA8D86D00D39C27 /* PastaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91F92BA8D86D00D39C27 /* PastaView.swift */; };
 		370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */; };
 		370E91FE2BA8D9F200D39C27 /* ApresentacaoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */; };
+		3769DE122BBF4284004AE0B4 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3769DE112BBF4284004AE0B4 /* SwiftSoup */; };
 		377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */; };
 		BA5E1A1D2BB36ECD00B9528B /* ViewComponetns.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E1A1C2BB36ECD00B9528B /* ViewComponetns.swift */; };
 		BA5E1A202BB3724700B9528B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73F62BA4C865002190F4 /* ContentView.swift */; };
@@ -109,7 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				263D740E2BAA2C57002190F4 /* SwiftSoup in Frameworks */,
+				3769DE122BBF4284004AE0B4 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,7 +244,7 @@
 			);
 			name = Mini04;
 			packageProductDependencies = (
-				263D740D2BAA2C57002190F4 /* SwiftSoup */,
+				3769DE112BBF4284004AE0B4 /* SwiftSoup */,
 			);
 			productName = Mini04;
 			productReference = 263D73E22BA4C56F002190F4 /* Mini04.app */;
@@ -521,7 +521,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
+				DEVELOPMENT_TEAM = D76TBQVUQR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -553,7 +553,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
+				DEVELOPMENT_TEAM = D76TBQVUQR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -655,9 +655,8 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		263D740D2BAA2C57002190F4 /* SwiftSoup */ = {
+		3769DE112BBF4284004AE0B4 /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 263D740C2BAA2C57002190F4 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */
