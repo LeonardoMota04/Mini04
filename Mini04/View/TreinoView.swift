@@ -25,7 +25,7 @@ struct TreinoView: View {
         GeometryReader { geometry in
             let size = geometry.size
             
-            VStack {
+            ScrollView {
                 // BOTAO FECHAR A MODAL
                 HStack {
                     Button {
