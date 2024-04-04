@@ -20,8 +20,12 @@ struct PastaView: View {
     @State private var editedName: String = ""
     @State private var isShowingModal = false
     
-    @State private var selectedTraining: TreinoModel?
-
+    @State private var selectedTrainingIndex: Int?
+    @State var filteredTrainings: [TreinoModel] = []
+    @State var offsetView1: CGFloat = -2000
+    @State var offsetView2: CGFloat = 0
+    @State var offsetView3: CGFloat = 2000
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -103,10 +107,17 @@ struct PastaView: View {
                         Text("Novo Treino")
                     }
                     // exibe todos os treinos
-                    MyTrainingsView(folderVM: folderVM, isShowingModal: $isShowingModal, selectedTraining: $selectedTraining)
+                    MyTrainingsView(folderVM: folderVM, filteredTrainings: $filteredTrainings, isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex)
                 }
                 .blur(radius: isShowingModal ? 3 : 0)
                 .disabled(isShowingModal ? true : false)
+                .onTapGesture {
+                    if isShowingModal {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            isShowingModal.toggle()
+                        }
+                    }
+                }
             }
         }
         .padding()
@@ -145,7 +156,7 @@ struct PastaView: View {
             
         }
     }
-
+    
 }
 
 // MARK: - MODAL DE INFORMACOES
@@ -156,10 +167,10 @@ struct FolderInfoModalView: View {
             Text("Instruções:")
                 .font(.title)
                 .padding()
-
+            
             Text("pipipipi")
                 .padding()
-
+            
             Button("Fechar") {
                 isModalPresented = false
             }
@@ -167,5 +178,3 @@ struct FolderInfoModalView: View {
         }
     }
 }
-
-
