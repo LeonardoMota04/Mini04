@@ -66,7 +66,9 @@ struct TrainingCellsView: View {
                 Button {
                     //                    selectedTraining = training
                     selectedTrainingIndex = index
-                    isShowingModal.toggle()
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isShowingModal.toggle()
+                    }
                 } label: {
                     HStack {
                         Image(systemName: "video.badge.waveform.fill")
@@ -90,6 +92,8 @@ struct TrainingCellsView: View {
                             .font(.system(size: 15))
                         
                     }
+                    .transition(.scale) // Adiciona a transição de escala
+
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .foregroundStyle(.black)
                     .padding(.horizontal, 25)
@@ -107,6 +111,7 @@ struct TrainingCellsView: View {
                 }
             }
         }
+
         .padding(.top, 25)
         // ATUALIZAR A LISTA FILTRADA DE TREINOS
         /// ao abrir, ele atualiza a lista de treinos

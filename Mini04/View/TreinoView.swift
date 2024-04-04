@@ -28,8 +28,9 @@ struct TreinoView: View {
                 // BOTAO FECHAR A MODAL
                 HStack {
                     Button {
-                        isShowingModal.toggle()
-                    } label: {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            isShowingModal.toggle()
+                        }                    } label: {
                         Image(systemName: "xmark")
                     }
                     .buttonStyle(.plain)
@@ -71,9 +72,9 @@ struct TreinoView: View {
                         }
                         HStack {
                             // PLAYER DE VÍDEO
-                            VideoPlayer(player: AVPlayer(url: trainingVM.treino.video!.videoURL))
-                                .frame(width: 400)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
+//                            VideoPlayer(player: AVPlayer(url: trainingVM.treino.video!.videoURL))
+//                                .frame(width: 400)
+//                                .clipShape(RoundedRectangle(cornerRadius: 10))
                             VStack {
                                 HStack {
                                     Text("Transcrição")
