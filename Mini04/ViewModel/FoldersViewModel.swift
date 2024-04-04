@@ -178,13 +178,15 @@ class FoldersViewModel: ObservableObject {
                 }
             }
         }
+        
         // Conta as palavras repetidas
         for (_, words) in normalizedText {
             guard let firstWord = words.first else { continue }
             repeatedWords[firstWord, default: 0] += words.count
         }
+        
         // Filtra as palavras repetidas mais de 5 vezes
-        let repeatedWords_5 = repeatedWords.filter { $0.value >= 5 }.map { $0.key }
+        let repeatedWords_5 = repeatedWords.filter { $0.value >= 5 }
         
         return repeatedWords_5
     }
