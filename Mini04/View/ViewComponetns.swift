@@ -638,6 +638,17 @@ struct ObjectiveApresentationTopicsComponent: View {
     }
 }
 
+struct LoadingView: View {
+    var body: some View {
+        ZStack {
+            Color(.gray)
+                .scaledToFill()
+            ProgressView("Criando treino...")
+                .progressViewStyle(.circular)
+        }
+    }
+}
+
 //#Preview {
 //    TimeCircularFeedback(title: "5:37", subtitle: "Tempo total", objetiveTime: 6, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", frameWidth: 442, frameHeight: 154, progress: 80, totalProgress: 100)
 //}

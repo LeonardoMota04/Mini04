@@ -54,8 +54,6 @@ struct HUDCameraView: View {
                                        videoTime: cameraVC.getVideoDuration(from: newVideoURL),
                                        videoTopics: cameraVC.speechTopicText.components(separatedBy: "//"),
                                        topicsDuration: cameraVC.videoTopicDuration)
-            
-            presentationMode.wrappedValue.dismiss()
         }
         .onReceive(cameraVC.$finalModelDetection, perform: { result in
             if result == "0" && !cameraVC.isRecording{
