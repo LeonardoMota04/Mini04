@@ -89,12 +89,12 @@ class FoldersViewModel: ObservableObject {
                     folder.treinos.append(newTraining)
                     modelContext.insert(newTraining)
                     try modelContext.save()
-                    
+                    self.showLoadingView = false
                 } catch {
                     print("Não conseguiu criar e salvar o treino. \(error)")
                 }
             }
-            self.showLoadingView = false
+          
         }
     }
     
