@@ -16,7 +16,8 @@ struct TreinoView: View {
     @Binding var isShowingModal: Bool
     @State private var editedName: String = ""
     @State private var avPlayer: AVPlayer = AVPlayer()
-
+    @State private var videoPlayer = VideoPlayer(player: AVPlayer())
+    @State var videoTapped = false
      // Define outro DateFormatter para formatar a data de outra maneira
 
     
@@ -30,10 +31,11 @@ struct TreinoView: View {
                     Button {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             isShowingModal.toggle()
-                        }                    } label: {
-                        Image(systemName: "xmark")
-                    }
-                    .buttonStyle(.plain)
+                        }
+                    } label: {
+                            Image(systemName: "xmark")
+                        }
+                        .buttonStyle(.plain)
                     
                     Spacer()
                 }
@@ -72,9 +74,9 @@ struct TreinoView: View {
                         }
                         HStack {
                             // PLAYER DE VÍDEO
-//                            VideoPlayer(player: AVPlayer(url: trainingVM.treino.video!.videoURL))
-//                                .frame(width: 400)
-//                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                            VideoPlayer(player: AVPlayer(url: trainingVM.treino.video!.videoURL))
+                                .frame(width: 400)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
                             VStack {
                                 HStack {
                                     Text("Transcrição")
