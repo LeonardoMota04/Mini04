@@ -12,6 +12,7 @@ import SwiftData
 struct Mini04App: App {
     @StateObject var camVM = CameraViewModel()
     
+    //Variável que pega o tamanho do monitor
     let screenSize = NSScreen.main?.visibleFrame.size // Obter o tamanho visível do monitor principal
 
 
@@ -36,11 +37,9 @@ struct Mini04App: App {
     
     var body: some Scene {
         WindowGroup {
-//            SwiftDataView()
             ContentView()
-//            RecordingVideoView()
                 .environmentObject(camVM)
-//            WebScrappingView()
+                //utiliza do 2/3 do tamanho da tela pra dimensionar o aplicativo ou 800x600px
                 .frame(minWidth: (screenSize?.width ?? 800) * (2/3), minHeight: (screenSize?.height ?? 600) * (2/3)) // Define o tamanho mínimo da janela
 
         }
