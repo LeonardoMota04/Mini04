@@ -13,6 +13,7 @@ struct TreinoView: View {
     @ObservedObject var folderVM: FoldersViewModel
     @ObservedObject var trainingVM: TreinoViewModel
     @EnvironmentObject var cameraVC: CameraViewModel
+    
     @Binding var isShowingModal: Bool
     @State private var editedName: String = ""
     @State private var avPlayer: AVPlayer = AVPlayer()
@@ -25,7 +26,7 @@ struct TreinoView: View {
         GeometryReader { geometry in
             let size = geometry.size
             
-            VStack {
+            ScrollView {
                 // BOTAO FECHAR A MODAL
                 HStack {
                     Button {
@@ -101,18 +102,7 @@ struct TreinoView: View {
                         }
                     }
                     .padding()
-                    
-                HStack {
-                    TextField("Nome", text: $editedName)
-                        .font(.title)
-                    Spacer()
-                    Button("Salvar Alterações") {
-                        saveChanges()
-                    }
-                }
-                Text("Você está treinando na pasta \(folderVM.folder.nome)")
-                Text("Data de criação: \(trainingVM.treino.data)")
-                
+
                 TimeCircularFeedback(title: trainingVM.treino.video?.formattedTime() ?? "", subtitle: "Tempo Total", objetiveTime: folderVM.folder.tempoDesejado, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", frameWidth: 442, frameHeight: 154, progress: CGFloat(trainingVM.treino.video?.videoTime ?? 1), totalProgress: CGFloat(folderVM.folder.tempoDesejado * 60))
                 
                 // Verifica se o feedback está disponível
@@ -128,12 +118,18 @@ struct TreinoView: View {
                                                      connectionProgress: trainingVM.treino.feedback?.coherenceValues[2] ?? 1)
                 
                 // Tem feedbacks ACHO QUE NAO PRECISA, POIS PARA ENTRAR AQUI ELES DEVEM ESTAR CARREGADOS JÁ
-                Text("Palavras repetidas:")
                 if let feedback = trainingVM.treino.feedback {
-                    ForEach(feedback.repeatedWords, id: \.word) { synonymsModel in
-                        SynonymsListView(synonymsInfo: synonymsModel)
-                        Text(synonymsModel.word)
+                    // REPETIU PALAVRAS
+                    if feedback.repeatedWords.count > 0 {
+                        SynonymsFeedbackTrainingView(repeatedWordsArray: feedback.repeatedWords)
+                            .frame(height: 500)
+                        ForEach(feedback.repeatedWords, id: \.self) { repeatedWord in
+                            
+                        }
+                    } else {
+                        Text("Não repetiu palavras")
                     }
+                    
                 } else {
                     ProgressView("Carregando Feedback")
                 }
@@ -152,28 +148,4 @@ struct TreinoView: View {
     }
 }
 
-// LISTA DE SINONIMOS
-struct SynonymsListView: View {
-    let synonymsInfo: RepeatedWordsModel
-
-    var body: some View {
-        List {
-            Section(header: Text("Palavra: \(synonymsInfo.word)").font(.headline)) {
-                ForEach(synonymsInfo.synonymContexts, id: \.self.first) { contextAndSynonyms in
-                    VStack(alignment: .leading, spacing: 10) {
-                        if let context = contextAndSynonyms.first {
-                            Text("Contexto: \(context)").font(.subheadline)
-                        }
-                        ForEach(contextAndSynonyms.dropFirst(), id: \.self) { synonym in
-                            Text("Sinônimo: \(synonym)").font(.subheadline)
-                        }
-                    }
-                    .padding(.vertical, 5)
-                    .background(Color.gray.opacity(0.2))
-                }
-            }
-            .padding(.vertical, 10)
-        }
-    }
-}
 

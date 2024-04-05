@@ -272,6 +272,18 @@ struct PastaView: View {
             .sheet(isPresented: $isModalPresented) {
                 FolderInfoModalView(isModalPresented: $isModalPresented)
             }
+            //editedName = folderVM.folder.nome
+            folderVM.calculateAvarageTime()
+        }
+        .onChange(of: folderVM.folder) { _, _ in
+            // quando adicionar um novo treino atualiza o valor do tempo medio dos treinos
+            folderVM.calculateAvarageTime()
+            
+            // quando trocar de pasta, passa de novo o contexto
+            folderVM.modelContext = modelContext
+        }
+        .sheet(isPresented: $isModalPresented) {
+            FolderInfoModalView(isModalPresented: $isModalPresented)
         }
     }
     // UPDATE Nome da pasta e seus treinos

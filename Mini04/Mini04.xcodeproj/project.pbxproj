@@ -12,11 +12,11 @@
 		263D73EA2BA4C56F002190F4 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73E92BA4C56F002190F4 /* Item.swift */; };
 		263D73EC2BA4C571002190F4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EB2BA4C571002190F4 /* Assets.xcassets */; };
 		263D73EF2BA4C571002190F4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 263D73EE2BA4C571002190F4 /* Preview Assets.xcassets */; };
-		263D740E2BAA2C57002190F4 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 263D740D2BAA2C57002190F4 /* SwiftSoup */; };
 		263D74102BAA2CD3002190F4 /* WebScraping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D740F2BAA2CD3002190F4 /* WebScraping.swift */; };
 		2692A1F82BB1EC1600EEF9AB /* CameraOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2692A1F72BB1EC1600EEF9AB /* CameraOverlayView.swift */; };
 		2692A1FA2BB25F4000EEF9AB /* SynonymModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2692A1F92BB25F4000EEF9AB /* SynonymModel.swift */; };
 		269DF63F2BB8E47B00B0C629 /* MyTrainingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF63E2BB8E47B00B0C629 /* MyTrainingsView.swift */; };
+		269DF6432BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6422BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift */; };
 		370655E22BB1F32100B22AB0 /* HandPoseDoVH.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */; };
 		370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */; };
 		370655E62BB5009F00B22AB0 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E52BB5009F00B22AB0 /* Extras.swift */; };
@@ -35,6 +35,7 @@
 		370E91FA2BA8D86D00D39C27 /* PastaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91F92BA8D86D00D39C27 /* PastaView.swift */; };
 		370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */; };
 		370E91FE2BA8D9F200D39C27 /* ApresentacaoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */; };
+		3769DE122BBF4284004AE0B4 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3769DE112BBF4284004AE0B4 /* SwiftSoup */; };
 		377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */; };
 		BA5E1A1D2BB36ECD00B9528B /* ViewComponetns.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E1A1C2BB36ECD00B9528B /* ViewComponetns.swift */; };
 		BA5E1A202BB3724700B9528B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73F62BA4C865002190F4 /* ContentView.swift */; };
@@ -71,6 +72,7 @@
 		2692A1F72BB1EC1600EEF9AB /* CameraOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraOverlayView.swift; sourceTree = "<group>"; };
 		2692A1F92BB25F4000EEF9AB /* SynonymModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynonymModel.swift; sourceTree = "<group>"; };
 		269DF63E2BB8E47B00B0C629 /* MyTrainingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTrainingsView.swift; sourceTree = "<group>"; };
+		269DF6422BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynonymnsFeedbackTrainingView.swift; sourceTree = "<group>"; };
 		370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandPoseDoVH.mlmodel; sourceTree = "<group>"; };
 		370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiderbarFolderComponent.swift; sourceTree = "<group>"; };
 		370655E52BB5009F00B22AB0 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
@@ -107,7 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				263D740E2BAA2C57002190F4 /* SwiftSoup in Frameworks */,
+				3769DE122BBF4284004AE0B4 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +196,7 @@
 				BA5E1A1C2BB36ECD00B9528B /* ViewComponetns.swift */,
 				370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */,
 				269DF63E2BB8E47B00B0C629 /* MyTrainingsView.swift */,
+				269DF6422BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -241,7 +244,7 @@
 			);
 			name = Mini04;
 			packageProductDependencies = (
-				263D740D2BAA2C57002190F4 /* SwiftSoup */,
+				3769DE112BBF4284004AE0B4 /* SwiftSoup */,
 			);
 			productName = Mini04;
 			productReference = 263D73E22BA4C56F002190F4 /* Mini04.app */;
@@ -332,6 +335,7 @@
 			files = (
 				370E91EA2BA8C43B00D39C27 /* HandGestureController.swift in Sources */,
 				F19632182BA8DE5A0086D159 /* OpenAIService.swift in Sources */,
+				269DF6432BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift in Sources */,
 				BA5E1A202BB3724700B9528B /* ContentView.swift in Sources */,
 				F19632162BA8DE130086D159 /* ChatGPTModels.swift in Sources */,
 				370E91E32BA8B78300D39C27 /* HUDCameraView.swift in Sources */,
@@ -517,7 +521,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 3A253HAV36;
+				DEVELOPMENT_TEAM = D76TBQVUQR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -549,7 +553,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 3A253HAV36;
+				DEVELOPMENT_TEAM = D76TBQVUQR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -651,9 +655,8 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		263D740D2BAA2C57002190F4 /* SwiftSoup */ = {
+		3769DE112BBF4284004AE0B4 /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 263D740C2BAA2C57002190F4 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */

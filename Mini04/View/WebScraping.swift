@@ -66,7 +66,7 @@ class HTMLParser {
             if numbers.count >= 1 {
                 // SINONIMOS e CONTEXTOS
                 if numbers.count == 2 {
-                    numOfContexts = numbers[1]
+                    numOfContexts = min(numbers[1], 6) // limita o numero de contextos a 6
                     shouldGetContextName = true
                     
                 // SINONIMOS
@@ -78,12 +78,14 @@ class HTMLParser {
             
             let contexts = try doc.select(".content-detail")
             var synonymsInfo: [[String]] = [] // Array de arrays de String
+            var synonymsWithoutContext: [String] = [] // Array de sinônimos sem contexto
             
             for i in 0..<numOfContexts {
                 let context = contexts[i]
                 var contextAndSynonyms: [String] = []
                 
-                var contextName = "\(i + 1)" // Nome padrão do contexto
+                // Nome do contexto
+                var contextName = ""//"\(i + 1)" // Nome padrão do contexto
                 
                 if shouldGetContextName, let contextSubtitle = try? context.select(".content-detail--subtitle").first()?.text() {
                     contextName = contextSubtitle.replacingOccurrences(of: ":", with: "")
@@ -93,13 +95,26 @@ class HTMLParser {
                 
                 let synonymElements = try context.select("p.syn-list").select("a.sinonimo, span:not([class])")
                 
-                for j in 0..<synonymElements.count {
+                for j in 0..<min(synonymElements.count, 3) { // LIMITA A 3 SINONIMOS POR CONTEXTO
                     let synonym = try synonymElements.get(j).text()
-                    contextAndSynonyms.append(synonym) // Adiciona cada sinônimo ao subarray
+                    
+                    if contextName.isEmpty {
+                        synonymsWithoutContext.append(synonym) // Adiciona sinônimo sem contexto
+                    } else {
+                        contextAndSynonyms.append(synonym) // Adiciona sinônimo com contexto
+                    }
+                    
                     numOfSynonyms += 1
                 }
                 
-                synonymsInfo.append(contextAndSynonyms) // Adiciona o subarray ao array de informações de sinônimos
+                if !contextName.isEmpty {
+                    synonymsInfo.append(contextAndSynonyms) // Adiciona o subarray ao array de informações de sinônimos
+                }
+            }
+            
+            // Adiciona sinônimos sem contexto ao final da lista
+            if !synonymsWithoutContext.isEmpty {
+                synonymsInfo.append(synonymsWithoutContext)
             }
             
             let synonymsModel = RepeatedWordsModel(word: word, numSynonyms: numOfSynonyms, numContexts: numOfContexts, synonymContexts: synonymsInfo)
@@ -110,6 +125,7 @@ class HTMLParser {
         }
     }
 }
+
 
 
 
