@@ -35,8 +35,8 @@
 		370E91FA2BA8D86D00D39C27 /* PastaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91F92BA8D86D00D39C27 /* PastaView.swift */; };
 		370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */; };
 		370E91FE2BA8D9F200D39C27 /* ApresentacaoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */; };
-		3769DE122BBF4284004AE0B4 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3769DE112BBF4284004AE0B4 /* SwiftSoup */; };
 		377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */; };
+		BA5B71BC2BC0726C000F2F90 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = BA5B71BB2BC0726C000F2F90 /* SwiftSoup */; };
 		BA5E1A1D2BB36ECD00B9528B /* ViewComponetns.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E1A1C2BB36ECD00B9528B /* ViewComponetns.swift */; };
 		BA5E1A202BB3724700B9528B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73F62BA4C865002190F4 /* ContentView.swift */; };
 		BA8571092BAB4FE6000FF83B /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8571082BAB4FE6000FF83B /* SpeechManager.swift */; };
@@ -109,7 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3769DE122BBF4284004AE0B4 /* SwiftSoup in Frameworks */,
+				BA5B71BC2BC0726C000F2F90 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,7 +244,7 @@
 			);
 			name = Mini04;
 			packageProductDependencies = (
-				3769DE112BBF4284004AE0B4 /* SwiftSoup */,
+				BA5B71BB2BC0726C000F2F90 /* SwiftSoup */,
 			);
 			productName = Mini04;
 			productReference = 263D73E22BA4C56F002190F4 /* Mini04.app */;
@@ -521,7 +521,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = D76TBQVUQR;
+				DEVELOPMENT_TEAM = 3A253HAV36;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -553,7 +553,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = D76TBQVUQR;
+				DEVELOPMENT_TEAM = 3A253HAV36;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -655,7 +655,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3769DE112BBF4284004AE0B4 /* SwiftSoup */ = {
+		BA5B71BB2BC0726C000F2F90 /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SwiftSoup;
 		};

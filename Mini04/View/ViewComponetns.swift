@@ -695,23 +695,32 @@ struct AvaregeTimeFeedbackView: View {
                                 .opacity(0.5)
                                 .padding(.top)
                             HStack {
-                                // mostrar apenas 8 treinos graficos
-                                ForEach(0..<8, id: \.self) { index in
-                                    VStack {
-                                        ZStack(alignment: .bottom) {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .frame(maxWidth: 14, maxHeight: proxy.size.height * 0.45)
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .frame(width: 14, height: Double(treinos[index].video?.videoTime ?? 0) > Double(wishTime) ? proxy.size.height * 0.45 :  treinos[index].video?.videoTime ?? 1)
-                                                .foregroundStyle(Double(treinos[index].video?.videoTime ?? 0) > Double(wishTime) ? .red : .blue)
+                                if treinos.isEmpty {
+                                    Spacer()
+                                    Text("Nenhum treino criado")
+                                        .font(.title3)
+                                        .foregroundStyle(.black)
+                                        .padding()
+                                    Spacer()
+                                } else {
+                                    // mostrar apenas 8 treinos graficos
+                                    ForEach(0..<(treinos.count < 8 ? treinos.count : 8), id: \.self) { index in
+                                        VStack {
+                                            ZStack(alignment: .bottom) {
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .frame(maxWidth: 14, maxHeight: proxy.size.height * 0.45)
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .frame(width: 14, height: Double(treinos[index].video?.videoTime ?? 0) > Double(wishTime) ? proxy.size.height * 0.45 :  treinos[index].video?.videoTime ?? 1)
+                                                    .foregroundStyle(Double(treinos[index].video?.videoTime ?? 0) > Double(wishTime) ? .red : .blue)
+                                            }
+                                            Text("T \(treinos.count - index)")
+                                                .font(.footnote)
+                                                .foregroundStyle(.black)
+                                                .opacity(0.5)
                                         }
-                                        Text("T \(treinos.count - index)")
-                                            .font(.footnote)
-                                            .foregroundStyle(.black)
-                                            .opacity(0.5)
+                                        .padding(.top, 5)
                                     }
-                                    .padding(.top, 5)
-                                }
+                            }
                             }
                             Spacer()
                         }

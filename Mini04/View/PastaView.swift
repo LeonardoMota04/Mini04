@@ -273,7 +273,7 @@ struct PastaView: View {
                 FolderInfoModalView(isModalPresented: $isModalPresented)
             }
             //editedName = folderVM.folder.nome
-            folderVM.calculateAvarageTime()
+        //    folderVM.calculateAvarageTime() // TODO: arrumar isso e ver isso
         }
         .onChange(of: folderVM.folder) { _, _ in
             // quando adicionar um novo treino atualiza o valor do tempo medio dos treinos
