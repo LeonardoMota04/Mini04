@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+enum RelativeSizes: CGFloat {
+    case width380 = 0.3223
+    case height130 = 0.14238
+    case height260 = 0.28477
+    case height334 = 0.36582
+    case height350 = 0.38335
+}
+
 struct TimeFeedBackView: View {
     @State var avaregeTime: String
     var wishTime: Double
@@ -180,6 +188,8 @@ struct TimeFeedbackView: View {
 struct WordRepetitionView: View {
     @ObservedObject var folderVM: FoldersViewModel
     @State private var isExpanded = false
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
     
     var body: some View {
         let allRepeatedWords = folderVM.folder.treinos.flatMap { $0.feedback?.repeatedWords ?? [] }.map { $0.word }
@@ -244,10 +254,10 @@ struct WordRepetitionView: View {
                     Spacer() // hstack
                 }
             }
-            .frame(width: 350, height: isExpanded ? 280 : 140)
-            .onTapGesture {
+            .frame(width: widthFrame * RelativeSizes.width380.rawValue, height: isExpanded ? heightFrame *  RelativeSizes.height334.rawValue : heightFrame * RelativeSizes.height130.rawValue)
+            .onHover { over in
                 withAnimation(.spring(duration: 0.3)) {
-                    isExpanded.toggle()
+                    isExpanded = over
                 }
             }
     }
@@ -446,8 +456,8 @@ struct CohesionFeedback: View {
                             .opacity(0.5)
                             .frame(maxWidth: 306)
                             .padding(.top, 2)
-                       
-                            BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238)
+                        
+                        BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238)
                             .padding(.top, 10)
                         Group {
                             BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238)
@@ -508,9 +518,12 @@ struct ImproveApresentationView: View {
     @State var isExtended: Bool = false
     var allCallActions: [String] = ["Reforce a chamada à ação:", "Cuidado com a repetição excessiva das mesmas palavras:", "Refine o timing da apresentação:", "Utilize técnicas de engajamento:"]
     var allBodyText: [String] = [" Certifique-se de que a chamada à ação seja clara, específica e irresistível.", " Utilize sinônimos ou formas diferentes de expressar ideias sem perder a clareza.", " Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada", " Explore recursos visuais, como gráficos, imagens ou vídeos, para aumentar o engajamento da audiência e tornar a apresentação mais memorável."]
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
     var body: some View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16)
+                .foregroundStyle(.white)
                 .overlay {
                     VStack(alignment: .leading) {
                         Text(title)
@@ -524,7 +537,7 @@ struct ImproveApresentationView: View {
                         if !isExtended {
                             ImproveTextFeedbackComponet(callAction: callAction, bodyText: bodyText)
                                 .padding(.top, 5)
-                              
+                            
                         } else {
                             ForEach(0..<allBodyText.count, id: \.self) { index in
                                 ImproveTextFeedbackComponet(callAction: allCallActions[index], bodyText: allBodyText[index])
@@ -534,12 +547,12 @@ struct ImproveApresentationView: View {
                     }
                     .padding()
                 }
-        }.onTapGesture {
+        }.onHover { over in
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                self.isExtended.toggle()
+                self.isExtended = over
             }
         }
-        .frame(maxWidth: 380, maxHeight: isExtended ? 334 : 130)
+        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height334.rawValue : heightFrame * RelativeSizes.height130.rawValue)
     }
 }
 
@@ -549,11 +562,11 @@ struct ImproveTextFeedbackComponet: View {
     var bodyText: String
     var body: some View {
         HStack(alignment: .top) {
-//                            Image(systemName: "exclamationmark.triangle.fill")
-//                                .resizable()
-//                                .scaledToFit()
-//                                .frame(maxWidth: proxy.size.width * 0.03)
-//                                .padding(.top, 3)
+            //                            Image(systemName: "exclamationmark.triangle.fill")
+            //                                .resizable()
+            //                                .scaledToFit()
+            //                                .frame(maxWidth: proxy.size.width * 0.03)
+            //                                .padding(.top, 3)
             Text("\(callAction)" + bodyText)
                 .font(.callout)
                 .foregroundStyle(.black)
@@ -567,9 +580,12 @@ struct ObjectiveApresentationView: View {
     var subTitle: String  = "De acordo com o tipo de apresentação informado"
     var allImages: [String] = ["wand.and.stars", "suitcase.fill", "person.2.fill", "megaphone.fill"]
     var allObjText: [String] = ["Destacar os benefícios do produto ou serviço.", "Incentivar ação, como uma compra ou inscrição.", "Despertar o interesse do público (clientes). ", "Comunicar de forma persuasiva e clara."]
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
     var body: some View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16)
+    
                 .overlay {
                     HStack {
                         VStack(alignment: .leading) {
@@ -603,12 +619,12 @@ struct ObjectiveApresentationView: View {
                     .padding()
                     .padding(.leading, 5)
                 }
-        }.onTapGesture {
+        }.onHover { over in
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                self.isExtended.toggle()
+                self.isExtended = over
             }
         }
-        .frame(maxWidth: 380, maxHeight: isExtended ? 260 : 130)
+        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height260.rawValue : heightFrame * RelativeSizes.height130.rawValue)
     }
 }
 
@@ -649,6 +665,67 @@ struct LoadingView: View {
     }
 }
 
+struct AvaregeTimeFeedbackView: View {
+    @State var avaregeTime: String
+    var wishTime: Double
+    var treinos: [TreinoModel]
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
+    
+    var body: some View {
+        
+        GeometryReader { proxy in
+            RoundedRectangle(cornerRadius: 16)
+                .overlay {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("\(avaregeTime) Tempo médio")
+                                .font(.system(size: proxy.size.width * 0.0723))
+                                .bold()
+                                .foregroundStyle(.black)
+                            Text("próximo do desejado. ")
+                                .font(.system(size: proxy.size.width * 0.0553))
+                                .multilineTextAlignment(.leading)
+                                .foregroundStyle(.black)
+                                .opacity(0.6)
+                            Text("Tempo objetivo \(wishTime.formatted()) minutos")
+                                .font(.system(size: proxy.size.width * 0.0468))
+                               // .font(.footnote)
+                                .foregroundStyle(.black)
+                                .opacity(0.5)
+                                .padding(.top)
+                            HStack {
+                                // mostrar apenas 8 treinos graficos
+                                ForEach(0..<8, id: \.self) { index in
+                                    VStack {
+                                        ZStack(alignment: .bottom) {
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .frame(maxWidth: 14, maxHeight: proxy.size.height * 0.45)
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .frame(width: 14, height: Double(treinos[index].video?.videoTime ?? 0) > Double(wishTime) ? proxy.size.height * 0.45 :  treinos[index].video?.videoTime ?? 1)
+                                                .foregroundStyle(Double(treinos[index].video?.videoTime ?? 0) > Double(wishTime) ? .red : .blue)
+                                        }
+                                        Text("T \(treinos.count - index)")
+                                            .font(.footnote)
+                                            .foregroundStyle(.black)
+                                            .opacity(0.5)
+                                    }
+                                    .padding(.top, 5)
+                                }
+                            }
+                            Spacer()
+                        }
+                        Spacer()
+                    }
+                    .padding()
+            }
+        }
+        .frame(maxWidth: widthFrame * 0.21, maxHeight: heightFrame * 0.296)
+    }
+}
+
+
+
 //#Preview {
 //    TimeCircularFeedback(title: "5:37", subtitle: "Tempo total", objetiveTime: 6, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", frameWidth: 442, frameHeight: 154, progress: 80, totalProgress: 100)
 //}
@@ -662,5 +739,14 @@ struct LoadingView: View {
 //}
 
 #Preview {
-    ObjectiveApresentationView()
+    AvaregeTimeFeedbackView(avaregeTime: "00:66", wishTime: 10, treinos: [TreinoModel(),TreinoModel(),TreinoModel(), TreinoModel()], widthFrame: 1179.0, heightFrame: 913)
+}
+
+extension CGFloat {
+    func calculatePercentage(screenWidth: CGFloat, screenHeight: CGFloat, componentWidth: CGFloat, componentHeight: CGFloat) -> (widthPercentage: CGFloat, heightPercentage: CGFloat) {
+        let widthPercentage = (componentWidth / screenWidth) * 100
+        let heightPercentage = (componentHeight / screenHeight) * 100
+        
+        return (widthPercentage, heightPercentage)
+    }
 }

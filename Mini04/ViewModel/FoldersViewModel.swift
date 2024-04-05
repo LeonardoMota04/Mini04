@@ -98,6 +98,15 @@ class FoldersViewModel: ObservableObject {
         }
     }
     
+    // retorna o valor da data formatado - 01 de abril
+    func formatterDate(date: Date) -> String  {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "pt_BR")
+        dateFormatter.dateFormat = "dd 'de' MMMM"
+        let portugueseDate = dateFormatter.string(from: date)
+        return portugueseDate
+    }
+    
     // MARK: - FEEDBACKS
     func processFeedbacks(videoScript: String, completion: @escaping (FeedbackModel) -> Void) {
         let repeatedWords = filterRepeatedWordsOverFiveTimes(videoScript: videoScript)
@@ -105,7 +114,7 @@ class FoldersViewModel: ObservableObject {
         let group = DispatchGroup()
         
         for word in repeatedWords {
-            globalGroup.enter()
+            group.enter()
             fetchSynonyms(for: word) { synonymsModel in
                 if let synonymsModel = synonymsModel {
                     // Formatando a palavra para a primeira maiúscula sempre
@@ -114,10 +123,10 @@ class FoldersViewModel: ObservableObject {
                     let repeatedWordModel = RepeatedWordsModel(word: formattedWord, numSynonyms: synonymsModel.numSynonyms, numContexts: synonymsModel.numContexts, synonymContexts: synonymsModel.synonymContexts)
                     repeatedWordFeedbacks.append(repeatedWordModel)
                 }
-                self.globalGroup.leave()
+                group.leave()
             }
         }
-        globalGroup.notify(queue: .main) {
+        group.notify(queue: .main) {
             //        self.sendMessage(content: """
             //                                              Considerando que as 3 principais características de uma apresentação coesa são: Fluidez do Discurso, Organização Lógica e Conexão entre Ideias. Me dê somente as porcentagens (sem texto explicativo, apenas as porcentagens) de cada  parâmetro (considerando que cada um vale 100% individualmente) analise a seguinte apresentação: Você sabia que 63.3 bilhões de dólares são perdidos anualmente por doenças ocupacionais como o burnout? É um problema tão grande atualmente que, no Japão, existe até uma palavra específica para descrever morte por estresse intenso no trabalho: Karoshi. Pensando nisso,  nós desenvolvemos o Be Cool!, uma solução digital que busca ajudar na organização das suas tarefas profissionais de uma maneira balanceada.
             //
@@ -133,9 +142,9 @@ class FoldersViewModel: ObservableObject {
             //
             //                                              Por isso, baixe agora e fique de olho em nossas atualizações! Use o Be Cool e viva uma vida mais balanceada.
             //                                            """) { coherenceBrute in
-            let retornoGPT:Message = Message(role: "assistant", content: "Fluidez do Discurso: 90%\nOrganização Lógica: 95%\nConexão entre Ideias: 100%")
-            let coherence = self.convertPorcentageCohesionFeedback(message: retornoGPT)
-            let feedback = FeedbackModel(coherence: 0, repeatedWords: repeatedWordFeedbacks, coherenceValues: coherence)
+//            let retornoGPT:Message = Message(role: "assistant", content: "Fluidez do Discurso: 90%\nOrganização Lógica: 95%\nConexão entre Ideias: 100%")
+//            let coherence = self.convertPorcentageCohesionFeedback(message: retornoGPT)
+            let feedback = FeedbackModel(coherence: 0, repeatedWords: repeatedWordFeedbacks, coherenceValues: [90, 70, 65])
             completion(feedback)
         }
         //    } // chaves do completion do send message

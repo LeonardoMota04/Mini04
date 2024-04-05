@@ -21,8 +21,8 @@ class PastaModel: Identifiable {
     init(nome: String, tempoDesejado: Int, objetivoApresentacao: String) {
         self.nome = nome
         self.tempoDesejado = tempoDesejado
-        self.objetivoApresentacao = objetivoApresentacao
     }
+ 
 }
 
 // objetivo da apresentação
