@@ -23,6 +23,13 @@ class PastaModel: Identifiable {
         self.tempoDesejado = tempoDesejado
         self.objetivoApresentacao = objetivoApresentacao
     }
+    
+    // Formata tempo desejado para: "00:00"
+    func formattedGoalTime(_ time: Int) -> String {
+            let minutes = time
+            let formattedMinutes = String(format: "%02d", minutes)
+            return "\(formattedMinutes):00"
+        }
 }
 
 // objetivo da apresentação
