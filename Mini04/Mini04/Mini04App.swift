@@ -13,7 +13,7 @@ struct Mini04App: App {
     @StateObject var camVM = CameraViewModel()
     
     //Variável que pega o tamanho do monitor
-    let screenSize = NSScreen.main?.visibleFrame.size // Obter o tamanho visível do monitor principal
+    @StateObjectlet screenSize = NSScreen.main?.visibleFrame.size // Obter o tamanho visível do monitor principal
 
 
     var modelContainer: ModelContainer = {
@@ -37,6 +37,8 @@ struct Mini04App: App {
     
     var body: some Scene {
         WindowGroup {
+            GeometryReader { proxy in
+            }
             ContentView()
                 .environmentObject(camVM)
                 //utiliza do 2/3 do tamanho da tela pra dimensionar o aplicativo ou 800x600px

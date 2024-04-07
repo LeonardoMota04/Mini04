@@ -174,33 +174,34 @@ struct ContentView: View {
                     }
                 }
             }
-            .navigationSplitViewStyle(.balanced)
+            .navigationSplitViewStyle(.automatic)
 
         } detail: {
 
         }
         //abrir a sidebar sempre
         //https://stackoverflow.com/questions/77794673/disable-collapsing-sidebar-navigationsplitview
-        .onChange(of: camVM.cameraGravando, { oldValue, newValue in
-                //                camVM.previewLayer.session?.isRunning
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        .onChange(of: camVM.cameraGravando) {_,  newValue in
+            DispatchQueue.main.async {
                 if newValue {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        
+                    withAnimation {
                         columnVisibility = .detailOnly
                     }
                 } else {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        
+                    withAnimation {
                         columnVisibility = .all
                     }
                 }
             }
-        })
-        .onChange(of: columnVisibility, initial: true) { oldVal, newVal in
-            if newVal == .detailOnly && !camVM.cameraGravando{
+        }
+
+        .onChange(of: columnVisibility, initial: true) { _, newValue in
+            DispatchQueue.main.async {
+                
+                if newValue == .detailOnly && !camVM.cameraGravando{
                     withAnimation(.easeInOut(duration: 0.2)) {
                         columnVisibility = .all
+                    }
                 }
             }
         }
