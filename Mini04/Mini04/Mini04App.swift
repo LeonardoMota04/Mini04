@@ -13,7 +13,7 @@ struct Mini04App: App {
     @StateObject var camVM = CameraViewModel()
     
     //Variável que pega o tamanho do monitor
-    @StateObjectlet screenSize = NSScreen.main?.visibleFrame.size // Obter o tamanho visível do monitor principal
+    var screenSize = NSScreen.main?.visibleFrame.size // Obter o tamanho visível do monitor principal
 
 
     var modelContainer: ModelContainer = {
