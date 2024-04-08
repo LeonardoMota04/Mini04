@@ -21,7 +21,6 @@ class PastaModel: Identifiable {
     init(nome: String, tempoDesejado: Int, objetivoApresentacao: String) {
         self.nome = nome
         self.tempoDesejado = tempoDesejado
-        self.objetivoApresentacao = objetivoApresentacao
     }
     
     // Formata tempo desejado para: "00:00"

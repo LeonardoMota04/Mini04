@@ -16,7 +16,7 @@ class CameraViewModel: NSObject, ObservableObject {
     var micDevice: AVCaptureDevice!
     var micInput: AVCaptureInput!
     
-    var previewLayer =  AVCaptureVideoPreviewLayer()
+    @Published var previewLayer =  AVCaptureVideoPreviewLayer()
     @Published var videoFileOutput = AVCaptureMovieFileOutput()
     @Published var videoDataOutput = AVCaptureVideoDataOutput()
     @Published var audioOutput = AVCaptureAudioDataOutput()
@@ -36,6 +36,10 @@ class CameraViewModel: NSObject, ObservableObject {
 
     var urltemp: URL?
     
+    //sessao secundário feita somente para a camera
+    private let sessionQueue = DispatchQueue(label: "sessionQueue")
+    private var isConfigured = false // sessao configurada
+
     // numero de contagem
     @Published var countdownNumber: Int = 3
     
@@ -50,6 +54,7 @@ class CameraViewModel: NSObject, ObservableObject {
     @Published var videoTime: TimeInterval = 0 // tempo do video
     @Published var videoTopicDuration: [TimeInterval] = [] // duração de cada tópico
     
+    @Published var cameraGravando = false
     // Video Player
     var videoPlayer: AVPlayer?
     
@@ -65,23 +70,21 @@ class CameraViewModel: NSObject, ObservableObject {
     
     // MARK: - Start/Stop Session
     
-    func startSession() {
-        guard !captureSession.isRunning else {
-            return
-        }
-        
-        DispatchQueue.global().async {
+    func startSession(completion: @escaping () -> Void) {
+        sessionQueue.async {
+            guard !self.captureSession.isRunning else { return }
             self.captureSession.startRunning()
             print("sessão iniciada")
+            completion()
+
         }
     }
     
     func stopSession() {
-        guard captureSession.isRunning else {
-            return
-        }
-        
-        DispatchQueue.global().async {
+        self.isConfigured = false
+
+        sessionQueue.async {
+            guard self.captureSession.isRunning else { return }
             self.captureSession.stopRunning()
             print("sessão finalizada")
         }
@@ -89,40 +92,36 @@ class CameraViewModel: NSObject, ObservableObject {
     
     // MARK: - Session Configuration
     func configureSession(completion: @escaping () -> Void) {
-        captureSession.beginConfiguration()
-        
-        // Remove existing inputs and outputs before reconfiguring
-        captureSession.inputs.forEach { input in
-            captureSession.removeInput(input)
-        }
-        
-        captureSession.outputs.forEach { output in
-            captureSession.removeOutput(output)
-        }
-        
-        setupInputs()
-        
-        if captureSession.canAddOutput(audioOutput) {
-            captureSession.addOutput(audioOutput)
-        }
-        
-        if captureSession.canAddOutput(videoFileOutput) {
-            captureSession.addOutput(videoFileOutput)
-        }
-        
-        if captureSession.canAddOutput(videoDataOutput) {
-            captureSession.addOutput(videoDataOutput)
-        }
-        
-        
-        self.videoDataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
-        
-        captureSession.commitConfiguration()
-        
-        DispatchQueue.main.async {
-            completion()
+        sessionQueue.async {
+            guard !self.isConfigured else { return }
+            
+            self.captureSession.beginConfiguration()
+            self.captureSession.inputs.forEach { input in
+                self.captureSession.removeInput(input)
+            }
+            self.captureSession.outputs.forEach { output in
+                self.captureSession.removeOutput(output)
+            }
+            self.setupInputs()
+            if self.captureSession.canAddOutput(self.audioOutput) {
+                self.captureSession.addOutput(self.audioOutput)
+            }
+            if self.captureSession.canAddOutput(self.videoFileOutput) {
+                self.captureSession.addOutput(self.videoFileOutput)
+            }
+            if self.captureSession.canAddOutput(self.videoDataOutput) {
+                self.captureSession.addOutput(self.videoDataOutput)
+            }
+            self.videoDataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
+            self.captureSession.commitConfiguration()
+            
+            DispatchQueue.main.async {
+                self.isConfigured = true
+                completion()
+            }
         }
     }
+
     
     func setupInputs(){
         // setting devices
@@ -355,5 +354,6 @@ struct CameraRepresentable: NSViewRepresentable {
     
     func updateNSView(_ nsView: NSView, context: Context) {
         // Atualizações de visualização, se necessário
+        self.camVM.previewLayer.frame = NSRect(x: 0, y: 0, width: size.width, height: size.height)
     }
 }

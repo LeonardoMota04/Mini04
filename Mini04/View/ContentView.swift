@@ -11,6 +11,7 @@ import SwiftData
 // MARK: - CONTENT VIEW
 struct ContentView: View {
     // VM
+    @EnvironmentObject private var camVM: CameraViewModel
     @StateObject private var searchVM = SearchViewModel() // Gerenciar a searchbar
     @StateObject private var presentationVM = ApresentacaoViewModel()
     @State private var isModalPresented = false
@@ -92,6 +93,7 @@ struct ContentView: View {
                                 NavigationLink {
                                     if let folderVM = presentationVM.foldersViewModels[folder.id] {
                                         PastaView(folderVM: folderVM)
+                                            
                                     } else {
                                         Text("ViewModel não encontrada para esta pasta")
                                     }
@@ -156,39 +158,6 @@ struct ContentView: View {
                 }
                 .buttonStyle(.plain)
 
-                
-                NavigationLink("Minhas Apresentações") {
-                    // MESMA COISA AQUI
-                    if presentationVM.apresentacao.folders.isEmpty {
-                        ContentUnavailableView("Adicione sua primeira pasta.", systemImage: "folder.badge.questionmark")
-                        Button("Criar pasta") {
-                            isModalPresented.toggle()
-                        }
-                    } else {
-                        Button("Criar pasta") {
-                            isModalPresented.toggle()
-                        }
-                        List {
-                            // exibir todas as pastas
-                            ForEach(searchVM.filteredFolders) { folder in
-                                // pastas + apagar
-                                HStack {
-                                    NavigationLink(folder.nome) {
-                                        if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                            PastaView(folderVM: folderVM)
-                                        } else {
-                                            Text("ViewModel não encontrada para esta pasta")
-                                        }
-                                    }
-                                    Button("Apagar \(folder.nome)") {
-                                        presentationVM.deleteFolder(folder)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                
             }
             //remove aquela parada de fechar a searchbar
             .toolbar(removing: .sidebarToggle)
@@ -208,31 +177,30 @@ struct ContentView: View {
             .navigationSplitViewStyle(.balanced)
 
         } detail: {
-            VStack {
-                ForEach(folders) { folder in
-                    NavigationLink {
-                        if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                            PastaView(folderVM: folderVM)
-                        } else {
-                            Text("ViewModel não encontrada para esta pasta")
-                        }
-
-                    } label: {
-//                        SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao)
-                    }
-                    .buttonStyle(.plain)
-                    
-                }
-            }
-//            .navigationSplitViewColumnWidth(min: 200, ideal: 250, max: 300)
 
         }
         //abrir a sidebar sempre
         //https://stackoverflow.com/questions/77794673/disable-collapsing-sidebar-navigationsplitview
+        .onChange(of: camVM.cameraGravando, { oldValue, newValue in
+                //                camVM.previewLayer.session?.isRunning
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                if newValue {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        
+                        columnVisibility = .detailOnly
+                    }
+                } else {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        
+                        columnVisibility = .all
+                    }
+                }
+            }
+        })
         .onChange(of: columnVisibility, initial: true) { oldVal, newVal in
-            if newVal == .detailOnly {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    columnVisibility = .all
+            if newVal == .detailOnly && !camVM.cameraGravando{
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        columnVisibility = .all
                 }
             }
         }
