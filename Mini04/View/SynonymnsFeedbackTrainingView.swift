@@ -15,7 +15,7 @@ struct SynonymsFeedbackTrainingView: View {
     var body: some View {
         ZStack (alignment: .leading){
             RoundedRectangle(cornerRadius: 16)
-                .foregroundStyle(.gray.opacity(0.5)) // cor do fundao
+                .foregroundStyle(Color("light_White")) // cor do fundao
              
             VStack(alignment: .leading, spacing: 0) {
                 // HEADER

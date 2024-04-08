@@ -72,22 +72,25 @@ struct TrainingCellsView: View {
                 } label: {
                     HStack {
                         Image(systemName: "video.badge.waveform.fill")
+                            .foregroundStyle(Color("light_DarkerGreen"))
                         Text(training.nome)
+                            .foregroundStyle(Color("light_DarkerGreen"))
                             .bold()
                         
                         Spacer()
                         
                         // Data de criação
                         Text(training.formattedCreationDate())
-                        
+                            .foregroundStyle(Color("light_DarkerGreen"))
                         Spacer()
                         
                         // Duração do treino
                         Text((training.video?.formattedTime())!)
-                        
+                            .foregroundStyle(Color("light_DarkerGreen"))
                         Spacer()
                         
                         Image(systemName: training.isFavorite ? "heart.fill" : "heart")
+                            .foregroundStyle(Color("light_DarkerGreen"))
                             .onTapGesture { training.isFavorite.toggle() }
                             .font(.system(size: 15))
                         
@@ -95,12 +98,12 @@ struct TrainingCellsView: View {
                     .transition(.scale) // Adiciona a transição de escala
 
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.white)
                     .padding(.horizontal, 25)
                     .padding(.vertical, 15)
                     .background {
                         RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.white)
                     }
                 }
                 .buttonStyle(PlainButtonStyle())

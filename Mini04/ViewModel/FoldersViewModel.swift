@@ -77,6 +77,7 @@ class FoldersViewModel: ObservableObject {
         guard let modelContext = modelContext else { return }
         DispatchQueue.main.async {
             self.processFeedbacks(videoScript: videoScript) { [self] feedback in
+                feedback.coherenceValues = [90, 50, 40]
                 let newTraining = TreinoModel(name: "Treino \(folder.treinos.count + 1)",
                                               video: VideoModel(videoURL: videoURL,
                                                                 script: videoScript,

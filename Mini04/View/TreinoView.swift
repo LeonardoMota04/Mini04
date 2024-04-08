@@ -33,6 +33,7 @@ struct TreinoView: View {
                     }
                 } label: {
                     Image(systemName: "xmark")
+                        .foregroundStyle(.gray)
                 }
                 .padding(EdgeInsets(top: 15, leading: 15, bottom: 0, trailing: 0))
                 .buttonStyle(.plain)
@@ -113,27 +114,29 @@ struct TreinoView: View {
                                 HStack(alignment: .center) {
                                     VStack {
                                         RoundedRectangle(cornerRadius: 16, style: /*@START_MENU_TOKEN@*/.continuous/*@END_MENU_TOKEN@*/)
+                                            .stroke(Color("light_Orange"), lineWidth: 1)
+                                            .fill(.white)
                                             .frame(width: 442, height: 184)
-                                        // .padding(.bottom, 10)
                                             .overlay {
                                                 Text("Em breve")
                                                     .font(.title)
+                                                    .foregroundStyle(Color("light_Orange"))
                                             }
                                         TimeCircularFeedback(title: trainingVM.treino.video?.formattedTime() ?? "", subtitle: "Tempo Total", objetiveTime: folderVM.folder.tempoDesejado, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", widthFrame: 442, heightFrame: 154, progress: CGFloat(trainingVM.treino.video?.videoTime ?? 1), totalProgress: CGFloat(folderVM.folder.tempoDesejado * 60))
                                     }
-                                    if  ((trainingVM.treino.feedback?.coherenceValues.isEmpty) != nil) { //TODO: resolver essa logica na viewModel ou model - garatindo que nao vai crachar o app se o index nao existir
-                                        CohesionFeedback(fluidProgress: 1,
-                                                         organizationProgress: 1,
-                                                         connectionProgress: 1,
-                                                         widthFrame: 380,
-                                                         heightFrame: 350)
-                                    } else {
+//                                    if  ((trainingVM.treino.feedback?.coherenceValues.isEmpty) != nil) { //TODO: resolver essa logica na viewModel ou model - garatindo que nao vai crachar o app se o index nao existir
+//                                        CohesionFeedback(fluidProgress: 1,
+//                                                         organizationProgress: 1,
+//                                                         connectionProgress: 1,
+//                                                         widthFrame: 380,
+//                                                         heightFrame: 350)
+//                                    } else {
                                         CohesionFeedback(fluidProgress: trainingVM.treino.feedback?.coherenceValues[0] ?? 1,
                                                          organizationProgress: trainingVM.treino.feedback?.coherenceValues[1] ?? 1,
                                                          connectionProgress: trainingVM.treino.feedback?.coherenceValues[2] ?? 1,
                                                          widthFrame: 380,
                                                          heightFrame: 350)
-                                    }
+                         //           }
                                 }
                                 // Verifica se o feedback está disponível
 //                                Text(String("TempoVideo: \(trainingVM.treino.video!.videoTime)"))

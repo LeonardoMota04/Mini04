@@ -347,19 +347,18 @@ struct CircularProgress: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(.white.opacity(0.72), style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
-            
+                .stroke(.gray.opacity(0.3), style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
             Circle()
                 .trim(from: 0.0, to:
                         withAnimation {
                     CGFloat(progress)/totalProgress
                 })
-                .stroke(.blue, style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
+                .stroke(Color("light_Orange"), style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
                 .rotationEffect(.degrees(-90))
             Image(systemName: "timer")
                 .resizable()
                 .scaledToFit()
-                .foregroundStyle(.black)
+                .foregroundStyle(Color("light_Orange"))
                 .bold()
                 .frame(maxWidth: sizeCircle * 0.3)
         }
@@ -379,6 +378,8 @@ struct TimeCircularFeedback: View {
     var body: some View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16, style: /*@START_MENU_TOKEN@*/.continuous/*@END_MENU_TOKEN@*/)
+                .stroke(Color("light_Orange"), lineWidth: 2)
+                .fill(Color("light_White"))
                 .overlay {
                     HStack(alignment: .top) {
                         CircularProgress(sizeCircle: proxy.size.height * 0.7, progress: progress, totalProgress: totalProgress)
@@ -432,6 +433,8 @@ struct CohesionFeedback: View {
     var body: some View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16)
+                .stroke(Color("light_Orange"), lineWidth: 2)
+                .fill(Color("light_White"))
                 .overlay {
                     VStack(alignment: .leading) {
                         HStack(spacing: 0) {
@@ -459,11 +462,11 @@ struct CohesionFeedback: View {
                             .frame(maxWidth: 306)
                             .padding(.top, 2)
                         
-                        BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238)
+                        BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange")
                             .padding(.top, 10)
                         Group {
-                            BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238)
-                            BarProgress_Component(title: titleFeedback03, progress: connectionProgress, maxProgress: 238)
+                            BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange")
+                            BarProgress_Component(title: titleFeedback03, progress: connectionProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange")
                         }
                         .padding(.top, 5)
                         Text(footnoteText)
@@ -484,29 +487,108 @@ struct CohesionFeedback: View {
     }
 }
 
+struct CohesionExtendView: View {
+    var bodyText: String = "Sua apresentação fluiu de forma natural, com uma organização lógica e transições suaves entre os tópicos apresentados."
+    var titleFeedback01: String = "Fluidez do Discurso"
+    var titleFeedback02: String = "Organização Lógica"
+    var titleFeedback03: String = "Conexão entre Tópicos"
+    var fluidProgress: CGFloat
+    var organizationProgress: CGFloat
+    var connectionProgress: CGFloat
+    var footnoteText: String = "Isso mantem o público envolvido e facilita a compreensão das ideias apresentadas. "
+    var feedbackFootNote: String = "Ótimo trabalho!"
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
+    @State var isExtended: Bool = false
+    var body: some View {
+        GeometryReader { proxy in
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color("light_Blue"), lineWidth: 2)
+                .fill(Color("light_White"))
+                .overlay {
+                    VStack(alignment: .leading) {
+                        HStack(spacing: 0) {
+                            Image(systemName: "rectangle.inset.filled.and.person.filled")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(Color("light_DarkerGreen"))
+                                .bold()
+                                .frame(maxWidth: widthFrame * 0.03)
+                            Text("Apresentação Coesa!")
+                                .font(.title2)
+                                .bold()
+                                .foregroundStyle(.black)
+                            Spacer()
+                            Image(systemName: "chevron.down")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(.black)
+                                .frame(maxWidth: proxy.size.width * 0.04)
+                        }
+                        Text(bodyText)
+                            .multilineTextAlignment(.leading)
+                            .foregroundStyle(.black)
+                            .opacity(0.5)
+                            .frame(maxWidth: 306)
+                            .padding(.top, 2)
+                        if isExtended {
+                            BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238, lightColor: "light_DarkerGreen", boldColor: "light_DarkerGreen")
+                                .padding(.top, 10)
+                            Group {
+                                BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238, lightColor: "light_DarkerGreen", boldColor: "light_DarkerGreen")
+                                BarProgress_Component(title: titleFeedback03, progress: connectionProgress, maxProgress: 238, lightColor: "light_DarkerGreen", boldColor: "light_DarkerGreen")
+                            }
+                            .padding(.top, 5)
+                            Text(footnoteText)
+                                .foregroundStyle(.black)
+                                .opacity(0.5)
+                                .padding(.top, 10)
+                            
+                            Spacer()
+                            Text(feedbackFootNote)
+                                .foregroundStyle(Color("light_DarkerGreen"))
+                                .bold()
+                        }
+                    }
+                    .padding()
+                }
+        }
+        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height350.rawValue : heightFrame * RelativeSizes.height130.rawValue)
+        .onTapGesture {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                self.isExtended.toggle()
+            }
+        }
+    }
+}
+
 struct BarProgress_Component: View {
     var title: String
     var progress: CGFloat
     var maxProgress: CGFloat
+    var lightColor: String
+    var boldColor: String
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
                 .font(.caption)
-                .foregroundStyle(.black)
-                .opacity(0.5)
+                .foregroundStyle(Color(lightColor))
+            //  .opacity(0.5)
             HStack {
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 25)
                         .frame(maxWidth: maxProgress)
                         .frame(height: 14)
+                        .foregroundStyle(.gray)
+                        .opacity(0.3)
                     RoundedRectangle(cornerRadius: 25)
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color("light_Orange"))
                         .frame(maxWidth: (progress/100) * maxProgress)
                         .frame(height: 14)
                 }
                 Text("\(progress.formatted()) %")
                     .font(.caption)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(Color(lightColor))
             }
         }
     }
@@ -525,33 +607,37 @@ struct ImproveApresentationView: View {
     var body: some View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16)
-                .foregroundStyle(.white)
+                .stroke(Color("light_Blue"), lineWidth: 2)
+                .fill(Color("light_White"))
                 .overlay {
-                    VStack(alignment: .leading) {
-                        Text(title)
-                            .font(.title2)
-                            .foregroundStyle(.black)
-                            .bold()
-                        Text(subTitle)
-                            .font(.footnote)
-                            .foregroundStyle(.black)
-                            .padding(.bottom, 10)
-                        if !isExtended {
-                            ImproveTextFeedbackComponet(callAction: callAction, bodyText: bodyText)
-                                .padding(.top, 5)
-                            
-                        } else {
-                            ForEach(0..<allBodyText.count, id: \.self) { index in
-                                ImproveTextFeedbackComponet(callAction: allCallActions[index], bodyText: allBodyText[index])
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(title)
+                                .font(.title2)
+                                .foregroundStyle(Color("light_DarkerGreen"))
+                                .bold()
+                            Text(subTitle)
+                                .font(.footnote)
+                                .foregroundStyle(.black)
+                                .padding(.bottom, 10)
+                            if !isExtended {
+                                ImproveTextFeedbackComponet(callAction: callAction, bodyText: bodyText)
                                     .padding(.top, 5)
+                                
+                            } else {
+                                ForEach(0..<allBodyText.count, id: \.self) { index in
+                                    ImproveTextFeedbackComponet(callAction: allCallActions[index], bodyText: allBodyText[index])
+                                        .padding(.top, 5)
+                                }
                             }
                         }
+                        Spacer()
                     }
                     .padding()
                 }
-        }.onHover { over in
+        }.onTapGesture {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                self.isExtended = over
+                self.isExtended.toggle()
             }
         }
         .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height334.rawValue : heightFrame * RelativeSizes.height130.rawValue)
@@ -564,14 +650,17 @@ struct ImproveTextFeedbackComponet: View {
     var bodyText: String
     var body: some View {
         HStack(alignment: .top) {
-            //                            Image(systemName: "exclamationmark.triangle.fill")
-            //                                .resizable()
-            //                                .scaledToFit()
-            //                                .frame(maxWidth: proxy.size.width * 0.03)
-            //                                .padding(.top, 3)
-            Text("\(callAction)" + bodyText)
+            
+            Text(Image(systemName: "exclamationmark.triangle.fill"))
                 .font(.callout)
-                .foregroundStyle(.black)
+                .foregroundStyle(Color("light_DarkerGreen")) +
+            Text(callAction)
+                .font(.callout)
+                .foregroundStyle(Color("light_DarkerGreen"))
+                .bold() +
+            Text(bodyText)
+                .font(.callout)
+                .foregroundStyle(Color("light_DarkerGreen"))
         }
     }
 }
@@ -587,7 +676,8 @@ struct ObjectiveApresentationView: View {
     var body: some View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16)
-    
+                .stroke(Color("light_Blue"), lineWidth: 2)
+                .fill(Color("light_White"))
                 .overlay {
                     HStack {
                         VStack(alignment: .leading) {
@@ -595,12 +685,12 @@ struct ObjectiveApresentationView: View {
                                 Image(systemName: "scope")
                                     .resizable()
                                     .scaledToFit()
-                                    .foregroundStyle(.black)
+                                    .foregroundStyle(Color("light_DarkerGreen"))
                                     .bold()
                                     .frame(maxWidth: proxy.size.width * 0.06)
                                 Text(title)
                                     .font(.title2)
-                                    .foregroundStyle(.black)
+                                    .foregroundStyle(Color("light_DarkerGreen"))
                                     .bold()
                             }
                             Text(subTitle)
@@ -621,9 +711,9 @@ struct ObjectiveApresentationView: View {
                     .padding()
                     .padding(.leading, 5)
                 }
-        }.onHover { over in
+        }.onTapGesture {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                self.isExtended = over
+                self.isExtended.toggle()
             }
         }
         .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height260.rawValue : heightFrame * RelativeSizes.height130.rawValue)
@@ -641,15 +731,15 @@ struct ObjectiveApresentationTopicsComponent: View {
                 Image(systemName: imageName)
                     .resizable()
                     .scaledToFit()
-                    .foregroundStyle(.black)
+                    .foregroundStyle(Color("light_DarkerGreen"))
                     .bold()
                     .frame(maxWidth: widthSize * 0.04)
                 Text(title)
                     .font(.subheadline)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(Color("light_DarkerGreen"))
             }
             .padding(5)
-            .background(.white)
+            .background(Color("light_LighterBlue"))
             .clipShape(RoundedRectangle(cornerRadius: 6, style: /*@START_MENU_TOKEN@*/.continuous/*@END_MENU_TOKEN@*/))
             //        .frame(maxWidth: widthSize, maxHeight: heightSize)
         }
@@ -673,11 +763,13 @@ struct AvaregeTimeFeedbackView: View {
     var treinos: [TreinoModel]
     var widthFrame: CGFloat
     var heightFrame: CGFloat
-    
+    @State var isExtended: Bool = false
     var body: some View {
         
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16)
+                .stroke(Color("light_Blue"), lineWidth: 2)
+                .fill(.white)
                 .overlay {
                     HStack {
                         VStack(alignment: .leading) {
@@ -692,7 +784,7 @@ struct AvaregeTimeFeedbackView: View {
                                 .opacity(0.6)
                             Text("Tempo objetivo \(wishTime.formatted()) minutos")
                                 .font(.system(size: proxy.size.width * 0.0468))
-                               // .font(.footnote)
+                            // .font(.footnote)
                                 .foregroundStyle(.black)
                                 .opacity(0.5)
                                 .padding(.top)
@@ -707,35 +799,75 @@ struct AvaregeTimeFeedbackView: View {
                                 } else {
                                     // mostrar apenas 8 treinos graficos
                                     ForEach(0..<(treinos.count < 8 ? treinos.count : 8), id: \.self) { index in
-                                        VStack {
-                                            ZStack(alignment: .bottom) {
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .frame(maxWidth: 14, maxHeight: proxy.size.height * 0.45)
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .frame(width: 14, height: Double(treinos[index].video?.videoTime ?? 0) > Double(wishTime) ? proxy.size.height * 0.45 :  treinos[index].video?.videoTime ?? 1)
-                                                    .foregroundStyle(Double(treinos[index].video?.videoTime ?? 0) > Double(wishTime) ? .red : .blue)
-                                            }
-                                            Text("T \(treinos.count - index)")
-                                                .font(.footnote)
-                                                .foregroundStyle(.black)
-                                                .opacity(0.5)
-                                        }
-                                        .padding(.top, 5)
+                                        AvaregeFeedbackGrafics(widthFrame: 14, heightFrame: proxy.size.height * 0.45, titleText: (String(treinos.count - index)), porcentage: (Double(treinos[index].video?.videoTime ?? 0) > Double(wishTime) ? proxy.size.height * 0.45 :  treinos[index].video?.videoTime ?? 1))
+                                            .padding(.top, 5)
                                     }
+                                }
                             }
+                            if isExtended {
+                                HStack {
+                                   Rectangle()
+                                        .frame(maxWidth: widthFrame * 0.21 * 0.04, maxHeight: widthFrame * 0.21 * 0.04)
+                                        .foregroundStyle(Color("light_Blue"))
+                                    Text("Dentro do desejado")
+                                        .font(.system(size: 10))
+                                        .foregroundStyle(Color("light_Blue"))
+                                    Rectangle()
+                                        .frame(maxWidth: widthFrame * 0.21 * 0.04, maxHeight: widthFrame * 0.21 * 0.04)
+                                        .foregroundStyle(Color("light_DarkerGreen"))
+                                     Text("Fora do desejado")
+                                        .font(.system(size: 10))
+                                         .multilineTextAlignment(.leading)
+                                         .foregroundStyle(Color("light_DarkerGreen"))
+                                }
+                                .padding(.top, 5)
+                                Text("Se manter dentro do tempo proposto é crucial para garantir a clareza e o impacto de sua mensagem! ")
+                                    .font(.system(size: proxy.size.width * 0.0553))
+                                    .multilineTextAlignment(.leading)
+                                    .foregroundStyle(.black)
+                                    .opacity(0.6)
+                                    .padding(.top, 5)
                             }
                             Spacer()
                         }
+                        
                         Spacer()
                     }
                     .padding()
+                }
+        }
+        .onTapGesture {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                self.isExtended.toggle()
             }
         }
-        .frame(maxWidth: widthFrame * 0.21, maxHeight: heightFrame * 0.296)
+        .frame(maxWidth: widthFrame * 0.21, maxHeight: isExtended ? .calculateHeightPercentageFullScreen(componentHeight: 699, heightScreenSize: heightFrame) : heightFrame * 0.296 )
     }
 }
 
-
+struct AvaregeFeedbackGrafics: View {
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
+    var titleText: String
+    var porcentage: CGFloat
+    var body: some View {
+        VStack {
+            ZStack(alignment: .bottom) {
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(maxWidth: widthFrame, maxHeight: heightFrame)
+                    .foregroundStyle(.gray)
+                    .opacity(0.3)
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(width: 14, height: porcentage )
+                    .foregroundStyle(porcentage > 100 ? Color("light_DarkerGreen") : Color("light_Blue"))
+            }
+            Text("T \(titleText)")
+                .font(.footnote)
+                .foregroundStyle(.black)
+                .opacity(0.5)
+        }
+    }
+}
 
 #Preview {
     TimeCircularFeedback(title: "5:37", subtitle: "Tempo total", objetiveTime: 6, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", widthFrame: 442, heightFrame: 350, progress: 80, totalProgress: 100)
