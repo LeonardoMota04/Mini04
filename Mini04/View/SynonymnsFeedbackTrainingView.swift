@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 // MARK: - SINONIMOS FEEDBACK TREINO VIEW
 struct SynonymsFeedbackTrainingView: View {
     // recebe um array de palavras repetidas naquele treino
@@ -15,8 +17,9 @@ struct SynonymsFeedbackTrainingView: View {
     var body: some View {
         ZStack (alignment: .leading){
             RoundedRectangle(cornerRadius: 16)
-                .foregroundStyle(Color("light_White")) // cor do fundao
-             
+                .stroke(Color("light_Orange"), lineWidth: 2)
+                .fill(Color("light_White"))
+            
             VStack(alignment: .leading, spacing: 0) {
                 // HEADER
                 VStack (alignment: .leading, spacing: 5) {
@@ -40,6 +43,8 @@ struct SynonymsFeedbackTrainingView: View {
     }
 }
 
+
+
 // MARK: - QUADRO COM SINONIMOS
 struct SynonymsFrameBoardView: View {
     let repeatedWordsArray: [RepeatedWordsModel]
@@ -56,18 +61,18 @@ struct SynonymsFrameBoardView: View {
                    ForEach(filteredWords, id: \.self) { repeatedWord in
                        Text(repeatedWord.word)
                            .bold(selectedWord == repeatedWord.word ? true : false)
-                           .foregroundStyle(selectedWord == repeatedWord.word ? .white : .black)
+                           .foregroundStyle(selectedWord == repeatedWord.word ? (Color.lightOrange) : (Color.lightLighterGray))
                            .padding(selectedWord == repeatedWord.word ? 14 : 8)
-                           .background(selectedWord == repeatedWord.word ? .gray : .white)
+                           .background(selectedWord == repeatedWord.word ? (Color.lightOrange.opacity(0.1)) : (Color.lightOrange))
                            .clipShape(selectedWord == repeatedWord.word ? UnevenRoundedRectangle(cornerRadii: .init(topLeading: 6, topTrailing: 6)) : UnevenRoundedRectangle(cornerRadii: .init(topLeading: 6, bottomLeading: 6, bottomTrailing: 6, topTrailing: 6)))
                            .overlay {
                                VStack {
                                    HStack {
                                        Spacer()
                                        Text("\(repeatedWord.repetitionCount)") // Bola em cima mostrando quantas vezes foi repetida
-                                           .foregroundStyle(.white)
+                                           .foregroundStyle(selectedWord == repeatedWord.word ? (Color.lightLighterGray) : (Color.lightOrange))
                                            .padding(6)
-                                           .background(.ultraThickMaterial)
+                                           .background(selectedWord == repeatedWord.word ? (Color.lightOrange) : (Color.lightLighterGray))
                                            .clipShape(Circle())
                                            .offset(x: 10, y: -10)
                                    }
@@ -83,16 +88,17 @@ struct SynonymsFrameBoardView: View {
             
             // MARK: - QUADRO DE SINONIMOS
                UnevenRoundedRectangle(cornerRadii: .init(bottomLeading: 6, bottomTrailing: 6, topTrailing: 6))
-                   .foregroundStyle(.gray)
+                   .foregroundStyle(Color.lightOrange.opacity(0.1))
                    .overlay {
                        VStack(alignment: .leading) {
                            Text("Você repetiu essa palavra \(Text(String(repeatedTimes)).bold()) vezes.")
                                .font(.body)
-                           
+                               .foregroundStyle((Color.lightOrange))
+
                            Divider()
                                .padding(.trailing, 40)
                                .padding(.vertical, 5)
-                               .foregroundStyle(.black.opacity(0.8))
+                               .foregroundStyle((Color.lightOrange))
                            
                            // Verifica se a palavra clicada está presente no array de palavras repetidas
                            if let repeatedWord = repeatedWordsArray.first(where: { $0.word == selectedWord }) {
@@ -121,21 +127,21 @@ struct SynonymsFrameBoardView: View {
                                                        ForEach(contextWithSynonyms.dropFirst(), id: \.self) { synonym in
                                                            Text(synonym)
                                                                .font(.subheadline)
-                                                               .foregroundStyle(.white)
+                                                               .foregroundStyle(.black)
                                                                .padding(8)
-                                                               .background(.black.opacity(0.6))
+                                                               .background(Color.lightWhite)
                                                                .clipShape(RoundedRectangle(cornerRadius: 6))
                                                        }
                                                    }
                                                } else {
                                                    // SINONIMOS
                                                    HStack {
-                                                       ForEach(contextWithSynonyms, id: \.self) { synonym in
+                                                       ForEach(contextWithSynonyms.dropFirst(), id: \.self) { synonym in
                                                            Text(synonym)
                                                                .font(.subheadline)
-                                                               .foregroundStyle(.white)
+                                                               .foregroundStyle(.black)
                                                                .padding(8)
-                                                               .background(.black.opacity(0.6))
+                                                               .background(Color.lightWhite)
                                                                .clipShape(RoundedRectangle(cornerRadius: 6))
                                                        }
                                                    }
@@ -160,21 +166,21 @@ struct SynonymsFrameBoardView: View {
                                                            ForEach(contextWithSynonyms.dropFirst(), id: \.self) { synonym in
                                                                Text(synonym)
                                                                    .font(.subheadline)
-                                                                   .foregroundStyle(.white)
+                                                                   .foregroundStyle(.black)
                                                                    .padding(8)
-                                                                   .background(.black.opacity(0.6))
+                                                                   .background(Color.lightWhite)
                                                                    .clipShape(RoundedRectangle(cornerRadius: 6))
                                                            }
                                                        }
                                                    } else {
                                                        // SINONIMOS
                                                        HStack {
-                                                           ForEach(contextWithSynonyms, id: \.self) { synonym in
+                                                           ForEach(contextWithSynonyms.dropFirst(), id: \.self) { synonym in
                                                                Text(synonym)
                                                                    .font(.subheadline)
-                                                                   .foregroundStyle(.white)
+                                                                   .foregroundStyle(.black)
                                                                    .padding(8)
-                                                                   .background(.black.opacity(0.6))
+                                                                   .background(Color.lightWhite)
                                                                    .clipShape(RoundedRectangle(cornerRadius: 6))
                                                            }
                                                        }
@@ -209,4 +215,9 @@ struct SynonymsFrameBoardView: View {
     }
 }
 
+struct SynonymsFrameBoardView_Previews: PreviewProvider {
+    static var previews: some View {
+        SynonymsFrameBoardView(repeatedWordsArray: [RepeatedWordsModel(word: "exemplo", numSynonyms: 10, numContexts: 10), RepeatedWordsModel(word: "Outra", numSynonyms: 10, numContexts: 10)])
 
+    }
+}
