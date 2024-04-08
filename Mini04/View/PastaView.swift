@@ -67,7 +67,7 @@ struct PastaView: View {
                                 //                            if let selectedTrainingIndex = selectedTrainingIndex, selectedTrainingIndex < filteredTrainings.count - 1 {
                                 TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
                                     .frame(maxHeight: .infinity)
-                                    .frame(width: 800)
+                                    .frame(width: 958)
                                     .background(.gray)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                     .offset(y: 25)
@@ -91,7 +91,7 @@ struct PastaView: View {
                                 
                                 TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
                                     .frame(maxHeight: .infinity)
-                                    .frame(width: 800)
+                                    .frame(width: 958)
                                     .background(.gray)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                     .offset(y:25)
@@ -123,7 +123,7 @@ struct PastaView: View {
                                 //                            if let selectedTrainingIndex = selectedTrainingIndex, selectedTrainingIndex > 0 {
                                 TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
                                     .frame(maxHeight: .infinity)
-                                    .frame(width: 800)
+                                    .frame(width: 958)
                                     .background(.gray)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                     .offset(y: 25)
@@ -197,6 +197,8 @@ struct PastaView: View {
                         //MARK: FeedBacks -
                         // Colocando os elemebtos de baixo orimeiro na Stack apra que ele consigam ser sobrepostos
                         ZStack(alignment: .topLeading) {
+                            MyTrainingsView(folderVM: folderVM, filteredTrainings: $filteredTrainings, isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex)
+                                .padding(.top, geo.size.height * 0.35706)
                             HStack(alignment: .top){
                                 Color(.clear) // colocando algo tranparente para ficar ao lado da AvaregeTimeFeedBackView
                                     .frame(maxWidth: geo.size.width * 0.21, maxHeight: 10)
@@ -228,7 +230,6 @@ struct PastaView: View {
                             Text("Novo Treino")
                         }
                         // exibe todos os treinos
-                        MyTrainingsView(folderVM: folderVM, filteredTrainings: $filteredTrainings, isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex)
                     }
                     .padding(.horizontal, 55)
                     .blur(radius: isShowingModal ? 3 : 0)

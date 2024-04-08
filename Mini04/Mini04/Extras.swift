@@ -15,3 +15,41 @@ extension NSTextField {
         }
 }
 
+extension CGFloat {
+    // Essa funcoes calculam o a porcentagem que o componente tem que ter de acordo como o tamanho da tela cheia, de acordo com o prototipo. Assim fica mais facil de calcular o AutoLayout
+    static func calculateWidthPercentageFullScreen(componentWidth: CGFloat, witdhScreenSize: CGFloat) -> CGFloat {
+        let screenWidth: CGFloat = 1512
+        let widthPercentage = (componentWidth / screenWidth) * 100
+        
+        let widthRelativeSize = witdhScreenSize * widthPercentage
+        
+        return widthRelativeSize
+    }
+    
+    static func calculateHeightPercentageFullScreen(componentHeight: CGFloat, heightScreenSize: CGFloat) ->  CGFloat {
+        let screenHeight: CGFloat = 982
+        let heightPercentage = (componentHeight / screenHeight) * 100
+        
+        let heightRelativeSize = heightScreenSize * heightPercentage
+        
+        return heightRelativeSize
+    }
+    
+    static func calculateWidthPercentageModal(componentWidth: CGFloat, witdhScreenSize: CGFloat) -> CGFloat {
+        let screenWidth: CGFloat = 1512
+        let widthPercentage = (componentWidth / screenWidth) * 100
+        
+        let widthRelativeSize = witdhScreenSize * widthPercentage
+        
+        return widthRelativeSize
+    }
+    
+    static func calculateHeightPercentageModal(componentHeight: CGFloat, heightScreenSize: CGFloat) ->  CGFloat {
+        let screenHeight: CGFloat = 1444
+        let heightPercentage = (componentHeight / screenHeight) * 100
+        
+        let heightRelativeSize = heightScreenSize * heightPercentage
+        
+        return heightRelativeSize
+    }
+}

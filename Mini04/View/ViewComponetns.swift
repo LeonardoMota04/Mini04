@@ -372,8 +372,8 @@ struct TimeCircularFeedback: View {
     var subtitle: String
     var objetiveTime: Int
     var bodyText: String
-    @State var frameWidth: CGFloat
-    @State var frameHeight: CGFloat
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
     var progress: CGFloat
     var totalProgress: CGFloat
     var body: some View {
@@ -413,7 +413,7 @@ struct TimeCircularFeedback: View {
                     .padding(.horizontal)
                 }
         }
-        .frame(width: frameWidth, height: frameHeight)
+        .frame(width: widthFrame, height: heightFrame) // TODO: deixar responsivo
     }
 }
 
@@ -427,6 +427,8 @@ struct CohesionFeedback: View {
     var connectionProgress: CGFloat
     var footnoteText: String = "Isso mantem o público envolvido e facilita a compreensão das ideias apresentadas. "
     var feedbackFootNote: String = "Ótimo trabalho!"
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
     var body: some View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16)
@@ -478,7 +480,7 @@ struct CohesionFeedback: View {
                     .padding()
                 }
         }
-        .frame(maxWidth: 380, maxHeight: 350)
+        .frame(width: widthFrame, height: heightFrame) // TODO: deixar responsivo
     }
 }
 
@@ -735,9 +737,9 @@ struct AvaregeTimeFeedbackView: View {
 
 
 
-//#Preview {
-//    TimeCircularFeedback(title: "5:37", subtitle: "Tempo total", objetiveTime: 6, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", frameWidth: 442, frameHeight: 154, progress: 80, totalProgress: 100)
-//}
+#Preview {
+    TimeCircularFeedback(title: "5:37", subtitle: "Tempo total", objetiveTime: 6, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", widthFrame: 442, heightFrame: 350, progress: 80, totalProgress: 100)
+}
 
 //#Preview {
 //    TimeFeedBackView(avaregeTime: "10:", wishTime: 8, treinos: [])
@@ -746,16 +748,8 @@ struct AvaregeTimeFeedbackView: View {
 //#Preview {
 //    CohesionFeedback(fluidProgress: 50, organizationProgress: 90, connectionProgress: 85)
 //}
+//
+//#Preview {
+//    AvaregeTimeFeedbackView(avaregeTime: "00:66", wishTime: 10, treinos: [TreinoModel(),TreinoModel(),TreinoModel(), TreinoModel()], widthFrame: 1179.0, heightFrame: 913)
+//}
 
-#Preview {
-    AvaregeTimeFeedbackView(avaregeTime: "00:66", wishTime: 10, treinos: [TreinoModel(),TreinoModel(),TreinoModel(), TreinoModel()], widthFrame: 1179.0, heightFrame: 913)
-}
-
-extension CGFloat {
-    func calculatePercentage(screenWidth: CGFloat, screenHeight: CGFloat, componentWidth: CGFloat, componentHeight: CGFloat) -> (widthPercentage: CGFloat, heightPercentage: CGFloat) {
-        let widthPercentage = (componentWidth / screenWidth) * 100
-        let heightPercentage = (componentHeight / screenHeight) * 100
-        
-        return (widthPercentage, heightPercentage)
-    }
-}
