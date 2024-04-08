@@ -61,48 +61,48 @@ struct CameraOverlayView: View {
                 }
             }
             .onReceive(camVM.$detectedGestureModel1, perform: { modelDetection in
-                if modelDetection != "Other" {
-                    handResultText = modelDetection
-                    isHandTrackingActive = true
-                    startTimer()
-                    isAnimating = true
-
-                    if let lastValue = lastDetectionValue {
-                        if modelDetection == lastValue {
-                            tempDetectionValue = modelDetection
-                        } else {
-                            tempDetectionValue = nil
-                            isAnimating = false
-
-                        }
-                    } else {
-                        lastDetectionValue = modelDetection
-                        isAnimating = true
-                        progress = 0
-                    }
-                } else {
-                    isHandTrackingActive = false
-                    isAnimating = false
-                }
-
-                if isAnimating && modelDetection != camVM.finalModelDetection{
-                    withAnimation(Animation.linear(duration: 3).repeatForever(autoreverses: false)) {
-                        self.progress = 1.0
-                    }
-                } else {
-                    isHandTrackingActive = false
-                    progress = 0
-                }
-
-                print("final detection: \(camVM.finalModelDetection)")
+                handResultText = modelDetection
+//                if modelDetection != "Other" {
+//                    isHandTrackingActive = true
+//                    startTimer()
+//                    isAnimating = true
+//
+//                    if let lastValue = lastDetectionValue {
+//                        if modelDetection == lastValue {
+//                            tempDetectionValue = modelDetection
+//                        } else {
+//                            tempDetectionValue = nil
+//                            isAnimating = false
+//
+//                        }
+//                    } else {
+//                        lastDetectionValue = modelDetection
+//                        isAnimating = true
+//                        progress = 0
+//                    }
+//                } else {
+//                    isHandTrackingActive = false
+//                    isAnimating = false
+//                }
+//
+//                if isAnimating && modelDetection != camVM.finalModelDetection{
+//                    withAnimation(Animation.linear(duration: 3).repeatForever(autoreverses: false)) {
+//                        self.progress = 1.0
+//                    }
+//                } else {
+//                    isHandTrackingActive = false
+//                    progress = 0
+//                }
+//
+//                print("final detection: \(camVM.finalModelDetection)")
             })
-            .onReceive(timerPublisher) { _ in
-                if let tempValue = tempDetectionValue {
-                    camVM.finalModelDetection = tempValue
-                    lastDetectionValue = tempValue
-                    tempDetectionValue = nil
-                }
-            }
+//            .onReceive(timerPublisher) { _ in
+//                if let tempValue = tempDetectionValue {
+//                    camVM.finalModelDetection = tempValue
+//                    lastDetectionValue = tempValue
+//                    tempDetectionValue = nil
+//                }
+//            }
         }
     }
 

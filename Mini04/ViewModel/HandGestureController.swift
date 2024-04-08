@@ -12,7 +12,7 @@ import AVFoundation
 
 class HandGestureController: ObservableObject {
     
-    var model1: HandPose1?
+    var model1: HandPoseV1?
     let handPoseRequest = VNDetectHumanHandPoseRequest()
     var observationsBuffer: [VNHumanHandPoseObservation] = []
     var onUpdatePoints: (([VNRecognizedPoint]) -> Void)?
@@ -39,7 +39,7 @@ class HandGestureController: ObservableObject {
     
     private func setupModel1() {
         do {
-            model1 = try HandPose1(configuration: MLModelConfiguration())
+            model1 = try HandPoseV1(configuration: MLModelConfiguration())
             print("Model1 successfully configured.")
         } catch {
             print("Failed to load ML model1: \(error)")
@@ -53,7 +53,7 @@ class HandGestureController: ObservableObject {
             return
         }
         
-        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .down, options: [:])
+        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .up, options: [:])
         do {
             try handler.perform([handPoseRequest])
             guard let observation = handPoseRequest.results?.first as? VNHumanHandPoseObservation else {
@@ -92,7 +92,7 @@ class HandGestureController: ObservableObject {
             }
             
             if let model = model1 {
-                let input = HandPose1Input(poses: multiArray)
+                let input = HandPoseV1Input(poses: multiArray)
                 let result = try model.prediction(input: input)
                 DispatchQueue.main.async {
                     let formattedProbabilities = result.labelProbabilities.map { label, probability in
@@ -171,15 +171,24 @@ class HandGestureController: ObservableObject {
     
     func renderHandPoseEffect(name: String) {
         switch name {
-        case "0":
-            self.resulHandPoseModel = "0"
-            print("Result Model HandPose: 0")
-        case "1":
-            self.resulHandPoseModel = "1"
-            print("Result Model HandPose: 1")
+        case "iniciar":
+            self.resulHandPoseModel = "iniciar"
+            print("Result Model HandPose: iniciar")
+        case "pausar":
+            self.resulHandPoseModel = "pausar"
+            print("Result Model HandPose: pausar")
+        case "topicar":
+            self.resulHandPoseModel = "topicar"
+            print("Result Model HandPose: topicar")
+        case "encerrar":
+            self.resulHandPoseModel = "encerrar"
+            print("Result Model HandPose: encerrar")
+        case "outros":
+            self.resulHandPoseModel = "outros"
+            print("Result Model HandPose: outros")
         default:
-            self.resulHandPoseModel = "Other"
-            print("Result Model HandPose: Other")
+            self.resulHandPoseModel = "outros"
+            print("Result Model HandPose: outros")
         }
     }
 }
