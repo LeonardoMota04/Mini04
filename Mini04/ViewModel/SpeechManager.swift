@@ -17,11 +17,14 @@ class SpeechManager: ObservableObject {
     private var speechResult: SFSpeechRecognitionResult = SFSpeechRecognitionResult() // Guarda o resultado obtido do reconhecimento
     
     var isRecording = false
+    
+    var delegate: HumPredictor?
 
     init() {
         /// por padrão, detectará a localizacao do dispositivo, ideal deixar ele opcional
         self.speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "pt-BR"))
         self.requestPermission()
+        self.delegate = HumPredictor()
     }
     
     func startRecording(callback: @escaping callback) throws {
@@ -46,6 +49,7 @@ class SpeechManager: ObservableObject {
             let recordingFormat = inputNode.outputFormat(forBus: 0)
             inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
                 recognitionRequest.append(buffer)
+                self.processAudioBuffer(buffer)
             }
             
             recognitionRequest.shouldReportPartialResults = true
@@ -141,9 +145,31 @@ class SpeechManager: ObservableObject {
             completion(nil)
         }
     }
+    
+    private func processAudioBuffer(_ buffer: AVAudioPCMBuffer) {
 
-    
-    
+        guard let channelData = buffer.floatChannelData else {
+            print("[AudioCaptureManager - processAudioBuffer] Erro: Dados do canal de áudio não disponíveis")
+            return
+        }
+
+        let channelDataPointer = channelData.pointee
+        let frameLength = Int(buffer.frameLength)
+
+        var audioSamplesArray: [Float] = []
+        for i in 0..<frameLength {
+            audioSamplesArray.append(channelDataPointer[i])
+        }
+
+        guard let delegate = delegate else { return }
+        
+        delegate.didCaptureAudioSample(audioSamplesArray)
+    }
+
+}
+
+protocol SpeechManagerDelegate {
+    func didCaptureAudioSample(_ samples: [Float])
 }
 
 typealias callback = (_ text: String?, _ error: Error?) -> Void
