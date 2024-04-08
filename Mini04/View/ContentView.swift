@@ -198,9 +198,11 @@ struct ContentView: View {
             }
         })
         .onChange(of: columnVisibility, initial: true) { oldVal, newVal in
-            if newVal == .detailOnly && !camVM.cameraGravando{
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        columnVisibility = .all
+            DispatchQueue.main.async {
+                if newVal == .detailOnly && !camVM.cameraGravando{
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            columnVisibility = .all
+                    }
                 }
             }
         }
