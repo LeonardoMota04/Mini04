@@ -13,7 +13,7 @@ class PastaModel: Identifiable {
     var id: UUID = UUID()
     var nome: String = ""
     var data: Date = Date()
-    var tempoDesejado: Int = 1
+    var tempoDesejado: Int = 0
     var objetivoApresentacao: String = "" // ENUM????
     var treinos: [TreinoModel] = []
     var avaregeTime: Double = 0
