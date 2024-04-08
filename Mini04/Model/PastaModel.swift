@@ -13,7 +13,7 @@ class PastaModel: Identifiable {
     var id: UUID = UUID()
     var nome: String = ""
     var data: Date = Date()
-    var tempoDesejado: Int = 1
+    var tempoDesejado: Int = 0
     var objetivoApresentacao: String = "" // ENUM????
     var treinos: [TreinoModel] = []
     var avaregeTime: Double = 0
@@ -21,8 +21,14 @@ class PastaModel: Identifiable {
     init(nome: String, tempoDesejado: Int, objetivoApresentacao: String) {
         self.nome = nome
         self.tempoDesejado = tempoDesejado
-        self.objetivoApresentacao = objetivoApresentacao
     }
+    
+    // Formata tempo desejado para: "00:00"
+    func formattedGoalTime(_ time: Int) -> String {
+            let minutes = time
+            let formattedMinutes = String(format: "%02d", minutes)
+            return "\(formattedMinutes):00"
+        }
 }
 
 // objetivo da apresentação

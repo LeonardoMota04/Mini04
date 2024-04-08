@@ -7,8 +7,16 @@
 
 import SwiftUI
 
+enum RelativeSizes: CGFloat {
+    case width380 = 0.3223
+    case height130 = 0.14238
+    case height260 = 0.28477
+    case height334 = 0.36582
+    case height350 = 0.38335
+}
+
 struct TimeFeedBackView: View {
-   @State var avaregeTime: String
+    @State var avaregeTime: String
     var wishTime: Double
     var treinos: [TreinoModel]
     
@@ -56,14 +64,10 @@ struct TimeFeedBackView: View {
     }
 }
 
-#Preview {
-    TimeFeedBackView(avaregeTime: "10:", wishTime: 8, treinos: [])
-}
-
 struct TimeFeedBackViewExpand: View {
     @State var avaregeTime: String
-     var wishTime: Double
-     var treinos: [TreinoModel]
+    var wishTime: Double
+    var treinos: [TreinoModel]
     var body: some View {
         RoundedRectangle(cornerRadius: 16)
             .frame(width: 350, height: 280)
@@ -184,6 +188,8 @@ struct TimeFeedbackView: View {
 struct WordRepetitionView: View {
     @ObservedObject var folderVM: FoldersViewModel
     @State private var isExpanded = false
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
     
     var body: some View {
         let allRepeatedWords = folderVM.folder.treinos.flatMap { $0.feedback?.repeatedWords ?? [] }.map { $0.word }
@@ -209,8 +215,8 @@ struct WordRepetitionView: View {
                                     .padding(.trailing, 4) // Espaçamento entre o texto e a seta
                             }
                             Text("Repetidas em excesso")
-                               .font(.caption)
-                               .foregroundStyle(.gray)
+                                .font(.caption)
+                                .foregroundStyle(.gray)
                         }
                         
                         // Lista de palavras repetidas
@@ -248,10 +254,10 @@ struct WordRepetitionView: View {
                     Spacer() // hstack
                 }
             }
-            .frame(width: 350, height: isExpanded ? 280 : 140)
-            .onTapGesture {
+            .frame(width: widthFrame * RelativeSizes.width380.rawValue, height: isExpanded ? heightFrame *  RelativeSizes.height334.rawValue : heightFrame * RelativeSizes.height130.rawValue)
+            .onHover { over in
                 withAnimation(.spring(duration: 0.3)) {
-                    isExpanded.toggle()
+                    isExpanded = over
                 }
             }
     }
@@ -279,9 +285,9 @@ struct ExpandableView: View {
             }
         }
         .onTapGesture() {
-      
-                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                    show.toggle()
+            
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                show.toggle()
                 
             }
         }
@@ -341,19 +347,18 @@ struct CircularProgress: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(.white.opacity(0.72), style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
-            
+                .stroke(.gray.opacity(0.3), style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
             Circle()
                 .trim(from: 0.0, to:
                         withAnimation {
                     CGFloat(progress)/totalProgress
                 })
-                .stroke(.blue, style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
+                .stroke(Color("light_Orange"), style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
                 .rotationEffect(.degrees(-90))
             Image(systemName: "timer")
                 .resizable()
                 .scaledToFit()
-                .foregroundStyle(.black)
+                .foregroundStyle(Color("light_Orange"))
                 .bold()
                 .frame(maxWidth: sizeCircle * 0.3)
         }
@@ -366,17 +371,19 @@ struct TimeCircularFeedback: View {
     var subtitle: String
     var objetiveTime: Int
     var bodyText: String
-    @State var frameWidth: CGFloat
-    @State var frameHeight: CGFloat
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
     var progress: CGFloat
     var totalProgress: CGFloat
     var body: some View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16, style: /*@START_MENU_TOKEN@*/.continuous/*@END_MENU_TOKEN@*/)
+                .stroke(Color("light_Orange"), lineWidth: 2)
+                .fill(Color("light_White"))
                 .overlay {
                     HStack(alignment: .top) {
-                       CircularProgress(sizeCircle: proxy.size.height * 0.7, progress: progress, totalProgress: totalProgress)
-                               .padding()
+                        CircularProgress(sizeCircle: proxy.size.height * 0.7, progress: progress, totalProgress: totalProgress)
+                            .padding()
                         VStack(alignment: .leading) {
                             HStack(alignment: .top) {
                                 VStack(alignment: .leading) {
@@ -407,10 +414,474 @@ struct TimeCircularFeedback: View {
                     .padding(.horizontal)
                 }
         }
-        .frame(width: frameWidth, height: frameHeight)
+        .frame(width: widthFrame, height: heightFrame) // TODO: deixar responsivo
+    }
+}
+
+struct CohesionFeedback: View {
+    var bodyText: String = "Sua apresentação fluiu de forma natural, com uma organização lógica e transições suaves entre os tópicos apresentados."
+    var titleFeedback01: String = "Fluidez do Discurso"
+    var titleFeedback02: String = "Organização Lógica"
+    var titleFeedback03: String = "Conexão entre Tópicos"
+    var fluidProgress: CGFloat
+    var organizationProgress: CGFloat
+    var connectionProgress: CGFloat
+    var footnoteText: String = "Isso mantem o público envolvido e facilita a compreensão das ideias apresentadas. "
+    var feedbackFootNote: String = "Ótimo trabalho!"
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
+    var body: some View {
+        GeometryReader { proxy in
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color("light_Orange"), lineWidth: 2)
+                .fill(Color("light_White"))
+                .overlay {
+                    VStack(alignment: .leading) {
+                        HStack(spacing: 0) {
+                            Image(systemName: "rectangle.inset.filled.and.person.filled")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(.black)
+                                .bold()
+                                .frame(maxWidth: proxy.size.width * 0.08)
+                            Text("Apresentação Coesa!")
+                                .font(.title2)
+                                .bold()
+                                .foregroundStyle(.black)
+                            Spacer()
+                            Image(systemName: "chevron.down")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(.black)
+                                .frame(maxWidth: proxy.size.width * 0.04)
+                        }
+                        Text(bodyText)
+                            .multilineTextAlignment(.leading)
+                            .foregroundStyle(.black)
+                            .opacity(0.5)
+                            .frame(maxWidth: 306)
+                            .padding(.top, 2)
+                        
+                        BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange")
+                            .padding(.top, 10)
+                        Group {
+                            BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange")
+                            BarProgress_Component(title: titleFeedback03, progress: connectionProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange")
+                        }
+                        .padding(.top, 5)
+                        Text(footnoteText)
+                            .foregroundStyle(.black)
+                            .opacity(0.5)
+                            .padding(.top, 10)
+                        
+                        Spacer()
+                        Text(feedbackFootNote)
+                            .foregroundStyle(.black)
+                            .opacity(0.5)
+                            .bold()
+                    }
+                    .padding()
+                }
+        }
+        .frame(width: widthFrame, height: heightFrame) // TODO: deixar responsivo
+    }
+}
+
+struct CohesionExtendView: View {
+    var bodyText: String = "Sua apresentação fluiu de forma natural, com uma organização lógica e transições suaves entre os tópicos apresentados."
+    var titleFeedback01: String = "Fluidez do Discurso"
+    var titleFeedback02: String = "Organização Lógica"
+    var titleFeedback03: String = "Conexão entre Tópicos"
+    var fluidProgress: CGFloat
+    var organizationProgress: CGFloat
+    var connectionProgress: CGFloat
+    var footnoteText: String = "Isso mantem o público envolvido e facilita a compreensão das ideias apresentadas. "
+    var feedbackFootNote: String = "Ótimo trabalho!"
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
+    @State var isExtended: Bool = false
+    var body: some View {
+        GeometryReader { proxy in
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color("light_Blue"), lineWidth: 2)
+                .fill(Color("light_White"))
+                .overlay {
+                    VStack(alignment: .leading) {
+                        HStack(spacing: 0) {
+                            Image(systemName: "rectangle.inset.filled.and.person.filled")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(Color("light_DarkerGreen"))
+                                .bold()
+                                .frame(maxWidth: widthFrame * 0.03)
+                            Text("Apresentação Coesa!")
+                                .font(.title2)
+                                .bold()
+                                .foregroundStyle(.black)
+                            Spacer()
+                            Image(systemName: "chevron.down")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(.black)
+                                .frame(maxWidth: proxy.size.width * 0.04)
+                        }
+                        Text(bodyText)
+                            .multilineTextAlignment(.leading)
+                            .foregroundStyle(.black)
+                            .opacity(0.5)
+                            .frame(maxWidth: 306)
+                            .padding(.top, 2)
+                        if isExtended {
+                            BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238, lightColor: "light_DarkerGreen", boldColor: "light_DarkerGreen")
+                                .padding(.top, 10)
+                            Group {
+                                BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238, lightColor: "light_DarkerGreen", boldColor: "light_DarkerGreen")
+                                BarProgress_Component(title: titleFeedback03, progress: connectionProgress, maxProgress: 238, lightColor: "light_DarkerGreen", boldColor: "light_DarkerGreen")
+                            }
+                            .padding(.top, 5)
+                            Text(footnoteText)
+                                .foregroundStyle(.black)
+                                .opacity(0.5)
+                                .padding(.top, 10)
+                            
+                            Spacer()
+                            Text(feedbackFootNote)
+                                .foregroundStyle(Color("light_DarkerGreen"))
+                                .bold()
+                        }
+                    }
+                    .padding()
+                }
+        }
+        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height350.rawValue : heightFrame * RelativeSizes.height130.rawValue)
+        .onTapGesture {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                self.isExtended.toggle()
+            }
+        }
+    }
+}
+
+struct BarProgress_Component: View {
+    var title: String
+    var progress: CGFloat
+    var maxProgress: CGFloat
+    var lightColor: String
+    var boldColor: String
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(Color(lightColor))
+            //  .opacity(0.5)
+            HStack {
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 25)
+                        .frame(maxWidth: maxProgress)
+                        .frame(height: 14)
+                        .foregroundStyle(.gray)
+                        .opacity(0.3)
+                    RoundedRectangle(cornerRadius: 25)
+                        .foregroundStyle(Color("light_Orange"))
+                        .frame(maxWidth: (progress/100) * maxProgress)
+                        .frame(height: 14)
+                }
+                Text("\(progress.formatted()) %")
+                    .font(.caption)
+                    .foregroundStyle(Color(lightColor))
+            }
+        }
+    }
+}
+
+struct ImproveApresentationView: View {
+    var title: String = "Como melhorar sua apresentação:"
+    var subTitle: String = "De acordo com os seus feedbacks"
+    var callAction: String = "Reforce a chamada à ação:"
+    var bodyText: String = " Certifique-se de que a chamada à ação seja clara, específica e irresistível."
+    @State var isExtended: Bool = false
+    var allCallActions: [String] = ["Reforce a chamada à ação:", "Cuidado com a repetição excessiva das mesmas palavras:", "Refine o timing da apresentação:", "Utilize técnicas de engajamento:"]
+    var allBodyText: [String] = [" Certifique-se de que a chamada à ação seja clara, específica e irresistível.", " Utilize sinônimos ou formas diferentes de expressar ideias sem perder a clareza.", " Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada", " Explore recursos visuais, como gráficos, imagens ou vídeos, para aumentar o engajamento da audiência e tornar a apresentação mais memorável."]
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
+    var body: some View {
+        GeometryReader { proxy in
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color("light_Blue"), lineWidth: 2)
+                .fill(Color("light_White"))
+                .overlay {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(title)
+                                .font(.title2)
+                                .foregroundStyle(Color("light_DarkerGreen"))
+                                .bold()
+                            Text(subTitle)
+                                .font(.footnote)
+                                .foregroundStyle(.black)
+                                .padding(.bottom, 10)
+                            if !isExtended {
+                                ImproveTextFeedbackComponet(callAction: callAction, bodyText: bodyText)
+                                    .padding(.top, 5)
+                                
+                            } else {
+                                ForEach(0..<allBodyText.count, id: \.self) { index in
+                                    ImproveTextFeedbackComponet(callAction: allCallActions[index], bodyText: allBodyText[index])
+                                        .padding(.top, 5)
+                                }
+                            }
+                        }
+                        Spacer()
+                    }
+                    .padding()
+                }
+        }.onTapGesture {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                self.isExtended.toggle()
+            }
+        }
+        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height334.rawValue : heightFrame * RelativeSizes.height130.rawValue)
+    }
+}
+
+// Textos do Como melhorar sua apresentação
+struct ImproveTextFeedbackComponet: View {
+    var callAction: String
+    var bodyText: String
+    var body: some View {
+        HStack(alignment: .top) {
+            
+            Text(Image(systemName: "exclamationmark.triangle.fill"))
+                .font(.callout)
+                .foregroundStyle(Color("light_DarkerGreen")) +
+            Text(callAction)
+                .font(.callout)
+                .foregroundStyle(Color("light_DarkerGreen"))
+                .bold() +
+            Text(bodyText)
+                .font(.callout)
+                .foregroundStyle(Color("light_DarkerGreen"))
+        }
+    }
+}
+
+struct ObjectiveApresentationView: View {
+    @State var isExtended: Bool = false
+    var title: String = "Objetivos da Apresentação"
+    var subTitle: String  = "De acordo com o tipo de apresentação informado"
+    var allImages: [String] = ["wand.and.stars", "suitcase.fill", "person.2.fill", "megaphone.fill"]
+    var allObjText: [String] = ["Destacar os benefícios do produto ou serviço.", "Incentivar ação, como uma compra ou inscrição.", "Despertar o interesse do público (clientes). ", "Comunicar de forma persuasiva e clara."]
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
+    var body: some View {
+        GeometryReader { proxy in
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color("light_Blue"), lineWidth: 2)
+                .fill(Color("light_White"))
+                .overlay {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Image(systemName: "scope")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundStyle(Color("light_DarkerGreen"))
+                                    .bold()
+                                    .frame(maxWidth: proxy.size.width * 0.06)
+                                Text(title)
+                                    .font(.title2)
+                                    .foregroundStyle(Color("light_DarkerGreen"))
+                                    .bold()
+                            }
+                            Text(subTitle)
+                                .font(.footnote)
+                                .foregroundStyle(.black)
+                                .padding(.bottom, 10)
+                            if !isExtended {
+                                ObjectiveApresentationTopicsComponent(widthSize: proxy.size.width * 0.8, heightSize: proxy.size.height * 0.07, title: allObjText[0], imageName:  allImages[0])
+                            } else {
+                                ForEach(0..<allObjText.count, id: \.self) { index in
+                                    ObjectiveApresentationTopicsComponent(widthSize: proxy.size.width * 0.8, heightSize: proxy.size.height * 0.07, title: allObjText[index], imageName:  allImages[index])
+                                }
+                            }
+                            Spacer()
+                        }
+                        Spacer()
+                    }
+                    .padding()
+                    .padding(.leading, 5)
+                }
+        }.onTapGesture {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                self.isExtended.toggle()
+            }
+        }
+        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height260.rawValue : heightFrame * RelativeSizes.height130.rawValue)
+    }
+}
+
+struct ObjectiveApresentationTopicsComponent: View {
+    var widthSize: CGFloat
+    var heightSize: CGFloat
+    var title: String
+    var imageName: String
+    var body: some View {
+        ZStack {
+            HStack {
+                Image(systemName: imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(Color("light_DarkerGreen"))
+                    .bold()
+                    .frame(maxWidth: widthSize * 0.04)
+                Text(title)
+                    .font(.subheadline)
+                    .foregroundStyle(Color("light_DarkerGreen"))
+            }
+            .padding(5)
+            .background(Color("light_LighterBlue"))
+            .clipShape(RoundedRectangle(cornerRadius: 6, style: /*@START_MENU_TOKEN@*/.continuous/*@END_MENU_TOKEN@*/))
+            //        .frame(maxWidth: widthSize, maxHeight: heightSize)
+        }
+    }
+}
+
+struct LoadingView: View {
+    var body: some View {
+        ZStack {
+            Color(.gray)
+                .scaledToFill()
+            ProgressView("Criando treino...")
+                .progressViewStyle(.circular)
+        }
+    }
+}
+
+struct AvaregeTimeFeedbackView: View {
+    @State var avaregeTime: String
+    var wishTime: Double
+    var treinos: [TreinoModel]
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
+    @State var isExtended: Bool = false
+    var body: some View {
+        
+        GeometryReader { proxy in
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color("light_Blue"), lineWidth: 2)
+                .fill(.white)
+                .overlay {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("\(avaregeTime) Tempo médio")
+                                .font(.system(size: proxy.size.width * 0.0723))
+                                .bold()
+                                .foregroundStyle(.black)
+                            Text("próximo do desejado. ")
+                                .font(.system(size: proxy.size.width * 0.0553))
+                                .multilineTextAlignment(.leading)
+                                .foregroundStyle(.black)
+                                .opacity(0.6)
+                            Text("Tempo objetivo \(wishTime.formatted()) minutos")
+                                .font(.system(size: proxy.size.width * 0.0468))
+                            // .font(.footnote)
+                                .foregroundStyle(.black)
+                                .opacity(0.5)
+                                .padding(.top)
+                            HStack {
+                                if treinos.isEmpty {
+                                    Spacer()
+                                    Text("Nenhum treino criado")
+                                        .font(.title3)
+                                        .foregroundStyle(.black)
+                                        .padding()
+                                    Spacer()
+                                } else {
+                                    // mostrar apenas 8 treinos graficos
+                                    ForEach(0..<(treinos.count < 8 ? treinos.count : 8), id: \.self) { index in
+                                        AvaregeFeedbackGrafics(widthFrame: 14, heightFrame: proxy.size.height * 0.45, titleText: (String(treinos.count - index)), porcentage: (Double(treinos[index].video?.videoTime ?? 0) > Double(wishTime) ? proxy.size.height * 0.45 :  treinos[index].video?.videoTime ?? 1))
+                                            .padding(.top, 5)
+                                    }
+                                }
+                            }
+                            if isExtended {
+                                HStack {
+                                   Rectangle()
+                                        .frame(maxWidth: widthFrame * 0.21 * 0.04, maxHeight: widthFrame * 0.21 * 0.04)
+                                        .foregroundStyle(Color("light_Blue"))
+                                    Text("Dentro do desejado")
+                                        .font(.system(size: 10))
+                                        .foregroundStyle(Color("light_Blue"))
+                                    Rectangle()
+                                        .frame(maxWidth: widthFrame * 0.21 * 0.04, maxHeight: widthFrame * 0.21 * 0.04)
+                                        .foregroundStyle(Color("light_DarkerGreen"))
+                                     Text("Fora do desejado")
+                                        .font(.system(size: 10))
+                                         .multilineTextAlignment(.leading)
+                                         .foregroundStyle(Color("light_DarkerGreen"))
+                                }
+                                .padding(.top, 5)
+                                Text("Se manter dentro do tempo proposto é crucial para garantir a clareza e o impacto de sua mensagem! ")
+                                    .font(.system(size: proxy.size.width * 0.0553))
+                                    .multilineTextAlignment(.leading)
+                                    .foregroundStyle(.black)
+                                    .opacity(0.6)
+                                    .padding(.top, 5)
+                            }
+                            Spacer()
+                        }
+                        
+                        Spacer()
+                    }
+                    .padding()
+                }
+        }
+        .onTapGesture {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                self.isExtended.toggle()
+            }
+        }
+        .frame(maxWidth: widthFrame * 0.21, maxHeight: isExtended ? .calculateHeightPercentageFullScreen(componentHeight: 699, heightScreenSize: heightFrame) : heightFrame * 0.296 )
+    }
+}
+
+struct AvaregeFeedbackGrafics: View {
+    var widthFrame: CGFloat
+    var heightFrame: CGFloat
+    var titleText: String
+    var porcentage: CGFloat
+    var body: some View {
+        VStack {
+            ZStack(alignment: .bottom) {
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(maxWidth: widthFrame, maxHeight: heightFrame)
+                    .foregroundStyle(.gray)
+                    .opacity(0.3)
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(width: 14, height: porcentage )
+                    .foregroundStyle(porcentage > 100 ? Color("light_DarkerGreen") : Color("light_Blue"))
+            }
+            Text("T \(titleText)")
+                .font(.footnote)
+                .foregroundStyle(.black)
+                .opacity(0.5)
+        }
     }
 }
 
 #Preview {
-    TimeCircularFeedback(title: "5:37", subtitle: "Tempo total", objetiveTime: 6, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", frameWidth: 442, frameHeight: 154, progress: 80, totalProgress: 100)
+    TimeCircularFeedback(title: "5:37", subtitle: "Tempo total", objetiveTime: 6, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", widthFrame: 442, heightFrame: 350, progress: 80, totalProgress: 100)
 }
+
+//#Preview {
+//    TimeFeedBackView(avaregeTime: "10:", wishTime: 8, treinos: [])
+//}
+
+//#Preview {
+//    CohesionFeedback(fluidProgress: 50, organizationProgress: 90, connectionProgress: 85)
+//}
+//
+//#Preview {
+//    AvaregeTimeFeedbackView(avaregeTime: "00:66", wishTime: 10, treinos: [TreinoModel(),TreinoModel(),TreinoModel(), TreinoModel()], widthFrame: 1179.0, heightFrame: 913)
+//}
+

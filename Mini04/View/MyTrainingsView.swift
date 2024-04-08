@@ -12,10 +12,12 @@ struct MyTrainingsView: View {
     
     let trainingFilters: [TreinoModel.TrainingFilter] =  TreinoModel.TrainingFilter.allCases
     @State private var selectedFilter: TreinoModel.TrainingFilter = .newerToOlder
-    
+    @Binding var filteredTrainings: [TreinoModel]
+
     @Binding var isShowingModal: Bool
-    @Binding var selectedTraining: TreinoModel?
     @State private var selectedFavoriteOption: Bool = false
+    @Binding var selectedTrainingIndex: Int?
+
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -28,7 +30,7 @@ struct MyTrainingsView: View {
                 CustomPickerView(selectedSortByOption: $selectedFilter, selectedFavoriteOption: $selectedFavoriteOption)
                     .frame(maxWidth: 220)
             }
-            TrainingCellsView(folderVM: folderVM, selectedFilter: selectedFilter, selectedFavoriteOption: $selectedFavoriteOption, isShowingModal: $isShowingModal, selectedTraining: $selectedTraining)
+            TrainingCellsView(folderVM: folderVM, filteredTrainings: $filteredTrainings, selectedFilter: selectedFilter, selectedFavoriteOption: $selectedFavoriteOption, isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -38,12 +40,12 @@ struct TrainingCellsView: View {
     @ObservedObject var folderVM: FoldersViewModel
     
     // FILTERS
-    @State private var filteredTrainings: [TreinoModel] = []
+    @Binding var filteredTrainings: [TreinoModel]
     var selectedFilter: TreinoModel.TrainingFilter?
     @Binding var selectedFavoriteOption: Bool
 
     @Binding var isShowingModal: Bool
-    @Binding var selectedTraining: TreinoModel?
+    @Binding var selectedTrainingIndex: Int?
 
     var body: some View {
         ScrollView {
@@ -60,41 +62,48 @@ struct TrainingCellsView: View {
             .padding(.leading, 40)
             .padding(.bottom, 10)
             
-            ForEach(filteredTrainings, id: \.self) { training in
+            ForEach(Array(filteredTrainings.enumerated()), id: \.element.id) { (index, training) in
                 Button {
-                    selectedTraining = training
-                    isShowingModal.toggle()
-
+                    //                    selectedTraining = training
+                    selectedTrainingIndex = index
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isShowingModal.toggle()
+                    }
                 } label: {
                     HStack {
                         Image(systemName: "video.badge.waveform.fill")
+                            .foregroundStyle(Color("light_DarkerGreen"))
                         Text(training.nome)
+                            .foregroundStyle(Color("light_DarkerGreen"))
                             .bold()
                         
                         Spacer()
                         
                         // Data de criação
                         Text(training.formattedCreationDate())
-                        
+                            .foregroundStyle(Color("light_DarkerGreen"))
                         Spacer()
                         
                         // Duração do treino
                         Text((training.video?.formattedTime())!)
-                        
+                            .foregroundStyle(Color("light_DarkerGreen"))
                         Spacer()
                         
                         Image(systemName: training.isFavorite ? "heart.fill" : "heart")
+                            .foregroundStyle(Color("light_DarkerGreen"))
                             .onTapGesture { training.isFavorite.toggle() }
                             .font(.system(size: 15))
                         
                     }
+                    .transition(.scale) // Adiciona a transição de escala
+
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.white)
                     .padding(.horizontal, 25)
                     .padding(.vertical, 15)
                     .background {
                         RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.white)
                     }
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -105,6 +114,7 @@ struct TrainingCellsView: View {
                 }
             }
         }
+
         .padding(.top, 25)
         // ATUALIZAR A LISTA FILTRADA DE TREINOS
         /// ao abrir, ele atualiza a lista de treinos
@@ -197,69 +207,34 @@ struct TrainingCellsView: View {
 struct CustomPickerView: View {
 
     let trainingFilters: [TreinoModel.TrainingFilter] =  TreinoModel.TrainingFilter.allCases
-
-
-
     @Binding var selectedSortByOption: TreinoModel.TrainingFilter
-
     @Binding var selectedFavoriteOption: Bool
 
-    
-
     var body: some View {
-
         Menu {
-
             Section(header: Text("Classificar por")) {
-
                 ForEach(trainingFilters.filter { $0.rawValue != "Favoritos"}, id: \.self) { filter in
-
                     Button(filter.rawValue) {
-
                         selectedSortByOption = filter
-
                     }
-
                 }
-
             }
-
-            
-
             Section(header: Text("Filtrar por")) {
-
                 Toggle(isOn: $selectedFavoriteOption) {
-
                     Text("Favoritos")
-
                 }
-
                 .toggleStyle(.button)
-
             }
-
         } label: {
-
             Text(selectedSortByOption == .favorites ? "Favoritos" : selectedSortByOption.rawValue)
-
                 .font(.body)
-
                 .foregroundStyle(.primary)
-
         }
-
         .menuStyle(.borderlessButton)
-
         .background {
-
             RoundedRectangle(cornerRadius: 5)
-
                 .foregroundStyle(.clear)
-
                 .frame(height: 22)
-
         }
-
     }
-
 }
