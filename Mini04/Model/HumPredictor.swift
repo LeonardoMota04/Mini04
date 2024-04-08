@@ -49,7 +49,7 @@ class HumPredictor: SpeechManagerDelegate {
                 return
             }
             
-            print(" PREVISÃO: \n\n\n\(prediction.targetProbability)\n\n\n")
+//            print(" PREVISÃO: \n\n\n\(prediction.targetProbability)\n\n\n")
             
             for (hum, probability) in prediction.targetProbability {
                 // LÓGICA DE IDENTIFICAR QUANDO O "HUM" É DITO
@@ -57,7 +57,7 @@ class HumPredictor: SpeechManagerDelegate {
                 if hum == "Hum" && probability > 0.75 {
                     print("HUM MAIOR\n")
                 } else {
-                    print("NORMAL MAIOR\n")
+//                    print("NORMAL MAIOR\n")
                 }
             }
             

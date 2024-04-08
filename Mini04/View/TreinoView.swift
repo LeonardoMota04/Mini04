@@ -84,7 +84,7 @@ struct TreinoView: View {
                             }
                         }
                         VStack(alignment: .leading) {
-                        Text("Gravaçao")
+                        Text("Gravação")
                             .foregroundStyle(.black)
                             .font(.title3)
                             .bold()
@@ -99,8 +99,10 @@ struct TreinoView: View {
                                     .foregroundStyle(.black)
                                     .font(.title3)
                                     .bold()
-                                RoundedRectangle(cornerRadius: 10)
-                                    .frame(width: 316, height: 251)
+                                if let speech = trainingVM.treino.video?.cutSpeeches,
+                                   let time = trainingVM.treino.video?.speechStart {
+                                    TranscricaoViewComponent(trainingVM: trainingVM, player: avPlayer, speeches: speech, times: time)
+                                }
                             }
                             .foregroundStyle(.white)
                         }
