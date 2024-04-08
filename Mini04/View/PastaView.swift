@@ -68,7 +68,7 @@ struct PastaView: View {
                                 TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
                                     .frame(maxHeight: .infinity)
                                     .frame(width: 958)
-                                    .background(.gray)
+                                    .background(Color("light_LighterGray"))
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                     .offset(y: 25)
                                     .offset(x: offsetView1)
@@ -92,7 +92,7 @@ struct PastaView: View {
                                 TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
                                     .frame(maxHeight: .infinity)
                                     .frame(width: 958)
-                                    .background(.gray)
+                                    .background(Color("light_LighterGray"))
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                     .offset(y:25)
                                     .offset(x: offsetView2)
@@ -124,7 +124,7 @@ struct PastaView: View {
                                 TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
                                     .frame(maxHeight: .infinity)
                                     .frame(width: 958)
-                                    .background(.gray)
+                                    .background(Color("light_LighterGray"))
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                     .offset(y: 25)
                                     .offset(x: offsetView3)
@@ -202,7 +202,18 @@ struct PastaView: View {
                             HStack(alignment: .top){
                                 Color(.clear) // colocando algo tranparente para ficar ao lado da AvaregeTimeFeedBackView
                                     .frame(maxWidth: geo.size.width * 0.21, maxHeight: 10)
-                                ObjectiveApresentationView(widthFrame: geo.size.width, heightFrame: geo.size.height)
+                                // TODO: REAVALIAR ESSA LOGICA AQUI DA COESA NA *PASTA*
+                                if  (folderVM.folder.treinos.isEmpty || ((folderVM.folder.treinos.last?.feedback?.coherenceValues.isEmpty) != nil)) { //TODO: resolver essa logica na viewModel ou model - garatindo que nao vai crachar o app se o index nao existir
+                                    CohesionExtendView(fluidProgress: 0,
+                                                     organizationProgress: 0,
+                                                     connectionProgress: 0,
+                                                     widthFrame: geo.size.width, heightFrame: geo.size.height)
+                                } else {
+                                    CohesionExtendView(fluidProgress: folderVM.folder.treinos.last?.feedback?.coherenceValues[0] ?? 1,
+                                                       organizationProgress: folderVM.folder.treinos.last?.feedback?.coherenceValues[1] ?? 1,
+                                                       connectionProgress:  folderVM.folder.treinos.last?.feedback?.coherenceValues[2] ?? 1,
+                                                     widthFrame: geo.size.width, heightFrame: geo.size.height)
+                                }
                                 ObjectiveApresentationView(widthFrame: geo.size.width, heightFrame: geo.size.height)
                             }
                             .padding(.top, geo.size.height * 0.1423 + 5) // padding para organizar os elementos pois estao em cima um do outro
