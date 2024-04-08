@@ -10,15 +10,15 @@ import SwiftUI
 // MARK: - MODAL DE CRIAR PASTA
 struct CreatingFolderModalView: View {
     @ObservedObject var presentationVM: ApresentacaoViewModel
-    @State var presentation_Duration: Int = 0
-    @State var presentation_Type: String = ""
-    @State var presentation_Name: String = ""
-    @State var presentation_Date: Date = Date()
+    @State var presentation_Duration: Int = 0 // duracao desejada
+    @State var presentation_Goal: String = "" // tipo de apresentacao
+    @State var presentation_Name: String = "" // nome da apresentacao
+    @State var presentation_Date: Date = Date() // data da apresentacao NAO DE CRIACAO
     
     @Binding var isModalPresented: Bool
     
     var isFormValid: Bool {
-        return !presentation_Name.isEmpty && !presentation_Type.isEmpty && presentation_Duration > 0
+        return !presentation_Name.isEmpty && !presentation_Goal.isEmpty && presentation_Duration > 0
     }
     
     var body: some View {
@@ -32,7 +32,7 @@ struct CreatingFolderModalView: View {
                 // DURAÇÃO e TIPO
                 HStack {
                     CustomDurationPickerView(selectedSortByOption: $presentation_Duration)
-                    PickerPresentationTypeView(goalText: $presentation_Type)
+                    PickerPresentationTypeView(goalText: $presentation_Goal)
                 }
                 // NOME e DATA
                 HStack {
@@ -47,9 +47,10 @@ struct CreatingFolderModalView: View {
                 Spacer()
                 Button {
                     withAnimation {
-                        presentationVM.createNewFolder(name: presentation_Name,
+                        presentationVM.createNewFolder(name: presentation_Name, 
+                                                       dateOfPresentation: presentation_Date,
                                                        pretendedTime: presentation_Duration,
-                                                       presentationGoal: presentation_Type)
+                                                       presentationGoal: presentation_Goal)
                         isModalPresented = false
                     }
                 } label: {
@@ -64,7 +65,7 @@ struct CreatingFolderModalView: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.white)
-                .disabled(!isFormValid) // desabilita o botão se o formulário não estiver válido
+                //.disabled(!isFormValid) // desabilita o botão se o formulário não estiver válido
                 Spacer()
             }
             
@@ -103,7 +104,7 @@ struct TextFieldPresentationNameView: View {
                                 .strokeBorder((isHovered && !isEditing) ? Color(.darkGray) : (isEditing ? Color(.lightDarkerGreen) : Color(.gray)), lineWidth: 2)
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 10)) 
-                        .shadow(color: isEditing ? Color.black : .clear, radius: isEditing ? 5 : 0) // Aplicando sombra ao RoundedRectangle
+                        .shadow(color: isEditing ? Color.black.opacity(0.5) : .clear, radius: isEditing ? 5 : 0) // Aplicando sombra ao RoundedRectangle
                 )
 
                 .onChange(of: folderName) { _, newValue in
@@ -178,7 +179,7 @@ struct DatePickerPresentationDateView: View {
                             .strokeBorder((isHovered && !isEditing) ? Color(.darkGray) : (isEditing ? Color(.lightDarkerGreen) : Color(.gray)), lineWidth: 2)
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .shadow(color: isEditing ? Color.black : .clear, radius: isEditing ? 5 : 0) // Aplicando sombra ao RoundedRectangle
+                    .shadow(color: isEditing ? Color.black.opacity(0.5) : .clear, radius: isEditing ? 5 : 0) // Aplicando sombra ao RoundedRectangle
             )
         }
         .onHover { hovering in
@@ -201,13 +202,14 @@ struct DatePickerPresentationDateView: View {
     }
 }
 
-// MARK: - PICKER DURAÇÃO DA APRESENTAÇÃO
 struct CustomDurationPickerView: View {
     let timeStamps = [5, 8, 10, 15, 20]
     @Binding var selectedSortByOption: Int
-    @State private var customTime: String = ""
+    @State private var customMinutes: String = ""
+    @State private var customSeconds: String = ""
     @State private var isHovered = false
     @State private var isEditing = false
+    
     
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
@@ -217,10 +219,27 @@ struct CustomDurationPickerView: View {
             
             ZStack (alignment: .trailing){
                 HStack {
-                    TextField("00:00", text: $customTime, onEditingChanged: { editing in
+                    TextField("00", text: $customMinutes, onEditingChanged: { editing in
                         self.isEditing = editing
                     })
                         .textFieldStyle(.plain)
+                        .frame(width: 30) // Definindo a largura
+                        .onChange(of: customMinutes) { _, newValue in
+                            if newValue.count > 2 { // Limitando a 2 caracteres
+                                customMinutes = String(newValue.prefix(2))
+                            }
+                        }
+                    Text(":")
+                    TextField("00", text: $customSeconds, onEditingChanged: { editing in
+                        self.isEditing = editing
+                    })
+                        .textFieldStyle(.plain)
+                        .frame(width: 30) // Definindo a largura
+                        .onChange(of: customSeconds) { _, newValue in
+                            if newValue.count > 2 { // Limitando a 2 caracteres
+                                customSeconds = String(newValue.prefix(2))
+                            }
+                        }
                     Spacer()
                     Image(systemName: "timer")
                         .resizable()
@@ -238,15 +257,16 @@ struct CustomDurationPickerView: View {
                                 .strokeBorder((isHovered && !isEditing) ? Color(.darkGray) : (isEditing ? Color(.lightDarkerGreen) : Color(.gray)), lineWidth: 2)
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .shadow(color: isEditing ? Color.black : .clear, radius: isEditing ? 5 : 0) // Aplicando sombra ao RoundedRectangle
+                        .shadow(color: isEditing ? Color.black.opacity(0.5) : .clear, radius: isEditing ? 5 : 0) // Aplicando sombra ao RoundedRectangle
                 )
-                // MENU
+                
                 Menu {
                     Section(header: Text("Sugestões")) {
                         ForEach(timeStamps, id: \.self) { time in
                             Button("\(String(time)) minutos") {
-                                selectedSortByOption = time
-                                customTime = formatTime(time)
+                                selectedSortByOption = time * 60 // Convertendo para segundos
+                                customMinutes = formatTime(time)
+                                customSeconds = "00"
                             }
                         }
                     }
@@ -260,21 +280,34 @@ struct CustomDurationPickerView: View {
                 .menuIndicator(.hidden)
                 .padding(.trailing, 5)
             }
-
         }
         .onHover { hovering in
             withAnimation {
                 self.isHovered = hovering && !isEditing
             }
         }
+        .onChange(of: isEditing) { _, editing in
+            if !editing {
+                if let minutes = Int(customMinutes), let seconds = Int(customSeconds) {
+                    selectedSortByOption = minutes * 60 + seconds // Convertendo para segundos
+                } else {
+                    // Tratar erro de entrada inválida
+                }
+            }
+        }
     }
     
     func formatTime(_ time: Int) -> String {
-        let minutes = time
-        let formattedMinutes = String(format: "%02d", minutes)
-        return "\(formattedMinutes):00"
+        let formattedTime = String(format: "%02d", time)
+        return formattedTime
     }
 }
+
+
+
+
+
+
 
 // MARK: - PICKER TIPO DE APRESENTAÇÃO
 struct PickerPresentationTypeView: View {
@@ -330,7 +363,7 @@ struct PickerPresentationTypeView: View {
                             .strokeBorder((isHovered && !isEditing) ? Color(.darkGray) : (isEditing ? Color(.lightDarkerGreen) : Color(.gray)), lineWidth: 2)
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .shadow(color: isEditing ? Color.black : .clear, radius: isEditing ? 5 : 0) // Aplicando sombra ao RoundedRectangle
+                    .shadow(color: isEditing ? Color.black.opacity(0.5) : .clear, radius: isEditing ? 5 : 0) // Aplicando sombra ao RoundedRectangle
             )          
             
             .onChange(of: isPopoverVisible) { _, newValue in

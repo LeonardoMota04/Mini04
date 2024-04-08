@@ -28,12 +28,16 @@ class ApresentacaoViewModel: ObservableObject {
     // MARK: - CRUD
     
     // CREATE
-    func createNewFolder(name: String, pretendedTime: Int, presentationGoal: String) {
+    func createNewFolder(name: String, dateOfPresentation: Date, pretendedTime: Int, presentationGoal: String) {
         guard let modelContext = modelContext else { return }
         
         // cria nova pasta
-        let newFolder = PastaModel(nome: name, tempoDesejado: pretendedTime, objetivoApresentacao: presentationGoal)
+        let newFolder = PastaModel(nome: name,
+                                   dateOfPresentation: dateOfPresentation,
+                                   tempoDesejado: pretendedTime, 
+                                   objetivoApresentacao: presentationGoal)
 
+        print("Tempo Goal: \(newFolder.tempoDesejado)")
         // FoldersViewModel com a nova pasta
         if foldersViewModels[newFolder.id] == nil {
             let newFolderViewModel = FoldersViewModel(folder: newFolder)
@@ -68,7 +72,7 @@ class ApresentacaoViewModel: ObservableObject {
                 print("- Nome: \(folder.nome)")
                 print("- Treinos: \(folder.treinos)")
                 print("- Objetivo: \(folder.objetivoApresentacao)")
-                print("- Data: \(folder.data)")
+                print("- Data: \(folder.creationDate)")
                 print("\n\n\n\n")
             }
         } catch {

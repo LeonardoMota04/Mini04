@@ -176,13 +176,13 @@ struct PastaView: View {
                             Spacer()
                             HStack {
                                 Image(systemName: "calendar.badge.clock")
-                                Text(folderVM.formatterDate(date: folderVM.folder.data))
+                                Text(folderVM.formatterDate(date: folderVM.folder.dateOfPresentation))
                                     .font(.title3)
                                 Text("|")
                                     .font(.title2)
                                 Image(systemName: "video.badge.waveform.fill")
                                 Text("\(folderVM.folder.treinos.count) Treinos")
-                                    .font(.subheadline)
+                                    .font(.title3)
                                 Text("|")
                                     .font(.title2)
                                 Image(systemName: "handbag.fill")
@@ -218,7 +218,7 @@ struct PastaView: View {
                             }
                             .padding(.top, geo.size.height * 0.1423 + 5) // padding para organizar os elementos pois estao em cima um do outro
                             HStack(alignment: .top){
-                                AvaregeTimeFeedbackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos, widthFrame: geo.size.width, heightFrame: geo.size.height)
+                                AvaregeTimeFeedbackView(avaregeTime: folderVM.formatedAvareTime, wishTimeText: folderVM.folder.formattedGoalTime(), wishTime: folderVM.folder.tempoDesejado, treinos: folderVM.folder.treinos, widthFrame: geo.size.width, heightFrame: geo.size.height)
                                 WordRepetitionView(folderVM: folderVM, widthFrame: geo.size.width, heightFrame: geo.size.height)
                                 ImproveApresentationView(widthFrame: geo.size.width, heightFrame: geo.size.height)
                             }

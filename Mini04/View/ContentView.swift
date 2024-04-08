@@ -64,7 +64,12 @@ struct ContentView: View {
                                         Text("ViewModel não encontrada para esta pasta")
                                     }
                                 } label: {
-                                    SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
+                                    SiderbarFolderComponent(foldersDate: folder.creationDate,
+                                                            foldersName: folder.nome,
+                                                            foldersTrainingAmount: folder.treinos.count,
+                                                            foldersObjetiveTime: folder.tempoDesejado,
+                                                            foldersType: folder.objetivoApresentacao,
+                                                            backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
                                         .onHover { hovering in
                                             overText = hovering ? folder.id : nil
                                             backgroundHighlitedFolder = hovering ? folder.id : nil
@@ -98,7 +103,12 @@ struct ContentView: View {
                                         Text("ViewModel não encontrada para esta pasta")
                                     }
                                 } label: {
-                                    SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
+                                    SiderbarFolderComponent(foldersDate: folder.creationDate, 
+                                                            foldersName: folder.nome,
+                                                            foldersTrainingAmount: folder.treinos.count,
+                                                            foldersObjetiveTime: folder.tempoDesejado,
+                                                            foldersType: folder.objetivoApresentacao,
+                                                            backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
                                         .onHover { hovering in
                                             overText = hovering ? folder.id : nil
                                             backgroundHighlitedFolder = hovering ? folder.id : nil

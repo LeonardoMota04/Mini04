@@ -284,8 +284,11 @@ class FoldersViewModel: ObservableObject {
     
     
     func calculateTreinoTime(videoTime: Double) -> CGFloat {
-        return CGFloat(videoTime) / CGFloat(folder.tempoDesejado) * 54
+        let totalSeconds = Double(folder.tempoDesejado)
+        return CGFloat(videoTime) / CGFloat(totalSeconds) * 54
     }
+
+
     
     // tranforma o retorno do chatGTP em porcentagem par montar os graficos de feedback
     func convertPorcentageCohesionFeedback(message: Message?) -> [CGFloat] {
