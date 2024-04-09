@@ -17,12 +17,18 @@ struct PastaView: View {
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
     
-    // SABER QUAL PASTA ESTAMOS
-    @Binding var selectedFolderID: UUID?
+    
     
     // EDITAR NOME DA PASTA
     @State private var editedName: String = ""
     @State private var isShowingModal = false
+    @State private var isShowingEditingModal = false
+    
+    // DELETAR PASTA
+        // SABER QUAL PASTA ESTAMOS
+        @Binding var selectedFolderID: UUID?
+        // ALERTA DE DELETAR
+        @State private var isShowingAlert = false
     
     @State private var selectedTrainingIndex: Int?
     @State var filteredTrainings: [TreinoModel] = []
@@ -247,15 +253,19 @@ struct PastaView: View {
                     .blur(radius: isShowingModal ? 3 : 0)
                     .disabled(isShowingModal ? true : false)
                     .onTapGesture {
-                        if isShowingModal {
+                        if isShowingModal || isShowingEditingModal {
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                isShowingModal.toggle()
+                                isShowingModal = false
+                                isShowingEditingModal = false
                             }
                         }
                     }
                 }
             }
             .padding()
+            .sheet(isPresented: $isShowingEditingModal) {
+                EditingFolderModalView(folderVM: folderVM, isModalPresented: $isShowingEditingModal)
+            }
             .onChange(of: selectedFolderID) { _, newValue in
                 if newValue == nil {
                     dismiss()
@@ -280,7 +290,8 @@ struct PastaView: View {
             .onChange(of: folderVM.folder) {
                 // quando adicionar um novo treino atualiza o valor do tempo medio dos treinos
                 folderVM.calculateAvarageTime()
-            }.onReceive(screenResChanged, perform: { newValue in
+            }
+            .onReceive(screenResChanged, perform: { newValue in
                         //the screensize has changed.
                         // newValue contains userInfo. Incase you want to do anything with it
                         let tempScreenSize = NSScreen.main?.visibleFrame.size
@@ -302,29 +313,27 @@ struct PastaView: View {
         .toolbar() {
             ToolbarItem() {
                 Menu {
-                    Button {
-                        
-                    } label: {
-                        Text("Editar Apresentação")
-                    }
-                    Button {
-                        selectedFolderID = nil
-                    } label: {
-                        Text("Excluir Apresentação")
-                    }
+                    Button { isShowingEditingModal = true } label: { Text("Editar Apresentação") }
+                    Button { isShowingAlert = true } label: { Text("Excluir Apresentação") }
                     Divider()
                     // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
-                    NavigationLink {
-                        RecordingVideoView(folderVM: folderVM)
-                    } label: {
-                        Text("Adicionar novo treino")
-                    }
+                    NavigationLink { RecordingVideoView(folderVM: folderVM) } label: { Text("Adicionar novo treino") }
                 } label: {
                     Image(systemName: "ellipsis.circle.fill")
                 }
                 .menuIndicator(.hidden)          
             }
         }
+        .alert("Você tem certeza?", isPresented: $isShowingAlert) {
+            Button("Cancelar", role: .cancel) { isShowingAlert = false }
+            Button("Deletar", role: .destructive) {
+                // deletar treino
+                selectedFolderID = nil
+            }
+        } message: {
+            Text("Essa Apresentação (incluindo os treinos e os feedbacks) será permanentemente excluída.")
+        }
+        
     }
     // UPDATE Nome da pasta e seus treinos
     func saveChanges() {
@@ -342,3 +351,5 @@ struct PastaView: View {
     }
     
 }
+
+    

@@ -237,9 +237,9 @@ struct ContentView: View {
             presentationVM.modelContext = modelContext
             presentationVM.fetchFolders()
         }
-        .sheet(isPresented: $isModalPresented, content: {
+        .sheet(isPresented: $isModalPresented) {
             CreatingFolderModalView(presentationVM: presentationVM, isModalPresented: $isModalPresented)
-        })
+        }
         .environmentObject(searchVM)
     }
     

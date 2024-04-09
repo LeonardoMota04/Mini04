@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+
+
+
+
+
 // MARK: - MODAL DE CRIAR PASTA
 struct CreatingFolderModalView: View {
     @ObservedObject var presentationVM: ApresentacaoViewModel
@@ -65,7 +70,7 @@ struct CreatingFolderModalView: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.white)
-                //.disabled(!isFormValid) // desabilita o botão se o formulário não estiver válido
+                .disabled(!isFormValid) // desabilita o botão se o formulário não estiver válido
                 Spacer()
             }
             
@@ -209,7 +214,7 @@ struct CustomDurationPickerView: View {
     @State private var customSeconds: String = ""
     @State private var isHovered = false
     @State private var isEditing = false
-    
+    @State private var isShowingAlert = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
@@ -219,7 +224,7 @@ struct CustomDurationPickerView: View {
             
             ZStack (alignment: .trailing){
                 HStack {
-                    TextField("00", text: $customMinutes, onEditingChanged: { editing in
+                    TextField(getMinutesFromSeconds(selectedSortByOption), text: $customMinutes, onEditingChanged: { editing in
                         self.isEditing = editing
                     })
                         .textFieldStyle(.plain)
@@ -230,7 +235,7 @@ struct CustomDurationPickerView: View {
                             }
                         }
                     Text(":")
-                    TextField("00", text: $customSeconds, onEditingChanged: { editing in
+                    TextField(getSecondsFromSeconds(selectedSortByOption), text: $customSeconds, onEditingChanged: { editing in
                         self.isEditing = editing
                     })
                         .textFieldStyle(.plain)
@@ -291,10 +296,27 @@ struct CustomDurationPickerView: View {
                 if let minutes = Int(customMinutes), let seconds = Int(customSeconds) {
                     selectedSortByOption = minutes * 60 + seconds // Convertendo para segundos
                 } else {
-                    // Tratar erro de entrada inválida
+                    isShowingAlert = true
                 }
             }
         }
+//        .popover(isPresented: $isShowingAlert, arrowEdge: .bottom) {
+//            VStack(alignment: .leading) {
+//                Text("Insira valores válidos!")
+//            }
+//            .padding()
+//            .frame(width: 200, height: 50)
+//        }
+    }
+    
+    func getMinutesFromSeconds(_ seconds: Int) -> String {
+        let minutes = seconds / 60
+        return String(format: "%02d", minutes)
+    }
+    
+    func getSecondsFromSeconds(_ seconds: Int) -> String {
+        let remainingSeconds = seconds % 60
+        return String(format: "%02d", remainingSeconds)
     }
     
     func formatTime(_ time: Int) -> String {
