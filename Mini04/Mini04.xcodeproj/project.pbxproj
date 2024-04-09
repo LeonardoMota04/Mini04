@@ -19,9 +19,9 @@
 		269DF6432BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6422BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift */; };
 		269DF6472BC3667500B0C629 /* CreateFolderModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6462BC3667500B0C629 /* CreateFolderModalView.swift */; };
 		269DF64B2BC57C6E00B0C629 /* EditingFolderModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF64A2BC57C6E00B0C629 /* EditingFolderModalView.swift */; };
-		269DF64D2BC5C94200B0C629 /* HumClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 269DF64C2BC5C94200B0C629 /* HumClassifier.mlmodel */; };
 		269DF64F2BC5D65200B0C629 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 269DF64E2BC5D65200B0C629 /* SwiftSoup */; };
-		370655E22BB1F32100B22AB0 /* HandPoseDoVH.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */; };
+		269DF6512BC5D76100B0C629 /* HumClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6502BC5D76100B0C629 /* HumClassifier.mlmodel */; };
+		269DF6532BC5D78800B0C629 /* HandPoseV1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6522BC5D78800B0C629 /* HandPoseV1.mlmodel */; };
 		370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */; };
 		370655E62BB5009F00B22AB0 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E52BB5009F00B22AB0 /* Extras.swift */; };
 		370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */; };
@@ -39,8 +39,6 @@
 		370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */; };
 		370E91FE2BA8D9F200D39C27 /* ApresentacaoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */; };
 		377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */; };
-		37E608F12BC5D4F000B96B4A /* HandPoseV1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 37E608F02BC5D4F000B96B4A /* HandPoseV1.mlmodel */; };
-		37E608F32BC5D51500B96B4A /* HumClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 37E608F22BC5D51500B96B4A /* HumClassifier.mlmodel */; };
 		37E608F52BC5D56900B96B4A /* ModalTreinoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E608F42BC5D56900B96B4A /* ModalTreinoView.swift */; };
 		BA5E1A1D2BB36ECD00B9528B /* ViewComponetns.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E1A1C2BB36ECD00B9528B /* ViewComponetns.swift */; };
 		BA5E1A202BB3724700B9528B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73F62BA4C865002190F4 /* ContentView.swift */; };
@@ -82,6 +80,8 @@
 		269DF6422BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynonymnsFeedbackTrainingView.swift; sourceTree = "<group>"; };
 		269DF6462BC3667500B0C629 /* CreateFolderModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderModalView.swift; sourceTree = "<group>"; };
 		269DF64A2BC57C6E00B0C629 /* EditingFolderModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingFolderModalView.swift; sourceTree = "<group>"; };
+		269DF6502BC5D76100B0C629 /* HumClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HumClassifier.mlmodel; sourceTree = "<group>"; };
+		269DF6522BC5D78800B0C629 /* HandPoseV1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandPoseV1.mlmodel; sourceTree = "<group>"; };
 		370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiderbarFolderComponent.swift; sourceTree = "<group>"; };
 		370655E52BB5009F00B22AB0 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		370E91DE2BA8AFAE00D39C27 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
@@ -99,8 +99,6 @@
 		370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreinoView.swift; sourceTree = "<group>"; };
 		370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApresentacaoViewModel.swift; sourceTree = "<group>"; };
 		377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingVideoView.swift; sourceTree = "<group>"; };
-		37E608F02BC5D4F000B96B4A /* HandPoseV1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = HandPoseV1.mlmodel; path = ../../../../../../../dataset5/HandPoseV1.mlmodel; sourceTree = "<group>"; };
-		37E608F22BC5D51500B96B4A /* HumClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = HumClassifier.mlmodel; path = ../../../../../../../../Downloads/HumClassifier.mlmodel; sourceTree = "<group>"; };
 		37E608F42BC5D56900B96B4A /* ModalTreinoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalTreinoView.swift; sourceTree = "<group>"; };
 		BA5E1A1C2BB36ECD00B9528B /* ViewComponetns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewComponetns.swift; sourceTree = "<group>"; };
 		BA8571082BAB4FE6000FF83B /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
@@ -138,6 +136,8 @@
 		263D73D92BA4C56F002190F4 = {
 			isa = PBXGroup;
 			children = (
+				269DF6522BC5D78800B0C629 /* HandPoseV1.mlmodel */,
+				269DF6502BC5D76100B0C629 /* HumClassifier.mlmodel */,
 				370E91E82BA8C14B00D39C27 /* Model */,
 				370E91E72BA8C14600D39C27 /* View */,
 				370E91E62BA8C13B00D39C27 /* ViewModel */,
@@ -220,8 +220,6 @@
 		370E91E82BA8C14B00D39C27 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				37E608F22BC5D51500B96B4A /* HumClassifier.mlmodel */,
-				37E608F02BC5D4F000B96B4A /* HandPoseV1.mlmodel */,
 				370E91F72BA8D7E200D39C27 /* VideoModel.swift */,
 				370E91F32BA8D7BA00D39C27 /* TreinoModel.swift */,
 				2692A1F92BB25F4000EEF9AB /* SynonymModel.swift */,
@@ -361,7 +359,6 @@
 				F1B51E002BBC3A7F000D0126 /* HumPredictor.swift in Sources */,
 				370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */,
 				370E91F62BA8D7D200D39C27 /* TreinoViewModel.swift in Sources */,
-				37E608F12BC5D4F000B96B4A /* HandPoseV1.mlmodel in Sources */,
 				269DF64B2BC57C6E00B0C629 /* EditingFolderModalView.swift in Sources */,
 				263D73E82BA4C56F002190F4 /* SwiftDataView.swift in Sources */,
 				370E91FA2BA8D86D00D39C27 /* PastaView.swift in Sources */,
@@ -376,8 +373,8 @@
 				2692A1F82BB1EC1600EEF9AB /* CameraOverlayView.swift in Sources */,
 				BA5E1A1D2BB36ECD00B9528B /* ViewComponetns.swift in Sources */,
 				F196321C2BA9C3810086D159 /* ChatViewModel.swift in Sources */,
-				37E608F32BC5D51500B96B4A /* HumClassifier.mlmodel in Sources */,
 				2692A1FA2BB25F4000EEF9AB /* SynonymModel.swift in Sources */,
+				269DF6512BC5D76100B0C629 /* HumClassifier.mlmodel in Sources */,
 				370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */,
 				F196321A2BA8E1670086D159 /* Constants.swift in Sources */,
 				370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */,
@@ -390,6 +387,7 @@
 				263D73E62BA4C56F002190F4 /* Mini04App.swift in Sources */,
 				370E91FE2BA8D9F200D39C27 /* ApresentacaoViewModel.swift in Sources */,
 				370E91F22BA8D7AD00D39C27 /* FoldersViewModel.swift in Sources */,
+				269DF6532BC5D78800B0C629 /* HandPoseV1.mlmodel in Sources */,
 				263D74102BAA2CD3002190F4 /* WebScraping.swift in Sources */,
 				370E91F02BA8D79600D39C27 /* PastaModel.swift in Sources */,
 			);
