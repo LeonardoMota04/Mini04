@@ -11,7 +11,6 @@ import SwiftData
 struct PastaView: View {
     @Environment(\.dismiss) private var dismiss
 
-    
     // VM
     @ObservedObject var folderVM: FoldersViewModel
     @State private var isModalPresented = true // Modal sempre será apresentado ao entrar na view
@@ -322,7 +321,7 @@ struct PastaView: View {
                         Text("Editar Apresentação")
                     }
                     Button {
-                        
+                        selectedFolderID = nil
                     } label: {
                         Text("Excluir Apresentação")
                     }
@@ -336,6 +335,7 @@ struct PastaView: View {
                 } label: {
                     Image(systemName: "ellipsis.circle.fill")
                 }
+                .menuIndicator(.hidden)          
             }
         }
     }

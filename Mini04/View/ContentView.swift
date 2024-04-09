@@ -210,6 +210,22 @@ struct ContentView: View {
                 }
             }
         })
+        // ao trocar o ID da pasta selecionada e ele for NIL é para apagar ela
+        .onChange(of: selectedPresentationID) { oldValue, newValue in
+            if newValue == nil {
+                if let folderID = oldValue {
+                    // Encontrar a pasta correspondente ao ID na fonte de dados
+                    if let folderIndex = folders.firstIndex(where: { $0.id == folderID }) {
+                        let folderToDelete = folders[folderIndex]
+                        
+                        // Excluir a pasta
+                        presentationVM.deleteFolder(folderToDelete)
+                        
+                    }
+                }
+            }
+        }
+
         .onChange(of: columnVisibility, initial: true) { oldVal, newVal in
             DispatchQueue.main.async {
                 if newVal == .detailOnly && !camVM.cameraGravando{
