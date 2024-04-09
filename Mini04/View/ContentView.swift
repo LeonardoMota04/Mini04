@@ -195,9 +195,11 @@ struct ContentView: View {
                     }
                 }
             } detail: {
-                
+                Color.lightLighterGray
             }
+            
         }
+        .preferredColorScheme(.light)
         //abrir a sidebar sempre
         //https://stackoverflow.com/questions/77794673/disable-collapsing-sidebar-navigationsplitview
         .onChange(of: camVM.cameraGravando, { oldValue, newValue in
