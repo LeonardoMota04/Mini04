@@ -311,8 +311,6 @@ class FoldersViewModel: ObservableObject {
     }
     
     
-
-    
     // tranforma o retorno do chatGTP em porcentagem par montar os graficos de feedback
     func convertPorcentageCohesionFeedback(message: Message?) -> [CGFloat] {
         // porcentagens do feecback de coesa
