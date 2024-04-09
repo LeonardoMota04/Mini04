@@ -13,7 +13,6 @@ struct PastaView: View {
 
     // VM
     @ObservedObject var folderVM: FoldersViewModel
-    @State private var isModalPresented = true // Modal sempre será apresentado ao entrar na view
     
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
@@ -232,23 +231,17 @@ struct PastaView: View {
                             }
                         }
                         .padding(EdgeInsets(top: 40, leading: 0, bottom: 55, trailing: 0))
-                        // MARK: FeedBacks -
                         
-                        Spacer()
                         
-                        if folderVM.folder.treinos.isEmpty {
-                            Text("Adicione um treino para começar")
+                        HStack {
+                            Spacer()
+                            if folderVM.folder.treinos.isEmpty {
+                                ContentUnavailableView("Adicione um treino para começar", systemImage: "folder.fill.badge.questionmark")
+                            }
+                            Spacer()
                         }
-                        
+                        .padding(.bottom, 80)
                         Spacer()
-                        
-                        // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
-                        NavigationLink {
-                            RecordingVideoView(folderVM: folderVM)
-                        } label: {
-                            Text("Novo Treino")
-                        }
-                        // exibe todos os treinos
                     }
                     .padding(.horizontal, 55)
                     .blur(radius: isShowingModal ? 3 : 0)
@@ -296,21 +289,15 @@ struct PastaView: View {
                             currentScreenSize = tempScreenSize ?? NSSize.zero
                         }
                     })
-            .sheet(isPresented: $isModalPresented) {
-                FolderInfoModalView(isModalPresented: $isModalPresented)
-            }
-            //editedName = folderVM.folder.nome
-        //    folderVM.calculateAvarageTime() // TODO: arrumar isso e ver isso
+            
         }
+        .background(Color.lightLighterGray)
         .onChange(of: folderVM.folder) { _, _ in
             // quando adicionar um novo treino atualiza o valor do tempo medio dos treinos
             folderVM.calculateAvarageTime()
             
             // quando trocar de pasta, passa de novo o contexto
             folderVM.modelContext = modelContext
-        }
-        .sheet(isPresented: $isModalPresented) {
-            FolderInfoModalView(isModalPresented: $isModalPresented)
         }
         .toolbar() {
             ToolbarItem() {
@@ -354,24 +341,4 @@ struct PastaView: View {
         }
     }
     
-}
-
-// MARK: - MODAL DE INFORMACOES
-struct FolderInfoModalView: View {
-    @Binding var isModalPresented: Bool
-    var body: some View {
-        VStack {
-            Text("Instruções:")
-                .font(.title)
-                .padding()
-            
-            Text("pipipipi")
-                .padding()
-            
-            Button("Fechar") {
-                isModalPresented = false
-            }
-            .padding()
-        }
-    }
 }

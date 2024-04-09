@@ -43,6 +43,8 @@ struct ContentView: View {
                 //searchbar
                 HStack {
                     SearchBar(searchText: $searchText, isSearching: $isSearching, disableTextfield: $disableTextfield)
+                        .shadow(radius: 2)
+
                         //roda a funcao que buscar os folders filtrados toda vez ue textfiled muda de valor
                         .onChange(of: searchText) { oldValue, newValue in
                             searchVM.searchFolders(allFolders: folders, searchText: searchText)
@@ -65,7 +67,7 @@ struct ContentView: View {
                                         Text("ViewModel não encontrada para esta pasta")
                                     }
                                 } label: {
-                                    SiderbarFolderComponent(foldersDate: folder.creationDate,
+                                    SiderbarFolderComponent(foldersDate: folder.dateOfPresentation,
                                                             foldersName: folder.nome,
                                                             foldersTrainingAmount: folder.treinos.count,
                                                             foldersObjetiveTime: folder.tempoDesejado,
@@ -104,7 +106,7 @@ struct ContentView: View {
                                         Text("ViewModel não encontrada para esta pasta")
                                     }
                                 } label: {
-                                    SiderbarFolderComponent(foldersDate: folder.creationDate, 
+                                    SiderbarFolderComponent(foldersDate: folder.dateOfPresentation,
                                                             foldersName: folder.nome,
                                                             foldersTrainingAmount: folder.treinos.count,
                                                             foldersObjetiveTime: folder.tempoDesejado,
@@ -132,10 +134,6 @@ struct ContentView: View {
                                                     Text("Editar")
                                                 }
                                                 Divider()
-                                                Button {
-                                                } label: {
-                                                    Text("To na pasta tal")
-                                                }
                                             }
                                         }
                                     
@@ -158,20 +156,19 @@ struct ContentView: View {
                 } label: {
                     HStack {
                         Image(systemName: "play.fill")
-                            .foregroundStyle(.black)
                         Text("Nova apresentação")
-                            .foregroundStyle(.black)
                     }
                     .padding(.horizontal, 40)
-                    .padding(.vertical, 10)
-                    .background(.white)
-                    .containerShape(RoundedRectangle(cornerRadius: 10))
-
-
+                    .padding(.vertical, 12)
+                    .background(Color.lightDarkerGreen)
+                    .containerShape(RoundedRectangle(cornerRadius: 14))
+                    .foregroundStyle(Color.lightWhite)
                 }
                 .buttonStyle(.plain)
+                .padding(.bottom)
 
             }
+            .background(Color.lightWhite)
             //remove aquela parada de fechar a searchbar
             .toolbar(removing: .sidebarToggle)
             .navigationSplitViewColumnWidth(min: 300, ideal: 300, max: 300)
@@ -262,7 +259,6 @@ class SearchViewModel: ObservableObject {
 
 struct SearchBar: View {
     @Binding var searchText: String
-    
     @Binding var isSearching: Bool
     @Binding var disableTextfield: Bool
 
@@ -270,54 +266,38 @@ struct SearchBar: View {
         ZStack {
             HStack {
                 Image(systemName: "magnifyingglass")
-//                    .foregroundStyle(.gray)
-                    .foregroundStyle(.gray)
-
+                    .foregroundColor(.gray)
                     .padding(.leading, 4)
                 
-                //https://stackoverflow.com/questions/70828401/how-to-detect-when-a-textfield-becomes-active-in-swiftui
-                TextField("Pesquisar apresentação...", text: $searchText, onEditingChanged: { changed in
-                  if changed {
-                    // User began editing the text field
-                      isSearching = true
-                  }
-                  else {
-                    // User tapped the return key
-                      isSearching = false
-                  }
-                })
-                .disabled(disableTextfield)
-                .foregroundStyle(.black)
-                .tint(.gray)
+                TextField("Pesquisar apresentação...", text: $searchText)
+                    .disabled(disableTextfield)
+                    .foregroundColor(.black) // Define a cor do texto como preto
+                    .background(Color.white) // Define o estilo de fundo do TextField como branco
+                    .onChange(of: searchText) { _, newValue in
+                        isSearching = !searchText.isEmpty
+                    }
+                
                 if isSearching {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.gray)
+                        .foregroundColor(.gray)
                         .onTapGesture {
                             searchText = ""
                             isSearching = false
-                            //ativa e desativa o textfield pra sair a interação do usuário
                             disableTextfield = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 disableTextfield = false
                             }
-
                         }
                         .padding(.trailing, 4)
                 }
             }
             .padding(4)
-            .background(.white)
-            .containerShape(RoundedRectangle(cornerRadius: 5))
+            .background(Color.white)
+            .cornerRadius(5)
+            .shadow(radius: 4) // Adiciona uma sombra à barra de pesquisa
         }
-        .onAppear {
-            disableTextfield = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                disableTextfield = false
-            }
-        }
-        
     }
-    
 }
+
 
 
