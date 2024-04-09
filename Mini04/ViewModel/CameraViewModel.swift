@@ -21,9 +21,7 @@ class CameraViewModel: NSObject, ObservableObject {
     @Published var videoDataOutput = AVCaptureVideoDataOutput()
     @Published var audioOutput = AVCaptureAudioDataOutput()
     @Published var captureSession =  AVCaptureSession()
-    
-    @Published var isRecording = false
-    
+        
     @Published var handPoseModelController: HandGestureController?
     @Published var detectedGestureModel1: String = "" {
         // Quando detectar a mudanca de valor (uma mao na tela) ele chama a funcao de topicos
@@ -48,7 +46,6 @@ class CameraViewModel: NSObject, ObservableObject {
     @Published var speechText: String = ""
     @Published var speechTopicText: String = ""
     var auxSpeech: String = ""
-    var timer: Timer? // timer inicia junto com o video
     @Published var currentTime: TimeInterval = 0
     var topicTime: [TimeInterval] = [] // momentos em que foi feito o tópico
     @Published var videoTime: TimeInterval = 0 // tempo do video
@@ -158,7 +155,7 @@ class CameraViewModel: NSObject, ObservableObject {
     
     // função para colocar o // no scrpit e criar topico
     func createTopics(handPoseResult: String) {
-        if handPoseResult == "0" {
+        if handPoseResult == "pausar" {
             if speechTopicText.isEmpty {
                 speechTopicText = speechText + " //"
                 auxSpeech = speechText
@@ -253,26 +250,11 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     }
     
     func startRecording() {
-        isRecording = true
-
-
-        // Contagem antes de iniciar a gravar
-        // Timer para contagem regressiva de 3 segundos
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
-            if self.countdownNumber > 0 {
-                print(countdownNumber)
-                countdownNumber -= 1
-            } else {
-                
-                // reiniciando as variaveis
-                deinitVariables()
-                print("começou a gravar")
-                let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
-                videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
-                
-                timer.invalidate()
-            }
-        }
+        // reiniciando as variaveis
+        deinitVariables()
+        print("começou a gravar")
+        let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
+        videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
         
         // Inciando o SpeechToText
         do {
@@ -290,14 +272,34 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
             print(error)
         }
         
-        // iniciando o timer para saber o momento de cada topico
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { time in
-            self.currentTime += 1
-        })
     }
     
+    func pauseRecording() {
+         // Pausar a gravação apenas se estiver gravando
+         guard videoFileOutput.isRecording else {
+             print("Nenhuma gravação em andamento.")
+             return
+         }
+         
+         videoFileOutput.pauseRecording()
+         speechManager.pauseRecording()
+         print("Gravação pausada.")
+     }
+     
+     func resumeRecording() {
+         // Retomar a gravação apenas se estiver pausada
+         guard !videoFileOutput.isRecording && videoFileOutput.isRecording else {
+             print("Nenhuma gravação pausada para retomar.")
+             return
+         }
+         
+         videoFileOutput.resumeRecording()
+//         speechManager.resumeRecording()
+         print("Gravação retomada.")
+     }
+
+    
     func stopRecording() {
-        isRecording = false
         // variavel para armazenar o scrip (quando da stop ele deixa a string "" e fica impossivel salva-la)
         auxSpeech = speechText
         speechManager.stopRecording()
@@ -307,10 +309,6 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
             return
         }
         videoFileOutput.stopRecording()
-        
-        // parando o timer e reiniciando ele
-        timer?.invalidate()
-        timer = nil
         currentTime = 0
     }
     
@@ -324,8 +322,8 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
 extension CameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        handPoseModelController?.performHandPoseRequest(sampleBuffer: sampleBuffer)
-       // handPoseModelController?.performHandPoseRequestShort(sampleBuffer: sampleBuffer)
+//        handPoseModelController?.performHandPoseRequest(sampleBuffer: sampleBuffer)
+        handPoseModelController?.performHandPoseRequestShort(sampleBuffer: sampleBuffer)
         
     }
 }

@@ -56,10 +56,19 @@ struct HUDCameraView: View {
                                        topicsDuration: cameraVC.videoTopicDuration)
         }
         .onReceive(cameraVC.$finalModelDetection, perform: { result in
-            if result == "0" && !cameraVC.isRecording{
-                
-                cameraVC.startRecording()
+            switch (result) {
+            case "iniciar":
+                if !cameraVC.videoFileOutput.isRecording {
+                    cameraVC.startRecording()
+                }
+            case "encerrar":
+                if cameraVC.videoFileOutput.isRecording {
+                    cameraVC.stopRecording()
+                }
+            default:
+                break
             }
+            
         })
     }
 }

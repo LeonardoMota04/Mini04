@@ -90,6 +90,16 @@ class SpeechManager: ObservableObject {
         }
     }
     
+    func pauseRecording() {
+        if audioEngine.isRunning {
+            audioEngine.pause()
+            recognitionRequest?.endAudio()
+            recognitionTask?.cancel()
+        }
+    }
+    
+
+    
     func requestPermission() {
         SFSpeechRecognizer.requestAuthorization { status in
             OperationQueue.main.addOperation {

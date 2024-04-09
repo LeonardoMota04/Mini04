@@ -11,7 +11,6 @@ import SwiftData
 struct PastaView: View {
     // VM
     @ObservedObject var folderVM: FoldersViewModel
-    @State private var isModalPresented = true // Modal sempre será apresentado ao entrar na view
     
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
@@ -281,9 +280,7 @@ struct PastaView: View {
                             currentScreenSize = tempScreenSize ?? NSSize.zero
                         }
                     })
-            .sheet(isPresented: $isModalPresented) {
-                FolderInfoModalView(isModalPresented: $isModalPresented)
-            }
+
             //editedName = folderVM.folder.nome
         //    folderVM.calculateAvarageTime() // TODO: arrumar isso e ver isso
         }
@@ -294,9 +291,7 @@ struct PastaView: View {
             // quando trocar de pasta, passa de novo o contexto
             folderVM.modelContext = modelContext
         }
-        .sheet(isPresented: $isModalPresented) {
-            FolderInfoModalView(isModalPresented: $isModalPresented)
-        }
+
     }
     // UPDATE Nome da pasta e seus treinos
     func saveChanges() {
@@ -313,24 +308,4 @@ struct PastaView: View {
         }
     }
     
-}
-
-// MARK: - MODAL DE INFORMACOES
-struct FolderInfoModalView: View {
-    @Binding var isModalPresented: Bool
-    var body: some View {
-        VStack {
-            Text("Instruções:")
-                .font(.title)
-                .padding()
-            
-            Text("pipipipi")
-                .padding()
-            
-            Button("Fechar") {
-                isModalPresented = false
-            }
-            .padding()
-        }
-    }
 }
