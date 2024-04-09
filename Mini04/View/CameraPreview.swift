@@ -32,6 +32,7 @@ struct CameraPreview : View {
                     .frame(width: size.width, height: size.height)
             }
         }
+        .background(Color.lightLighterGray)
         
         .onAppear {
             cameraVC.cameraGravando = true
