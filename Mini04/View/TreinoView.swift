@@ -100,8 +100,13 @@ struct TreinoView: View {
                                     .foregroundStyle(.black)
                                     .font(.title3)
                                     .bold()
-                                RoundedRectangle(cornerRadius: 10)
-                                    .frame(width: 316, height: 251)
+                                
+                                if let speech = trainingVM.treino.video?.cutSpeeches,
+                                   let time = trainingVM.treino.video?.speechStart {
+                                    TranscricaoViewComponent(trainingVM: trainingVM, player: avPlayer, speeches: speech, times: time)
+                                        .frame(height: size.height / 3.25)
+                                }
+                                    
                             }
                             .foregroundStyle(.white)
                         }
@@ -112,6 +117,8 @@ struct TreinoView: View {
                                     .foregroundStyle(.black)
                                     .font(.title3)
                                     .bold()
+                                
+                                // 3 FEEDBACKS JUNTOS
                                 HStack(alignment: .center) {
                                     VStack {
                                         RoundedRectangle(cornerRadius: 16, style: /*@START_MENU_TOKEN@*/.continuous/*@END_MENU_TOKEN@*/)
@@ -141,6 +148,7 @@ struct TreinoView: View {
                                                          heightFrame: 350)
                                 }
                                 // Verifica se o feedback está disponível
+                                // FEEDBACK DE BAIXO
                                 if let feedback = trainingVM.treino.feedback {
                                     // REPETIU PALAVRAS
                                     if feedback.repeatedWords.count > 0 {

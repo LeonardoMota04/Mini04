@@ -13,32 +13,37 @@ struct SiderbarFolderComponent: View {
     var foldersTrainingAmount: Int
     var foldersObjetiveTime: Int
     var foldersType: String
+    
     @Binding var backgroundHighlited: Bool
     
     var body: some View {
         ZStack {
             ZStack {
                 CustomRoundedRectangle()
+                    .fill(Color.lightLighterGreen)
                     .foregroundStyle(.black)
-                    .opacity(backgroundHighlited ? 0.1 : 0.2)
+                    .opacity(backgroundHighlited ? 0.3 : 1)
 
                 HStack {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)
                             .frame(maxWidth: 54, maxHeight: 54)
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.clear)
                         iconImage(apresentationType: foldersType)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color.lightDarkerGreen)
                     }
                     VStack {
                         HStack {
                             Text(foldersName)
+                                .bold()
+                                .font(.title3)
                                 .foregroundStyle(.black)
                             Spacer()
                         }
                         HStack {
                             Text(formatDate())
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color(.darkGray))
+                                .font(.footnote)
                             Spacer()
                         }
                     }
@@ -50,7 +55,9 @@ struct SiderbarFolderComponent: View {
                     VStack {
                         Spacer()
                         Text(formatObjectiveTime())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.lightDarkerGreen.opacity(0.5))
+                            .bold()
+                            .padding(.trailing, 5)
                         
                     }
                 }
@@ -63,8 +70,8 @@ struct SiderbarFolderComponent: View {
                     ZStack {
                         CustomTag()
                             .frame(width: 65,height: 18)
-                            .foregroundStyle(.black)
-                            .opacity(backgroundHighlited ? 0.3 : 0.4)
+                            .foregroundStyle(Color.lightDarkerGreen)
+                            .opacity(backgroundHighlited ? 0.3 : 1)
                         HStack {
                             Text(String(foldersTrainingAmount))
                                 .foregroundStyle(.white)
@@ -84,8 +91,10 @@ struct SiderbarFolderComponent: View {
     // Função para formatar a data
     func formatDate() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MM/yy"
-        return dateFormatter.string(from: foldersDate)
+        dateFormatter.dateFormat = "d 'DE' MMMM"
+        dateFormatter.locale = Locale(identifier: "pt_BR") // Define o locale para português do Brasil
+        
+        return dateFormatter.string(from: foldersDate).uppercased()
     }
     
     // Função para formatar o tempo objetivo
