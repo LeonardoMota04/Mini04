@@ -309,8 +309,6 @@ struct PastaView: View {
             // quando trocar de pasta, passa de novo o contexto
             folderVM.modelContext = modelContext
         }
-        .sheet(isPresented: $isModalPresented) {
-            FolderInfoModalView(isModalPresented: $isModalPresented)
         .toolbar() {
             ToolbarItem() {
                 Menu {

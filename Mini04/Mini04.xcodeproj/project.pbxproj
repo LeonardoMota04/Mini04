@@ -20,6 +20,7 @@
 		269DF6472BC3667500B0C629 /* CreateFolderModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6462BC3667500B0C629 /* CreateFolderModalView.swift */; };
 		269DF64B2BC57C6E00B0C629 /* EditingFolderModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF64A2BC57C6E00B0C629 /* EditingFolderModalView.swift */; };
 		269DF64D2BC5C94200B0C629 /* HumClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 269DF64C2BC5C94200B0C629 /* HumClassifier.mlmodel */; };
+		269DF64F2BC5D65200B0C629 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 269DF64E2BC5D65200B0C629 /* SwiftSoup */; };
 		370655E22BB1F32100B22AB0 /* HandPoseDoVH.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */; };
 		370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */; };
 		370655E62BB5009F00B22AB0 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E52BB5009F00B22AB0 /* Extras.swift */; };
@@ -51,7 +52,6 @@
 		F196322D2BAA07F10086D159 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F196322C2BAA07F10086D159 /* TestData.swift */; };
 		F1B51E002BBC3A7F000D0126 /* HumPredictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B51DFF2BBC3A7F000D0126 /* HumPredictor.swift */; };
 		F1DEAE6F2BC487E100D1BB1C /* TranscricaoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DEAE6E2BC487E100D1BB1C /* TranscricaoViewComponent.swift */; };
-		F1DEAE752BC58B6D00D1BB1C /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = F1DEAE742BC58B6D00D1BB1C /* SwiftSoup */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,7 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1DEAE752BC58B6D00D1BB1C /* SwiftSoup in Frameworks */,
+				269DF64F2BC5D65200B0C629 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,7 +259,7 @@
 			);
 			name = Mini04;
 			packageProductDependencies = (
-				F1DEAE742BC58B6D00D1BB1C /* SwiftSoup */,
+				269DF64E2BC5D65200B0C629 /* SwiftSoup */,
 			);
 			productName = Mini04;
 			productReference = 263D73E22BA4C56F002190F4 /* Mini04.app */;
@@ -541,7 +541,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 3A253HAV36;
+				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -573,7 +573,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 3A253HAV36;
+				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -675,8 +675,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F1DEAE742BC58B6D00D1BB1C /* SwiftSoup */ = {
+		269DF64E2BC5D65200B0C629 /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 263D740C2BAA2C57002190F4 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */
