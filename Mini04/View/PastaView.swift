@@ -287,6 +287,31 @@ struct PastaView: View {
             .sheet(isPresented: $isModalPresented) {
                 FolderInfoModalView(isModalPresented: $isModalPresented)
             }
+            .toolbar() {
+                ToolbarItem() {
+                    Menu {
+                        Button {
+                            
+                        } label: {
+                            Text("Editar Apresentação")
+                        }
+                        Button {
+                            
+                        } label: {
+                            Text("Excluir Apresentação")
+                        }
+                        Divider()
+                        // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
+                        Button {
+                           
+                        } label: {
+                            Text("Adicionar novo treino")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle.fill")
+                    }
+                }
+            }
             //editedName = folderVM.folder.nome
         //    folderVM.calculateAvarageTime() // TODO: arrumar isso e ver isso
         }
@@ -299,31 +324,6 @@ struct PastaView: View {
         }
         .sheet(isPresented: $isModalPresented) {
             FolderInfoModalView(isModalPresented: $isModalPresented)
-        }
-        .toolbar() {
-            ToolbarItem() {
-                Menu {
-                    Button {
-                        
-                    } label: {
-                        Text("Editar Apresentação")
-                    }
-                    Button {
-                        
-                    } label: {
-                        Text("Excluir Apresentação")
-                    }
-                    Divider()
-                    // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
-                    NavigationLink {
-                        RecordingVideoView(folderVM: folderVM)
-                    } label: {
-                        Text("Adicionar novo treino")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis.circle.fill")
-                }
-            }
         }
     }
     // UPDATE Nome da pasta e seus treinos

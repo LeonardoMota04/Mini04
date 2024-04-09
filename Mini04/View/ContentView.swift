@@ -251,7 +251,6 @@ struct SearchBar: View {
         ZStack {
             HStack {
                 Image(systemName: "magnifyingglass")
-//                    .foregroundStyle(.gray)
                     .foregroundStyle(.gray)
 
                     .padding(.leading, 4)
