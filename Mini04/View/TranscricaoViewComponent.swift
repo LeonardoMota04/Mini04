@@ -23,17 +23,28 @@ struct TranscricaoViewComponent: View {
             let size = geometry.size
             
             if !showMessage {
-                VStack {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 25)
+                        .stroke(Color("light_Orange"), lineWidth: 2)
+                        .fill(Color("light_White"))
                     
-                    // Keys em ordem
-                    let sortedKeys = dicionario.keys.sorted(by: { dicionario[$0]! < dicionario[$1]! })
-                    
-                    ForEach(sortedKeys, id: \.self) { key in
-                        TranscricaoItem(transcriptionText: key, transcriptionTime: dicionario[key] ?? 0, trainingVM: trainingVM, player: player)
-                            .padding()
+                    ScrollView {
+                        VStack {
+                            // Keys em ordem
+                            let sortedKeys = dicionario.keys.sorted(by: { dicionario[$0]! < dicionario[$1]! })
+                            
+                            ForEach(sortedKeys, id: \.self) { key in
+                                TranscricaoItem(transcriptionText: key, transcriptionTime: dicionario[key] ?? 0, trainingVM: trainingVM, player: player)
+                                    .padding(.top)
+                                    .padding(.leading)
+                            }
+                        }
+                        .padding(.bottom, 32)
                     }
+//                    .frame(height: size.height * 1.15)
                 }
                 .onAppear {
+                    
                     // Verifica se os arrays de speech e time têm o mesmo comprimento
                     guard speeches.count == times.count else {
                         showMessage = true
@@ -45,12 +56,19 @@ struct TranscricaoViewComponent: View {
                         dicionario[speechText] = times[index]
                     }
                 }
-                .frame(height: size.height / 2)
+                
             } else {
-                Text("Não foi possível fazer a transcrição do vídeo")
-                    .foregroundStyle(.black)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 25)
+                        .stroke(Color("light_Orange"))
+                        .fill(Color("light_White"))
+                    
+                    Text("Não foi possível fazer a transcrição do vídeo")
+                        .foregroundStyle(.black)
+                }
             }
         }
+        .padding(.top)
     }
 }
 
@@ -71,31 +89,29 @@ struct TranscricaoItem: View {
                 
                 Button {
                     
+                    // MARK: - NAO ESTA FUNCIONANDO
                     guard let avPlayer = player else {return }
                     trainingVM.seek(to: Int(transcriptionTime), player: avPlayer)
                     print("VAI TMAR NO CU ORATO")
                     
                 } label: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: size.width / 20)
-                            .foregroundStyle(.blue)
-                            .opacity(0.5)
-                            .padding()
-                        
-                        Text(formatTimeInterval(transcriptionTime))
-                            .font(.callout)
-                            .bold()
-                            .foregroundStyle(.orange)
-                    }
-                    .frame(width: size.width / 8)
-                    .foregroundStyle(.lightOrange)
+                    
+                    Text(formatTimeInterval(transcriptionTime))
+                        .font(.system(size: 10))
+                        .foregroundStyle(Color("light_Orange"))
+                        .frame(width: size.width / 10, alignment: .center)
+                    
                 }
+                .background(Color("light_LighterOrange"))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 
                 Text(transcriptionText)
+                    .font(.caption)
                     .fontWeight(.semibold)
                     .lineLimit(2, reservesSpace: true)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.gray)
             }
+            .padding(.bottom)
         }
     }
     
@@ -107,7 +123,3 @@ struct TranscricaoItem: View {
         return String(format: "%02d:%02d", minutes, seconds)
     }
 }
-
-//#Preview {
-//    TranscricaoViewComponent(speeches: ["Olá tudo bem", "Meu nome é Victor Hugo", "Eu tenho 20 anos de idade"], times: [1, 4, 7])
-//}

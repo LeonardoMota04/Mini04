@@ -37,7 +37,6 @@
 		370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FB2BA8D8FD00D39C27 /* TreinoView.swift */; };
 		370E91FE2BA8D9F200D39C27 /* ApresentacaoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370E91FD2BA8D9F200D39C27 /* ApresentacaoViewModel.swift */; };
 		377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377643DD2BA7AA2F0011C2BA /* RecordingVideoView.swift */; };
-		BA5B71BC2BC0726C000F2F90 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = BA5B71BB2BC0726C000F2F90 /* SwiftSoup */; };
 		BA5E1A1D2BB36ECD00B9528B /* ViewComponetns.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E1A1C2BB36ECD00B9528B /* ViewComponetns.swift */; };
 		BA5E1A202BB3724700B9528B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D73F62BA4C865002190F4 /* ContentView.swift */; };
 		BA8571092BAB4FE6000FF83B /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8571082BAB4FE6000FF83B /* SpeechManager.swift */; };
@@ -51,6 +50,7 @@
 		F1B51E002BBC3A7F000D0126 /* HumPredictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B51DFF2BBC3A7F000D0126 /* HumPredictor.swift */; };
 		F1B51E022BBC3AA7000D0126 /* HumClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F1B51E012BBC3AA7000D0126 /* HumClassifier.mlmodel */; };
 		F1DEAE6F2BC487E100D1BB1C /* TranscricaoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DEAE6E2BC487E100D1BB1C /* TranscricaoViewComponent.swift */; };
+		F1DEAE732BC4909800D1BB1C /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = F1DEAE722BC4909800D1BB1C /* SwiftSoup */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,7 +117,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BA5B71BC2BC0726C000F2F90 /* SwiftSoup in Frameworks */,
+				F1DEAE732BC4909800D1BB1C /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,7 +256,7 @@
 			);
 			name = Mini04;
 			packageProductDependencies = (
-				BA5B71BB2BC0726C000F2F90 /* SwiftSoup */,
+				F1DEAE722BC4909800D1BB1C /* SwiftSoup */,
 			);
 			productName = Mini04;
 			productReference = 263D73E22BA4C56F002190F4 /* Mini04.app */;
@@ -671,7 +671,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		BA5B71BB2BC0726C000F2F90 /* SwiftSoup */ = {
+		F1DEAE722BC4909800D1BB1C /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SwiftSoup;
 		};
