@@ -71,6 +71,7 @@ struct TreinoView: View {
                                             .frame(width: 18)
                                     }
                             }
+                            .buttonStyle(.plain)
                             .frame(width: 38, height: 38)
                             .padding(.trailing, 5)
                             .alert("Você tem certeza?", isPresented: $isAlert) {
@@ -84,7 +85,7 @@ struct TreinoView: View {
                             }
                         }
                         VStack(alignment: .leading) {
-                        Text("Gravaçao")
+                        Text("Gravação")
                             .foregroundStyle(.black)
                             .font(.title3)
                             .bold()
@@ -122,30 +123,24 @@ struct TreinoView: View {
                                                     .font(.title)
                                                     .foregroundStyle(Color("light_Orange"))
                                             }
-                                        TimeCircularFeedback(title: trainingVM.treino.video?.formattedTime() ?? "", subtitle: "Tempo Total", objetiveTime: folderVM.folder.tempoDesejado, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", widthFrame: 442, heightFrame: 154, progress: CGFloat(trainingVM.treino.video?.videoTime ?? 1), totalProgress: CGFloat(folderVM.folder.tempoDesejado * 60))
+                                        TimeCircularFeedback(
+                                            title: trainingVM.treino.video?.formattedTime() ?? "",
+                                            subtitle: "Tempo Total",
+                                            objetiveTime: folderVM.folder.formattedGoalTime(), // Chama o método formattedTime() para obter o tempo formatado
+                                            bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.",
+                                            widthFrame: 442,
+                                            heightFrame: 154,
+                                            progress: CGFloat(trainingVM.treino.video?.videoTime ?? 1),
+                                            totalProgress: CGFloat(folderVM.folder.tempoDesejado) // em segundos
+                                        )
                                     }
-//                                    if  ((trainingVM.treino.feedback?.coherenceValues.isEmpty) != nil) { //TODO: resolver essa logica na viewModel ou model - garatindo que nao vai crachar o app se o index nao existir
-//                                        CohesionFeedback(fluidProgress: 1,
-//                                                         organizationProgress: 1,
-//                                                         connectionProgress: 1,
-//                                                         widthFrame: 380,
-//                                                         heightFrame: 350)
-//                                    } else {
                                         CohesionFeedback(fluidProgress: trainingVM.treino.feedback?.coherenceValues[0] ?? 1,
                                                          organizationProgress: trainingVM.treino.feedback?.coherenceValues[1] ?? 1,
                                                          connectionProgress: trainingVM.treino.feedback?.coherenceValues[2] ?? 1,
                                                          widthFrame: 380,
                                                          heightFrame: 350)
-                         //           }
                                 }
                                 // Verifica se o feedback está disponível
-//                                Text(String("TempoVideo: \(trainingVM.treino.video!.videoTime)"))
-//                                Text(String("TOPICS: \(trainingVM.treino.video!.videoTopics)"))
-//                                ForEach((trainingVM.treino.video?.topicsDuration.indices)!, id: \.self) { index in
-//                                    Text(String((trainingVM.treino.video?.topicsDuration[index])!))
-//                                }
-                               // Text("SCRIPT: \(trainingVM.treino.video?.script ?? "nao achou o script")")
-                                // Tem feedbacks ACHO QUE NAO PRECISA, POIS PARA ENTRAR AQUI ELES DEVEM ESTAR CARREGADOS JÁ
                                 if let feedback = trainingVM.treino.feedback {
                                     // REPETIU PALAVRAS
                                     if feedback.repeatedWords.count > 0 {
@@ -159,7 +154,6 @@ struct TreinoView: View {
                                     } else {
                                         Text("Não repetiu palavras")
                                     }
-                                    
                                 } else {
                                     ProgressView("Carregando Feedback")
                                 }

@@ -14,6 +14,7 @@ struct SiderbarFolderComponent: View {
     var foldersObjetiveTime: Int
     var foldersType: String
     @Binding var backgroundHighlited: Bool
+    
     var body: some View {
         ZStack {
             ZStack {
@@ -48,7 +49,7 @@ struct SiderbarFolderComponent: View {
                     Spacer()
                     VStack {
                         Spacer()
-                        Text("\(String(foldersObjetiveTime)) min")
+                        Text(formatObjectiveTime())
                             .foregroundStyle(.white)
                         
                     }
@@ -79,30 +80,47 @@ struct SiderbarFolderComponent: View {
         .frame(height: 74)
         .padding(.horizontal,12)
     }
+    
+    // Função para formatar a data
     func formatDate() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd/MM/yy"
         return dateFormatter.string(from: foldersDate)
     }
     
+    // Função para formatar o tempo objetivo
+    func formatObjectiveTime() -> String {
+        let minutes = foldersObjetiveTime / 60
+        let seconds = foldersObjetiveTime % 60
+        
+        if minutes > 0 && seconds > 0 {
+            return "\(minutes) min \(seconds) s"
+        } else if minutes > 0 {
+            return "\(minutes) min"
+        } else {
+            return "\(seconds) s"
+        }
+    }
+    
+    // Função para retornar a imagem com base no tipo de apresentação
     func iconImage(apresentationType: String) -> Image {
         switch (apresentationType) {
-        case "pitch":
+        case "Apresentação de Pitch":
             return Image(systemName: "lightbulb")
-        case "sales":
+        case "Apresentação de Vendas":
             return Image(systemName: "person.3.fill")
-        case "event":
+        case "Apresentação de Eventos":
             return Image(systemName: "megaphone.fill")
-        case "project":
+        case "Apresentação de Projetos":
             return Image(systemName: "projective")
-        case "informative":
+        case "Apresentação Acadêmica":
             return Image(systemName: "book.fill")
         default:
             return Image(systemName: "xmark")
         }
     }
-    
 }
+
 
 
 

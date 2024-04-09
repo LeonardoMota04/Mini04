@@ -140,9 +140,9 @@ struct TimeFeedbackView: View {
         RoundedRectangle(cornerRadius: 16)
             .overlay {
                 VStack {
-                    HStack{
+                    HStack {
                         VStack(alignment: .leading) {
-                            Text("\(folderVM.formatedAvareTime)")
+                            Text("\(folderVM.folder.formattedGoalTime())") // Formatando o tempo desejado
                                 .font(.title2)
                                 .bold()
                                 .foregroundStyle(.black)
@@ -154,7 +154,7 @@ struct TimeFeedbackView: View {
                         }
                         Spacer()
                         VStack(alignment: .leading) {
-                            Text("Tempo desejado - " + String(format: "%.2f", Double(folderVM.folder.tempoDesejado)))
+                            Text("Tempo desejado - \(folderVM.folder.formattedGoalTime())") // Formatando o tempo desejado
                                 .foregroundStyle(.black)
                             HStack {
                                 ForEach(folderVM.folder.treinos.suffix(8)) { treino in // sufix 8 para mostrar os ultimos 8 treinos
@@ -163,7 +163,7 @@ struct TimeFeedbackView: View {
                                             RoundedRectangle(cornerRadius: 10)
                                                 .frame(width: 10, height: 54)
                                             RoundedRectangle(cornerRadius: 10)
-                                                .frame(width: 10, height: Double(treino.video?.videoTime ?? 0) > Double(folderVM.folder.tempoDesejado) ? 54 :  treino.video?.videoTime ?? 1)
+                                                .frame(width: 10, height: Double(treino.video?.videoTime ?? 0) > Double(folderVM.folder.tempoDesejado) ? 54 :  Double(treino.video?.videoTime ?? 0))
                                                 .foregroundStyle(Double(treino.video?.videoTime ?? 0) > Double(folderVM.folder.tempoDesejado) ? .red : .blue)
                                             
                                         }
@@ -193,6 +193,7 @@ struct TimeFeedbackView: View {
             }
     }
 }
+
 
 // MARK: - PALAVRAS REPETIDAS DA PASTA
 struct WordRepetitionView: View {
@@ -379,7 +380,7 @@ struct CircularProgress: View {
 struct TimeCircularFeedback: View {
     var title: String
     var subtitle: String
-    var objetiveTime: Int
+    var objetiveTime: String
     var bodyText: String
     var widthFrame: CGFloat
     var heightFrame: CGFloat
@@ -408,7 +409,7 @@ struct TimeCircularFeedback: View {
                                         .padding(.bottom, 10)
                                 }
                                 Spacer()
-                                Text("Objetivo: \(objetiveTime) min")
+                                Text("Objetivo: \(objetiveTime)")
                                     .foregroundStyle(.black)
                                     .opacity(0.7)
                                     .padding(.top, 10)
@@ -778,13 +779,14 @@ struct LoadingView: View {
 
 struct AvaregeTimeFeedbackView: View {
     @State var avaregeTime: String
-    var wishTime: Double
+    var wishTimeText: String
+    var wishTime: Int
     var treinos: [TreinoModel]
     var widthFrame: CGFloat
     var heightFrame: CGFloat
     @State var isExtended: Bool = false
+    
     var body: some View {
-        
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color("light_Blue"), lineWidth: 2)
@@ -801,9 +803,8 @@ struct AvaregeTimeFeedbackView: View {
                                 .multilineTextAlignment(.leading)
                                 .foregroundStyle(.black)
                                 .opacity(0.6)
-                            Text("Tempo objetivo \(wishTime.formatted()) minutos")
+                            Text("Tempo objetivo \(wishTimeText)") // Formatando o tempo desejado
                                 .font(.system(size: proxy.size.width * 0.0468))
-                            // .font(.footnote)
                                 .foregroundStyle(.black)
                                 .opacity(0.5)
                                 .padding(.top)
@@ -818,12 +819,18 @@ struct AvaregeTimeFeedbackView: View {
                                 } else {
                                     // mostrar apenas 8 treinos graficos
                                     ForEach(0..<(treinos.count < 8 ? treinos.count : 8), id: \.self) { index in
-                                        AvaregeFeedbackGrafics(widthFrame: 14, heightFrame: proxy.size.height * 0.45, titleText: (String(treinos.count - index)), porcentage: (Double(treinos[index].video?.videoTime ?? 0) > Double(wishTime) ? proxy.size.height * 0.45 :  treinos[index].video?.videoTime ?? 1))
+                                        AvaregeFeedbackGrafics(
+                                            widthFrame: 14,
+                                            heightFrame: proxy.size.height * 0.45,
+                                            titleText: String(treinos.count - index),
+                                            porcentage: CGFloat(treinos[index].video?.videoTime ?? 0) > CGFloat(wishTime) ? proxy.size.height * 0.45 : CGFloat(treinos[index].video?.videoTime ?? 1) / CGFloat(wishTime) * 100
+                                        )
                                             .padding(.top, 5)
                                     }
                                 }
                             }
                             if isExtended {
+
                                 VStack(alignment: .leading) {
                                     HStack {
                                         Rectangle()
@@ -853,7 +860,6 @@ struct AvaregeTimeFeedbackView: View {
                             }
                             Spacer()
                         }
-                        
                         Spacer()
                     }
                     .padding()
@@ -867,6 +873,8 @@ struct AvaregeTimeFeedbackView: View {
         .frame(maxWidth: widthFrame * 0.21, maxHeight: isExtended ? .calculateHeightPercentageFullScreen(componentHeight: 699, heightScreenSize: heightFrame) : heightFrame * 0.296 )
     }
 }
+
+
 
 struct AvaregeFeedbackGrafics: View {
     var widthFrame: CGFloat
@@ -890,10 +898,6 @@ struct AvaregeFeedbackGrafics: View {
                 .opacity(0.5)
         }
     }
-}
-
-#Preview {
-    TimeCircularFeedback(title: "5:37", subtitle: "Tempo total", objetiveTime: 6, bodyText: "Embora o tempo médio esteja próximo do desejado, considere ajustes pontuais para garantir que cada parte da apresentação receba a atenção adequada.", widthFrame: 442, heightFrame: 350, progress: 80, totalProgress: 100)
 }
 
 //#Preview {

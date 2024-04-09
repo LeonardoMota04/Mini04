@@ -11,25 +11,31 @@ import SwiftData
 @Model
 class PastaModel: Identifiable {
     var id: UUID = UUID()
-    var nome: String = ""
-    var data: Date = Date()
-    var tempoDesejado: Int = 0
-    var objetivoApresentacao: String = "" // ENUM????
+    var creationDate: Date = Date()
     var treinos: [TreinoModel] = []
     var avaregeTime: Double = 0
     
-    init(nome: String, tempoDesejado: Int, objetivoApresentacao: String) {
+    // INFOS NA HORA DE CRIAR A PASTA
+    var nome: String
+    var dateOfPresentation: Date
+    var tempoDesejado: Int
+    var objetivoApresentacao: String
+    
+    init(nome: String, dateOfPresentation: Date, tempoDesejado: Int, objetivoApresentacao: String) {
         self.nome = nome
+        self.dateOfPresentation = dateOfPresentation
         self.tempoDesejado = tempoDesejado
+        self.objetivoApresentacao = objetivoApresentacao
     }
     
-    // Formata tempo desejado para: "00:00"
-    func formattedGoalTime(_ time: Int) -> String {
-            let minutes = time
-            let formattedMinutes = String(format: "%02d", minutes)
-            return "\(formattedMinutes):00"
-        }
+    // Método para formatar o tempo desejado em minutos e segundos (mm:ss)
+    func formattedGoalTime() -> String {
+        let minutes = tempoDesejado / 60
+        let seconds = tempoDesejado % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
 }
+
 
 // objetivo da apresentação
 enum ObjectiveApresentation: String, Identifiable, CaseIterable {
