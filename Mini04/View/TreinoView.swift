@@ -78,7 +78,10 @@ struct TreinoView: View {
                                 Button("Cancelar", role: .cancel) { isAlert = false }
                                 Button("Deletar", role: .destructive) {
                                     // deletar treino
-                                    folderVM.deleteTraining(trainingVM.treino)
+                                    isShowingModal = false
+                                    DispatchQueue.main.async {
+                                        withAnimation { self.folderVM.deleteTraining(trainingVM.treino) }
+                                    }
                                 }
                             } message: {
                                 Text("Esse treino (incluindo a gravação, transcrição e os feedbacks individuais) será permanentemente excluído.")

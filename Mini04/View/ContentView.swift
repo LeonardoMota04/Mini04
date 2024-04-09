@@ -136,27 +136,6 @@ struct ContentView: View {
                                             overText = hovering ? folder.id : nil
                                             backgroundHighlitedFolder = hovering ? folder.id : nil
                                         }
-                                        .contextMenu {
-                                            Group {
-                                                Button {
-                                                    if let selectedPresentationID = selectedPresentationID, selectedPresentationID == folder.id {
-                                                        self.selectedPresentationID = nil
-                                                    }
-                                                    withAnimation {
-                                                        presentationVM.deleteFolder(folder)
-                                                    }
-                                                } label: {
-                                                    Text("Apagar")
-                                                }
-                                                Button {
-                                                    print("menu apertado")
-                                                } label: {
-                                                    Text("Editar")
-                                                }
-                                                Divider()
-                                            }
-                                        }
-                                        
                                     }
                                     .buttonStyle(.plain)
                                     
