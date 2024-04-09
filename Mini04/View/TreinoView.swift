@@ -112,6 +112,8 @@ struct TreinoView: View {
                                     .foregroundStyle(.black)
                                     .font(.title3)
                                     .bold()
+                                
+                                // 3 FEEDBACKS JUNTOS
                                 HStack(alignment: .center) {
                                     VStack {
                                         RoundedRectangle(cornerRadius: 16, style: /*@START_MENU_TOKEN@*/.continuous/*@END_MENU_TOKEN@*/)
@@ -141,6 +143,7 @@ struct TreinoView: View {
                                                          heightFrame: 350)
                                 }
                                 // Verifica se o feedback está disponível
+                                // FEEDBACK DE BAIXO
                                 if let feedback = trainingVM.treino.feedback {
                                     // REPETIU PALAVRAS
                                     if feedback.repeatedWords.count > 0 {

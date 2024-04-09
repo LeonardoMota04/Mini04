@@ -61,9 +61,9 @@ struct SynonymsFrameBoardView: View {
                    ForEach(filteredWords, id: \.self) { repeatedWord in
                        Text(repeatedWord.word)
                            .bold(selectedWord == repeatedWord.word ? true : false)
-                           .foregroundStyle(selectedWord == repeatedWord.word ? (Color.lightOrange) : (Color.lightLighterGray))
-                           .padding(selectedWord == repeatedWord.word ? 14 : 8)
-                           .background(selectedWord == repeatedWord.word ? (Color.lightOrange.opacity(0.1)) : (Color.lightOrange))
+                           .foregroundStyle(selectedWord == repeatedWord.word ? (Color.lightOrange) : (Color.lightLighterOrange))
+                           .padding(selectedWord == repeatedWord.word ? 16 : 10)
+                           .background(selectedWord == repeatedWord.word ? (Color.lightLighterOrange) : (Color.lightOrange))
                            .clipShape(selectedWord == repeatedWord.word ? UnevenRoundedRectangle(cornerRadii: .init(topLeading: 6, topTrailing: 6)) : UnevenRoundedRectangle(cornerRadii: .init(topLeading: 6, bottomLeading: 6, bottomTrailing: 6, topTrailing: 6)))
                            .overlay {
                                VStack {
@@ -72,7 +72,7 @@ struct SynonymsFrameBoardView: View {
                                        Text("\(repeatedWord.repetitionCount)") // Bola em cima mostrando quantas vezes foi repetida
                                            .foregroundStyle(selectedWord == repeatedWord.word ? (Color.lightLighterGray) : (Color.lightOrange))
                                            .padding(6)
-                                           .background(selectedWord == repeatedWord.word ? (Color.lightOrange) : (Color.lightLighterGray))
+                                           .background(selectedWord == repeatedWord.word ? (Color.lightOrange) : (Color.lightLighterOrange))
                                            .clipShape(Circle())
                                            .offset(x: 10, y: -10)
                                    }
@@ -88,7 +88,7 @@ struct SynonymsFrameBoardView: View {
             
             // MARK: - QUADRO DE SINONIMOS
                UnevenRoundedRectangle(cornerRadii: .init(bottomLeading: 6, bottomTrailing: 6, topTrailing: 6))
-                   .foregroundStyle(Color.lightOrange.opacity(0.1))
+                   .foregroundStyle(Color.lightLighterOrange)
                    .overlay {
                        VStack(alignment: .leading) {
                            Text("Você repetiu essa palavra \(Text(String(repeatedTimes)).bold()) vezes.")
@@ -103,9 +103,9 @@ struct SynonymsFrameBoardView: View {
                            // Verifica se a palavra clicada está presente no array de palavras repetidas
                            if let repeatedWord = repeatedWordsArray.first(where: { $0.word == selectedWord }) {
                                Text(repeatedWord.numSynonyms > 0  ? "Possíveis sinônimos:" : "Infelizmente não encontramos possíveis sinônimos para '\(repeatedWord.word)'.")
-                               .foregroundStyle(.ultraThickMaterial)
-                               .font(.body)
-                               .bold()
+                                   .foregroundStyle(Color(.darkGray))
+                                   .font(.body)
+                                   .bold()
                           
                                // CONTEXTO COM (3) SINONIMOS
                                HStack(alignment: .top, spacing: 100) {
@@ -120,7 +120,7 @@ struct SynonymsFrameBoardView: View {
                                                if let context = contextWithSynonyms.first, context.first?.isUppercase == true {
                                                    Text(context)
                                                        .font(.footnote)
-                                                       .foregroundStyle(.ultraThinMaterial)
+                                                       .foregroundStyle(.gray)
                                                    
                                                    // SINONIMOS
                                                    HStack {
@@ -159,8 +159,8 @@ struct SynonymsFrameBoardView: View {
                                                    if let context = contextWithSynonyms.first, context.first?.isUppercase == true {
                                                        Text(context)
                                                            .font(.footnote)
-                                                           .foregroundStyle(.ultraThinMaterial)
-                                                       
+                                                           .foregroundStyle(.gray)
+
                                                        // SINONIMOS
                                                        HStack {
                                                            ForEach(contextWithSynonyms.dropFirst(), id: \.self) { synonym in
