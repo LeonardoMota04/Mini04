@@ -17,11 +17,16 @@ struct PastaView: View {
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
     
-    // SABER QUAL PASTA ESTAMOS
-    @Binding var selectedFolderID: UUID?
-    
     // EDITAR NOME DA PASTA
     @State private var editedName: String = ""
+    
+    @State private var isShowingEditingModal = false
+    
+    // DELETAR PASTA
+    // SABER QUAL PASTA ESTAMOS
+    @Binding var selectedFolderID: UUID?
+    // ALERTA DE DELETAR
+    @State private var isShowingAlert = false
     
     @Binding var isShowingModal: Bool
     @Binding var selectedTrainingIndex: Int?
@@ -114,14 +119,44 @@ struct PastaView: View {
                 .blur(radius: isShowingModal ? 3 : 0)
                 .disabled(isShowingModal ? true : false)
                 .onTapGesture {
-                    if isShowingModal {
+                    if isShowingModal || isShowingEditingModal {
                         withAnimation(.easeInOut(duration: 0.2)) {
-                            isShowingModal.toggle()
+                            isShowingModal = false
+                            isShowingEditingModal = false
                         }
                     }
                 }
             }
             .padding()
+            
+            .sheet(isPresented: $isShowingEditingModal) {
+                EditingFolderModalView(folderVM: folderVM, isModalPresented: $isShowingEditingModal)
+            }
+            .alert("Você tem certeza?", isPresented: $isShowingAlert) {
+                Button("Cancelar", role: .cancel) { isShowingAlert = false }
+                Button("Deletar", role: .destructive) {
+                    // deletar treino
+                    selectedFolderID = nil
+                }
+            } message: {
+                Text("Essa Apresentação (incluindo os treinos e os feedbacks) será permanentemente excluída.")
+            }
+            
+            .toolbar() {
+                ToolbarItem() {
+                    Menu {
+                        Button { isShowingEditingModal = true } label: { Text("Editar Apresentação") }
+                        Button { isShowingAlert = true } label: { Text("Excluir Apresentação") }
+                        Divider()
+                        // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
+                        NavigationLink { RecordingVideoView(folderVM: folderVM) } label: { Text("Adicionar novo treino") }
+                    } label: {
+                        Image(systemName: "ellipsis.circle.fill")
+                    }
+                    .menuIndicator(.hidden)
+                }
+            }
+            
             .onChange(of: selectedFolderID) { _, newValue in
                 if newValue == nil {
                     dismiss()
@@ -164,33 +199,6 @@ struct PastaView: View {
             // quando trocar de pasta, passa de novo o contexto
             folderVM.modelContext = modelContext
         }
-        .toolbar() {
-            ToolbarItem() {
-                Menu {
-                    Button {
-                        
-                    } label: {
-                        Text("Editar Apresentação")
-                    }
-                    Button {
-                        selectedFolderID = nil
-                    } label: {
-                        Text("Excluir Apresentação")
-                    }
-                    Divider()
-                    // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
-                    NavigationLink {
-                        RecordingVideoView(folderVM: folderVM)
-                    } label: {
-                        Text("Adicionar novo treino")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis.circle.fill")
-                }
-                .menuIndicator(.hidden)
-            }
-            
-        }
     }
     // UPDATE Nome da pasta e seus treinos
     func saveChanges() {
@@ -206,5 +214,5 @@ struct PastaView: View {
             
         }
     }
-    
 }
+
