@@ -90,7 +90,7 @@ struct TrainingCellsView: View {
                         Spacer()
                         
                         // Duração do treino
-                        Text((training.video?.formattedTime())!)
+                        Text((training.video?.formattedTime()) ?? "")
                             .foregroundStyle(Color("light_DarkerGreen"))
                         Spacer()
                         

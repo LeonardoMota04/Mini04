@@ -115,15 +115,15 @@ struct SiderbarFolderComponent: View {
     func iconImage(apresentationType: String) -> Image {
         switch (apresentationType) {
         case "Apresentação de Pitch":
-            return Image(systemName: "lightbulb")
-        case "Apresentação de Vendas":
-            return Image(systemName: "person.3.fill")
-        case "Apresentação de Eventos":
             return Image(systemName: "megaphone.fill")
+        case "Apresentação de Vendas":
+            return Image(systemName: "dollarsign.circle.fill")
+        case "Apresentação de Eventos":
+            return Image(systemName: "hands.clap.fill")
         case "Apresentação de Projetos":
-            return Image(systemName: "projective")
+            return Image(systemName: "suitcase.fill")
         case "Apresentação Acadêmica":
-            return Image(systemName: "book.fill")
+            return Image(systemName: "graduationcap.fill")
         default:
             return Image(systemName: "xmark")
         }

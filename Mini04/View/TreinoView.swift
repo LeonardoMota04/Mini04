@@ -75,13 +75,13 @@ struct TreinoView: View {
                             .frame(width: 38, height: 38)
                             .padding(.trailing, 5)
                             .alert("Você tem certeza?", isPresented: $isAlert) {
-                                Button("Cancelar", role: .cancel) { }
+                                Button("Cancelar", role: .cancel) { isAlert = false }
                                 Button("Deletar", role: .destructive) {
                                     // deletar treino
                                     folderVM.deleteTraining(trainingVM.treino)
                                 }
                             } message: {
-                                Text("Esse treino (incluindo a gravação, transcrição e os feedbacks individuais) serão permanentemente excluídos.")
+                                Text("Esse treino (incluindo a gravação, transcrição e os feedbacks individuais) será permanentemente excluído.")
                             }
                         }
                         VStack(alignment: .leading) {
