@@ -313,10 +313,10 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     func stopRecording() {
         
         // Transcrição
-        wordsArray.removeAll()
         separateStringsFromSpeech(speech: speechText) // Separa as strings de 10 em 10 palavras
         checkIfThereIsAnyWordsLeft()                  // checa se existem palavras restantes que não formaram um speech de 10 palavras
         eliminateSimilarTimes()                       // Elimina tempos duplos caso o speech corrija a primeira palavra de algum speech
+        wordsArray.removeAll()                        // Remove todos os elementos de wordsArray para a próxima transcrição
         
         isRecording = false
         // variavel para armazenar o scrip (quando da stop ele deixa a string "" e fica impossivel salva-la)
@@ -388,11 +388,16 @@ extension CameraViewModel {
     
     // MARK: Função para pegar o tempo da primeira palavra de cada discurso
     func getFirstWordTime(speech: String) {
+        
         var wordsArray = speech.components(separatedBy: " ") // Cria um array de string com cada palavra do discurso sendo uma string
         
         // Caso seja a primeira palavra do discurso, pega seu tempo
         if wordsArray.count == 1 || wordsArray.count % 10 == 1 {
-            startedSpeechTimes.append(currentTime - 1)
+            if currentTime == 0 {
+                startedSpeechTimes.append(currentTime)
+            } else {
+                startedSpeechTimes.append(currentTime - 1)
+            }
         }
     }
     
