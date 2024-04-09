@@ -15,6 +15,16 @@ enum RelativeSizes: CGFloat {
     case height350 = 0.38335
 }
 
+enum RelativeFontSizes: CGFloat {
+    case width380size13 = 0.034210526315789476
+    case width380size17 = 0.04473684210526316
+    case width380size22 = 0.05789473684210526
+    case width248size13 = 0.05241935483870968
+    case width248size17 = 0.06854838709677419
+    case width248size22 = 0.08870967741935484
+
+}
+
 struct TimeFeedBackView: View {
     @State var avaregeTime: String
     var wishTime: Double
@@ -515,7 +525,7 @@ struct CohesionExtendView: View {
                                 .bold()
                                 .frame(maxWidth: widthFrame * 0.03)
                             Text("Apresentação Coesa!")
-                                .font(.title2)
+                                .font(.system(size: proxy.size.width * 0.044))
                                 .bold()
                                 .foregroundStyle(.black)
                             Spacer()
@@ -526,26 +536,29 @@ struct CohesionExtendView: View {
                                 .frame(maxWidth: proxy.size.width * 0.04)
                         }
                         Text(bodyText)
+                            .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
                             .multilineTextAlignment(.leading)
                             .foregroundStyle(.black)
                             .opacity(0.5)
                             .frame(maxWidth: 306)
                             .padding(.top, 2)
                         if isExtended {
-                            BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238, lightColor: "light_DarkerGreen", boldColor: "light_DarkerGreen")
+                            BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238, lightColor: "light_Blue", boldColor: "light_DarkerGreen")
                                 .padding(.top, 10)
                             Group {
-                                BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238, lightColor: "light_DarkerGreen", boldColor: "light_DarkerGreen")
-                                BarProgress_Component(title: titleFeedback03, progress: connectionProgress, maxProgress: 238, lightColor: "light_DarkerGreen", boldColor: "light_DarkerGreen")
+                                BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238, lightColor: "light_Blue", boldColor: "light_DarkerGreen")
+                                BarProgress_Component(title: titleFeedback03, progress: connectionProgress, maxProgress: 238, lightColor: "light_Blue", boldColor: "light_DarkerGreen")
                             }
                             .padding(.top, 5)
                             Text(footnoteText)
+                                .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
                                 .foregroundStyle(.black)
                                 .opacity(0.5)
                                 .padding(.top, 10)
                             
                             Spacer()
                             Text(feedbackFootNote)
+                                .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
                                 .foregroundStyle(Color("light_DarkerGreen"))
                                 .bold()
                         }
@@ -582,7 +595,7 @@ struct BarProgress_Component: View {
                         .foregroundStyle(.gray)
                         .opacity(0.3)
                     RoundedRectangle(cornerRadius: 25)
-                        .foregroundStyle(Color("light_Orange"))
+                        .foregroundStyle(Color(lightColor))
                         .frame(maxWidth: (progress/100) * maxProgress)
                         .frame(height: 14)
                 }
@@ -613,20 +626,20 @@ struct ImproveApresentationView: View {
                     HStack {
                         VStack(alignment: .leading) {
                             Text(title)
-                                .font(.title2)
+                                .font(.system(size: proxy.size.width * RelativeFontSizes.width380size17.rawValue))
                                 .foregroundStyle(Color("light_DarkerGreen"))
                                 .bold()
                             Text(subTitle)
-                                .font(.footnote)
+                                .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
                                 .foregroundStyle(.black)
                                 .padding(.bottom, 10)
                             if !isExtended {
-                                ImproveTextFeedbackComponet(callAction: callAction, bodyText: bodyText)
+                                ImproveTextFeedbackComponet(callAction: callAction, bodyText: bodyText, widthSize: proxy.size.width)
                                     .padding(.top, 5)
                                 
                             } else {
                                 ForEach(0..<allBodyText.count, id: \.self) { index in
-                                    ImproveTextFeedbackComponet(callAction: allCallActions[index], bodyText: allBodyText[index])
+                                    ImproveTextFeedbackComponet(callAction: allCallActions[index], bodyText: allBodyText[index], widthSize: proxy.size.width)
                                         .padding(.top, 5)
                                 }
                             }
@@ -648,18 +661,18 @@ struct ImproveApresentationView: View {
 struct ImproveTextFeedbackComponet: View {
     var callAction: String
     var bodyText: String
+    @State var widthSize: CGFloat
     var body: some View {
         HStack(alignment: .top) {
-            
             Text(Image(systemName: "exclamationmark.triangle.fill"))
-                .font(.callout)
+                .font(.system(size: widthSize * RelativeFontSizes.width380size13.rawValue))
                 .foregroundStyle(Color("light_DarkerGreen")) +
             Text(callAction)
-                .font(.callout)
+                .font(.system(size: widthSize * RelativeFontSizes.width380size13.rawValue))
                 .foregroundStyle(Color("light_DarkerGreen"))
                 .bold() +
             Text(bodyText)
-                .font(.callout)
+                .font(.system(size: widthSize * RelativeFontSizes.width380size13.rawValue))
                 .foregroundStyle(Color("light_DarkerGreen"))
         }
     }
@@ -689,12 +702,12 @@ struct ObjectiveApresentationView: View {
                                     .bold()
                                     .frame(maxWidth: proxy.size.width * 0.06)
                                 Text(title)
-                                    .font(.title2)
+                                    .font(.system(size: proxy.size.width * RelativeFontSizes.width380size17.rawValue))
                                     .foregroundStyle(Color("light_DarkerGreen"))
                                     .bold()
                             }
                             Text(subTitle)
-                                .font(.footnote)
+                                .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
                                 .foregroundStyle(.black)
                                 .padding(.bottom, 10)
                             if !isExtended {
@@ -703,6 +716,11 @@ struct ObjectiveApresentationView: View {
                                 ForEach(0..<allObjText.count, id: \.self) { index in
                                     ObjectiveApresentationTopicsComponent(widthSize: proxy.size.width * 0.8, heightSize: proxy.size.height * 0.07, title: allObjText[index], imageName:  allImages[index])
                                 }
+                                Text("Ao definir objetivos, você molda a apresentação de forma a atingir os resultados desejados. Isso ajuda a manter o foco e a coesão, garantindo que sua mensagem seja transmitida de maneira eficaz e envolvente para o público.")
+                                    .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
+                                    .foregroundStyle(.black)
+                                    .opacity(0.5)
+                                    .padding(.top, 24)
                             }
                             Spacer()
                         }
@@ -716,7 +734,7 @@ struct ObjectiveApresentationView: View {
                 self.isExtended.toggle()
             }
         }
-        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height260.rawValue : heightFrame * RelativeSizes.height130.rawValue)
+        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height350.rawValue : heightFrame * RelativeSizes.height130.rawValue)
     }
 }
 
@@ -733,12 +751,13 @@ struct ObjectiveApresentationTopicsComponent: View {
                     .scaledToFit()
                     .foregroundStyle(Color("light_DarkerGreen"))
                     .bold()
-                    .frame(maxWidth: widthSize * 0.04)
+                    .frame(maxWidth: widthSize * 0.05)
                 Text(title)
-                    .font(.subheadline)
+                    .font(.system(size: widthSize * RelativeFontSizes.width380size17.rawValue))
                     .foregroundStyle(Color("light_DarkerGreen"))
             }
             .padding(5)
+            .padding(.leading, 5)
             .background(Color("light_LighterBlue"))
             .clipShape(RoundedRectangle(cornerRadius: 6, style: /*@START_MENU_TOKEN@*/.continuous/*@END_MENU_TOKEN@*/))
             //        .frame(maxWidth: widthSize, maxHeight: heightSize)
@@ -805,20 +824,24 @@ struct AvaregeTimeFeedbackView: View {
                                 }
                             }
                             if isExtended {
-                                HStack {
-                                   Rectangle()
-                                        .frame(maxWidth: widthFrame * 0.21 * 0.04, maxHeight: widthFrame * 0.21 * 0.04)
-                                        .foregroundStyle(Color("light_Blue"))
-                                    Text("Dentro do desejado")
-                                        .font(.system(size: 10))
-                                        .foregroundStyle(Color("light_Blue"))
-                                    Rectangle()
-                                        .frame(maxWidth: widthFrame * 0.21 * 0.04, maxHeight: widthFrame * 0.21 * 0.04)
-                                        .foregroundStyle(Color("light_DarkerGreen"))
-                                     Text("Fora do desejado")
-                                        .font(.system(size: 10))
-                                         .multilineTextAlignment(.leading)
-                                         .foregroundStyle(Color("light_DarkerGreen"))
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Rectangle()
+                                            .frame(maxWidth: widthFrame * 0.21 * 0.04, maxHeight: widthFrame * 0.21 * 0.04)
+                                            .foregroundStyle(Color("light_Blue"))
+                                        Text("Dentro do desejado")
+                                            .font(.system(size: 10))
+                                            .foregroundStyle(Color("light_Blue"))
+                                    }
+                                    HStack {
+                                        Rectangle()
+                                            .frame(maxWidth: widthFrame * 0.21 * 0.04, maxHeight: widthFrame * 0.21 * 0.04)
+                                            .foregroundStyle(Color("light_DarkerGreen"))
+                                        Text("Fora do desejado")
+                                            .font(.system(size: 10))
+                                            .multilineTextAlignment(.leading)
+                                            .foregroundStyle(Color("light_DarkerGreen"))
+                                    }
                                 }
                                 .padding(.top, 5)
                                 Text("Se manter dentro do tempo proposto é crucial para garantir a clareza e o impacto de sua mensagem! ")

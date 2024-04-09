@@ -52,4 +52,16 @@ extension CGFloat {
         
         return heightRelativeSize
     }
+    
+    static func calculateFontSize(componentWidth: CGFloat, desiredFontSize: CGFloat) -> CGFloat {
+        // Calcular o tamanho médio do componente
+   //     let averageSize = (componentWidth + componentHeight) / 2
+        
+        // Calcular a porcentagem do tamanho da fonte em relação ao tamanho médio do componente
+        let fontSizePercentage = (desiredFontSize / componentWidth)
+        
+        // Retornar o tamanho da fonte relativo ao tamanho do componente
+        return fontSizePercentage
+    }
 }
+
