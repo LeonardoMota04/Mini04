@@ -217,11 +217,11 @@ struct PastaView: View {
                                                    organizationProgress: folderVM.avaregeCohesionFeedback().organization,
                                                                   connectionProgress: folderVM.avaregeCohesionFeedback().conection,
                                                                   widthFrame: geo.size.width, heightFrame: geo.size.height)
-                                ObjectiveApresentationView(widthFrame: geo.size.width, heightFrame: geo.size.height)
+                                ObjectiveApresentationView(allImages: folderVM.setObjetiveApresentation(objetiveApresentation: "Pitch").images, allObjText: folderVM.setObjetiveApresentation(objetiveApresentation:"Pitch").phrases, widthFrame: geo.size.width, heightFrame:  geo.size.height)
                             }
                             .padding(.top, geo.size.height * 0.1423 + 5) // padding para organizar os elementos pois estao em cima um do outro
                             HStack(alignment: .top){
-                                AvaregeTimeFeedbackView(avaregeTime: folderVM.formatedAvareTime, wishTimeText: folderVM.folder.formattedGoalTime(), wishTime: folderVM.folder.tempoDesejado, treinos: folderVM.folder.treinos, widthFrame: geo.size.width, heightFrame: geo.size.height)
+                                AvaregeTimeFeedbackView(avaregeTime: folderVM.formatedAvareTime, wishTimeText: folderVM.folder.formattedGoalTime(), wishTime: folderVM.folder.tempoDesejado, treinos: folderVM.sortTreinos(), widthFrame: geo.size.width, heightFrame: geo.size.height)
                                 WordRepetitionView(folderVM: folderVM, widthFrame: geo.size.width, heightFrame: geo.size.height)
                                 ImproveApresentationView(widthFrame: geo.size.width, heightFrame: geo.size.height)
                             }

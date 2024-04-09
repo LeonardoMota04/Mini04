@@ -683,8 +683,8 @@ struct ObjectiveApresentationView: View {
     @State var isExtended: Bool = false
     var title: String = "Objetivos da Apresentação"
     var subTitle: String  = "De acordo com o tipo de apresentação informado"
-    var allImages: [String] = ["wand.and.stars", "suitcase.fill", "person.2.fill", "megaphone.fill"]
-    var allObjText: [String] = ["Destacar os benefícios do produto ou serviço.", "Incentivar ação, como uma compra ou inscrição.", "Despertar o interesse do público (clientes). ", "Comunicar de forma persuasiva e clara."]
+    var allImages: [String]// = ["wand.and.stars", "suitcase.fill", "person.2.fill", "megaphone.fill"]
+    var allObjText: [String]// = ["Destacar os benefícios do produto ou serviço.", "Incentivar ação, como uma compra ou inscrição.", "Despertar o interesse do público (clientes). ", "Comunicar de forma persuasiva e clara."]
     var widthFrame: CGFloat
     var heightFrame: CGFloat
     var body: some View {
@@ -710,7 +710,7 @@ struct ObjectiveApresentationView: View {
                             Text(subTitle)
                                 .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
                                 .foregroundStyle(.black)
-                                .padding(.bottom, 10)
+                                .padding(.bottom, 5)
                             if !isExtended {
                                 ObjectiveApresentationTopicsComponent(widthSize: proxy.size.width * 0.8, heightSize: proxy.size.height * 0.07, title: allObjText[0], imageName:  allImages[0])
                             } else {
@@ -778,7 +778,7 @@ struct LoadingView: View {
 }
 
 struct AvaregeTimeFeedbackView: View {
-    @State var avaregeTime: String
+     var avaregeTime: String
     var wishTimeText: String
     var wishTime: Int
     var treinos: [TreinoModel]
@@ -823,7 +823,8 @@ struct AvaregeTimeFeedbackView: View {
                                             widthFrame: 14,
                                             heightFrame: proxy.size.height * 0.45,
                                             titleText: String(treinos.count - index),
-                                            porcentage: CGFloat(treinos[index].video?.videoTime ?? 0) > CGFloat(wishTime) ? proxy.size.height * 0.45 : CGFloat(treinos[index].video?.videoTime ?? 1) / CGFloat(wishTime) * 100
+                                            porcentage: CGFloat(treinos[index].video?.videoTime ?? 0) > CGFloat(wishTime) ? proxy.size.height * 0.45 : CGFloat(treinos[index].video?.videoTime ?? 0) / CGFloat(wishTime) * (proxy.size.height * 0.45),
+                                            isOutofTime: CGFloat(treinos[index].video?.videoTime ?? 0) > CGFloat(wishTime)
                                         )
                                             .padding(.top, 5)
                                     }
@@ -881,6 +882,7 @@ struct AvaregeFeedbackGrafics: View {
     var heightFrame: CGFloat
     var titleText: String
     var porcentage: CGFloat
+    var isOutofTime: Bool
     var body: some View {
         VStack {
             ZStack(alignment: .bottom) {
@@ -889,8 +891,8 @@ struct AvaregeFeedbackGrafics: View {
                     .foregroundStyle(.gray)
                     .opacity(0.3)
                 RoundedRectangle(cornerRadius: 10)
-                    .frame(width: 14, height: porcentage )
-                    .foregroundStyle(porcentage > 100 ? Color("light_DarkerGreen") : Color("light_Blue"))
+                    .frame(maxWidth: 14, maxHeight: porcentage )
+                    .foregroundStyle(isOutofTime ? Color("light_DarkerGreen") : Color("light_Blue"))
             }
             Text("T \(titleText)")
                 .font(.footnote)

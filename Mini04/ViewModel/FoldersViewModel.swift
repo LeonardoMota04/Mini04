@@ -265,6 +265,14 @@ class FoldersViewModel: ObservableObject {
         }
     }
     
+    func sortTreinos() -> [TreinoModel] {
+        let sortedArray = self.folder.treinos.sorted(by:  {
+            $1.data <  $0.data
+        })
+        return sortedArray
+    }
+    
+    
     // Formata uma string com segundo minutos e horas
     func formatVideoDuration(time: TimeInterval) -> String {
         let totalSeconds = time
@@ -282,12 +290,25 @@ class FoldersViewModel: ObservableObject {
         }
     }
     
+//    func formatAvaregeVideo() -> String {
+//        var totalTime: TimeInterval = 0
+//        var calcTime: TimeInterval = 0
+//        for treino in folder.treinos {
+//            totalTime += treino.video?.videoTime ?? 0
+//        }
+//        // calculando a media - media = total / quantidade
+//        calcTime = totalTime / Double(folder.treinos.count)
+//        // Atribuindo o valor a persistencia e salvando em seguida
+//        return formatVideoDuration(time: calcTime)
+//    }
+    
     
     func calculateTreinoTime(videoTime: Double) -> CGFloat {
         let totalSeconds = Double(folder.tempoDesejado)
         return CGFloat(videoTime) / CGFloat(totalSeconds) * 54
     }
-
+    
+    
 
     
     // tranforma o retorno do chatGTP em porcentagem par montar os graficos de feedback
@@ -349,5 +370,20 @@ class FoldersViewModel: ObservableObject {
         let avaregeConection = totalConection / CGFloat(folder.treinos.count)
         
         return (avaregeFluid,avaregeOrganization, avaregeConection)
+    }
+    
+    func setObjetiveApresentation(objetiveApresentation: String) -> (phrases: [String], images: [String]) {
+        switch objetiveApresentation{
+        case "Pitch":
+            return (["1", "2"], ["1", "2"])
+        case "Sales":
+            return (["3", "4"], ["1", "2"])
+        case "Project":
+            return (["5", "6"], ["1", "2"])
+        case "Event":
+            return (["7", "8"], ["1", "2"])
+        default:
+            return (["9", "10"], ["1", "2"])
+        }
     }
 }
