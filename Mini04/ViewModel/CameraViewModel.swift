@@ -286,35 +286,34 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
                         self.currentTime += 1
                         print("Tempo atual de vídeo: \(self.currentTime)")
                     })
+                    
+                    // Inciando o SpeechToText
+                    do {
+                        try self.speechManager.startRecording { text, error in
+                            // verificando se o script falado nao esta vazio
+                            guard let text = text else {
+                                print("String SpeechToText vazia/nil")
+                                return
+                            }
+                            self.speechText = text
+                            print(text)
+                            
+                            // Função das transcrições
+                            self.getFirstWordTime(speech: self.speechText)
+                            
+                        }
+                    } catch {
+                        print(error)
+                    }
                 }
             }
         }
-        
-        // Inciando o SpeechToText
-        do {
-            try self.speechManager.startRecording { text, error in
-                // verificando se o script falado nao esta vazio
-                guard let text = text else {
-                    print("String SpeechToText vazia/nil")
-                    return
-                }
-                self.speechText = text
-                print(text)
-                
-                // Função das transcrições
-                self.getFirstWordTime(speech: self.speechText)
-                
-            }
-        } catch {
-            print(error)
-        }
-        
     }
     
     func stopRecording() {
         
         // Transcrição
-        wordsArray = []
+        wordsArray.removeAll()
         separateStringsFromSpeech(speech: speechText) // Separa as strings de 10 em 10 palavras
         checkIfThereIsAnyWordsLeft()                  // checa se existem palavras restantes que não formaram um speech de 10 palavras
         eliminateSimilarTimes()                       // Elimina tempos duplos caso o speech corrija a primeira palavra de algum speech
@@ -373,7 +372,7 @@ extension CameraViewModel {
                 let timeDifference = abs(time2 - time1)
                 
                 // Verifica se a diferença entre os tempos é no máximo 2 segundos
-                if timeDifference <= 2 {
+                if timeDifference <= 1.5 || time1 == time2 {
                     // Marca o índice do próximo tempo igual para remoção
                     indicesToRemove.append(i + 1)
                 }
@@ -393,7 +392,7 @@ extension CameraViewModel {
         
         // Caso seja a primeira palavra do discurso, pega seu tempo
         if wordsArray.count == 1 || wordsArray.count % 10 == 1 {
-            startedSpeechTimes.append(currentTime)
+            startedSpeechTimes.append(currentTime - 1)
         }
     }
     
