@@ -100,8 +100,13 @@ struct TreinoView: View {
                                     .foregroundStyle(.black)
                                     .font(.title3)
                                     .bold()
-                                RoundedRectangle(cornerRadius: 10)
-                                    .frame(width: 316, height: 251)
+                                
+                                if let speech = trainingVM.treino.video?.cutSpeeches,
+                                   let time = trainingVM.treino.video?.speechStart {
+                                    TranscricaoViewComponent(trainingVM: trainingVM, player: avPlayer, speeches: speech, times: time)
+                                        .frame(height: size.height / 3.25)
+                                }
+                                    
                             }
                             .foregroundStyle(.white)
                         }
