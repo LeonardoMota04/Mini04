@@ -9,12 +9,16 @@ import SwiftUI
 import SwiftData
 
 struct PastaView: View {
+    @Environment(\.dismiss) private var dismiss
+
     // VM
     @ObservedObject var folderVM: FoldersViewModel
-    @State private var isModalPresented = true // Modal sempre será apresentado ao entrar na view
     
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
+    
+    // SABER QUAL PASTA ESTAMOS
+    @Binding var selectedFolderID: UUID?
     
     // EDITAR NOME DA PASTA
     @State private var editedName: String = ""
@@ -88,7 +92,6 @@ struct PastaView: View {
                                         }
                                         //
                                     }
-                                
                                 TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
                                     .frame(maxHeight: .infinity)
                                     .frame(width: 958)
@@ -176,13 +179,13 @@ struct PastaView: View {
                             Spacer()
                             HStack {
                                 Image(systemName: "calendar.badge.clock")
-                                Text(folderVM.formatterDate(date: folderVM.folder.data))
+                                Text(folderVM.formatterDate(date: folderVM.folder.dateOfPresentation))
                                     .font(.title3)
                                 Text("|")
                                     .font(.title2)
                                 Image(systemName: "video.badge.waveform.fill")
                                 Text("\(folderVM.folder.treinos.count) Treinos")
-                                    .font(.subheadline)
+                                    .font(.title3)
                                 Text("|")
                                     .font(.title2)
                                 Image(systemName: "handbag.fill")
@@ -203,44 +206,42 @@ struct PastaView: View {
                                 Color(.clear) // colocando algo tranparente para ficar ao lado da AvaregeTimeFeedBackView
                                     .frame(maxWidth: geo.size.width * 0.21, maxHeight: 10)
                                 // TODO: REAVALIAR ESSA LOGICA AQUI DA COESA NA *PASTA*
-                                if  (folderVM.folder.treinos.isEmpty || ((folderVM.folder.treinos.last?.feedback?.coherenceValues.isEmpty) != nil)) { //TODO: resolver essa logica na viewModel ou model - garatindo que nao vai crachar o app se o index nao existir
-                                    CohesionExtendView(fluidProgress: 0,
-                                                     organizationProgress: 0,
-                                                     connectionProgress: 0,
-                                                     widthFrame: geo.size.width, heightFrame: geo.size.height)
-                                } else {
-                                    CohesionExtendView(fluidProgress: folderVM.folder.treinos.last?.feedback?.coherenceValues[0] ?? 1,
-                                                       organizationProgress: folderVM.folder.treinos.last?.feedback?.coherenceValues[1] ?? 1,
-                                                       connectionProgress:  folderVM.folder.treinos.last?.feedback?.coherenceValues[2] ?? 1,
-                                                     widthFrame: geo.size.width, heightFrame: geo.size.height)
-                                }
+//                                if  (folderVM.folder.treinos.isEmpty || ((folderVM.folder.treinos.last?.feedback?.coherenceValues.isEmpty) != nil)) { //TODO: resolver essa logica na viewModel ou model - garatindo que nao vai crachar o app se o index nao existir
+//                                    CohesionExtendView(fluidProgress: 0,
+//                                                     organizationProgress: 0,
+//                                                     connectionProgress: 0,
+//                                                     widthFrame: geo.size.width, heightFrame: geo.size.height)
+//                                } else {
+//                                    CohesionExtendView(fluidProgress: folderVM.folder.treinos.last?.feedback?.coherenceValues[0] ?? 1,
+//                                                       organizationProgress: folderVM.folder.treinos.last?.feedback?.coherenceValues[1] ?? 1,
+//                                                       connectionProgress:  folderVM.folder.treinos.last?.feedback?.coherenceValues[2] ?? 1,
+//                                                     widthFrame: geo.size.width, heightFrame: geo.size.height)
+//                                }
+                                CohesionExtendView(fluidProgress: folderVM.avaregeCohesionFeedback().fluid,
+                                                   organizationProgress: folderVM.avaregeCohesionFeedback().organization,
+                                                                  connectionProgress: folderVM.avaregeCohesionFeedback().conection,
+                                                                  widthFrame: geo.size.width, heightFrame: geo.size.height)
                                 ObjectiveApresentationView(widthFrame: geo.size.width, heightFrame: geo.size.height)
                             }
                             .padding(.top, geo.size.height * 0.1423 + 5) // padding para organizar os elementos pois estao em cima um do outro
                             HStack(alignment: .top){
-                                AvaregeTimeFeedbackView(avaregeTime: folderVM.formatedAvareTime, wishTime: Double(folderVM.folder.tempoDesejado), treinos: folderVM.folder.treinos, widthFrame: geo.size.width, heightFrame: geo.size.height)
+                                AvaregeTimeFeedbackView(avaregeTime: folderVM.formatedAvareTime, wishTimeText: folderVM.folder.formattedGoalTime(), wishTime: folderVM.folder.tempoDesejado, treinos: folderVM.folder.treinos, widthFrame: geo.size.width, heightFrame: geo.size.height)
                                 WordRepetitionView(folderVM: folderVM, widthFrame: geo.size.width, heightFrame: geo.size.height)
                                 ImproveApresentationView(widthFrame: geo.size.width, heightFrame: geo.size.height)
                             }
                         }
                         .padding(EdgeInsets(top: 40, leading: 0, bottom: 55, trailing: 0))
-                        // MARK: FeedBacks -
                         
-                        Spacer()
                         
-                        if folderVM.folder.treinos.isEmpty {
-                            Text("Adicione um treino para começar")
+                        HStack {
+                            Spacer()
+                            if folderVM.folder.treinos.isEmpty {
+                                ContentUnavailableView("Adicione um treino para começar", systemImage: "folder.fill.badge.questionmark")
+                            }
+                            Spacer()
                         }
-                        
+                        .padding(.bottom, 80)
                         Spacer()
-                        
-                        // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
-                        NavigationLink {
-                            RecordingVideoView(folderVM: folderVM)
-                        } label: {
-                            Text("Novo Treino")
-                        }
-                        // exibe todos os treinos
                     }
                     .padding(.horizontal, 55)
                     .blur(radius: isShowingModal ? 3 : 0)
@@ -255,7 +256,14 @@ struct PastaView: View {
                 }
             }
             .padding()
+            .onChange(of: selectedFolderID) { _, newValue in
+                if newValue == nil {
+                    dismiss()
+                }
+            }
             .onAppear {
+                selectedFolderID = folderVM.folder.id
+                
                 // resizeble
                 currentScreenSize = (NSScreen.main?.visibleFrame.size)!
                 oldScreenSize = currentScreenSize
@@ -281,12 +289,9 @@ struct PastaView: View {
                             currentScreenSize = tempScreenSize ?? NSSize.zero
                         }
                     })
-            .sheet(isPresented: $isModalPresented) {
-                FolderInfoModalView(isModalPresented: $isModalPresented)
-            }
-            //editedName = folderVM.folder.nome
-        //    folderVM.calculateAvarageTime() // TODO: arrumar isso e ver isso
+            
         }
+        .background(Color.lightLighterGray)
         .onChange(of: folderVM.folder) { _, _ in
             // quando adicionar um novo treino atualiza o valor do tempo medio dos treinos
             folderVM.calculateAvarageTime()
@@ -294,8 +299,31 @@ struct PastaView: View {
             // quando trocar de pasta, passa de novo o contexto
             folderVM.modelContext = modelContext
         }
-        .sheet(isPresented: $isModalPresented) {
-            FolderInfoModalView(isModalPresented: $isModalPresented)
+        .toolbar() {
+            ToolbarItem() {
+                Menu {
+                    Button {
+                        
+                    } label: {
+                        Text("Editar Apresentação")
+                    }
+                    Button {
+                        selectedFolderID = nil
+                    } label: {
+                        Text("Excluir Apresentação")
+                    }
+                    Divider()
+                    // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
+                    NavigationLink {
+                        RecordingVideoView(folderVM: folderVM)
+                    } label: {
+                        Text("Adicionar novo treino")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle.fill")
+                }
+                .menuIndicator(.hidden)          
+            }
         }
     }
     // UPDATE Nome da pasta e seus treinos
@@ -313,24 +341,4 @@ struct PastaView: View {
         }
     }
     
-}
-
-// MARK: - MODAL DE INFORMACOES
-struct FolderInfoModalView: View {
-    @Binding var isModalPresented: Bool
-    var body: some View {
-        VStack {
-            Text("Instruções:")
-                .font(.title)
-                .padding()
-            
-            Text("pipipipi")
-                .padding()
-            
-            Button("Fechar") {
-                isModalPresented = false
-            }
-            .padding()
-        }
-    }
 }

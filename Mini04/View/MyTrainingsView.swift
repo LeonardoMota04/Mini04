@@ -29,8 +29,13 @@ struct MyTrainingsView: View {
                 
                 CustomPickerView(selectedSortByOption: $selectedFilter, selectedFavoriteOption: $selectedFavoriteOption)
                     .frame(maxWidth: 220)
+                    .padding(4)
+                    .background(Color.lightWhite)
+                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                    .shadow(radius: 2)
             }
             TrainingCellsView(folderVM: folderVM, filteredTrainings: $filteredTrainings, selectedFilter: selectedFilter, selectedFavoriteOption: $selectedFavoriteOption, isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex)
+
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -98,7 +103,7 @@ struct TrainingCellsView: View {
                     .transition(.scale) // Adiciona a transição de escala
 
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.lightWhite)
                     .padding(.horizontal, 25)
                     .padding(.vertical, 15)
                     .background {
@@ -114,6 +119,7 @@ struct TrainingCellsView: View {
                 }
             }
         }
+        .preferredColorScheme(.light)
 
         .padding(.top, 25)
         // ATUALIZAR A LISTA FILTRADA DE TREINOS
@@ -147,6 +153,7 @@ struct TrainingCellsView: View {
                 updateFilteredTrainings()
             }
         }
+        
     }
     
     private func updateFilteredTrainings() {

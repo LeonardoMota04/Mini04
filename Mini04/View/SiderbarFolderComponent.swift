@@ -13,31 +13,37 @@ struct SiderbarFolderComponent: View {
     var foldersTrainingAmount: Int
     var foldersObjetiveTime: Int
     var foldersType: String
+    
     @Binding var backgroundHighlited: Bool
+    
     var body: some View {
         ZStack {
             ZStack {
                 CustomRoundedRectangle()
+                    .fill(Color.lightLighterGreen)
                     .foregroundStyle(.black)
-                    .opacity(backgroundHighlited ? 0.1 : 0.2)
+                    .opacity(backgroundHighlited ? 0.3 : 1)
 
                 HStack {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)
                             .frame(maxWidth: 54, maxHeight: 54)
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.clear)
                         iconImage(apresentationType: foldersType)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color.lightDarkerGreen)
                     }
                     VStack {
                         HStack {
                             Text(foldersName)
+                                .bold()
+                                .font(.title3)
                                 .foregroundStyle(.black)
                             Spacer()
                         }
                         HStack {
                             Text(formatDate())
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color(.darkGray))
+                                .font(.footnote)
                             Spacer()
                         }
                     }
@@ -48,8 +54,10 @@ struct SiderbarFolderComponent: View {
                     Spacer()
                     VStack {
                         Spacer()
-                        Text("\(String(foldersObjetiveTime)) min")
-                            .foregroundStyle(.white)
+                        Text(formatObjectiveTime())
+                            .foregroundStyle(Color.lightDarkerGreen.opacity(0.5))
+                            .bold()
+                            .padding(.trailing, 5)
                         
                     }
                 }
@@ -62,8 +70,8 @@ struct SiderbarFolderComponent: View {
                     ZStack {
                         CustomTag()
                             .frame(width: 65,height: 18)
-                            .foregroundStyle(.black)
-                            .opacity(backgroundHighlited ? 0.3 : 0.4)
+                            .foregroundStyle(Color.lightDarkerGreen)
+                            .opacity(backgroundHighlited ? 0.3 : 1)
                         HStack {
                             Text(String(foldersTrainingAmount))
                                 .foregroundStyle(.white)
@@ -79,30 +87,49 @@ struct SiderbarFolderComponent: View {
         .frame(height: 74)
         .padding(.horizontal,12)
     }
+    
+    // Função para formatar a data
     func formatDate() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MM/yy"
-        return dateFormatter.string(from: foldersDate)
+        dateFormatter.dateFormat = "d 'DE' MMMM"
+        dateFormatter.locale = Locale(identifier: "pt_BR") // Define o locale para português do Brasil
+        
+        return dateFormatter.string(from: foldersDate).uppercased()
     }
     
+    // Função para formatar o tempo objetivo
+    func formatObjectiveTime() -> String {
+        let minutes = foldersObjetiveTime / 60
+        let seconds = foldersObjetiveTime % 60
+        
+        if minutes > 0 && seconds > 0 {
+            return "\(minutes) min \(seconds) s"
+        } else if minutes > 0 {
+            return "\(minutes) min"
+        } else {
+            return "\(seconds) s"
+        }
+    }
+    
+    // Função para retornar a imagem com base no tipo de apresentação
     func iconImage(apresentationType: String) -> Image {
         switch (apresentationType) {
-        case "pitch":
+        case "Apresentação de Pitch":
             return Image(systemName: "lightbulb")
-        case "sales":
+        case "Apresentação de Vendas":
             return Image(systemName: "person.3.fill")
-        case "event":
+        case "Apresentação de Eventos":
             return Image(systemName: "megaphone.fill")
-        case "project":
+        case "Apresentação de Projetos":
             return Image(systemName: "projective")
-        case "informative":
+        case "Apresentação Acadêmica":
             return Image(systemName: "book.fill")
         default:
             return Image(systemName: "xmark")
         }
     }
-    
 }
+
 
 
 

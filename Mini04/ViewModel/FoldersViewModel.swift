@@ -286,8 +286,11 @@ class FoldersViewModel: ObservableObject {
     
     
     func calculateTreinoTime(videoTime: Double) -> CGFloat {
-        return CGFloat(videoTime) / CGFloat(folder.tempoDesejado) * 54
+        let totalSeconds = Double(folder.tempoDesejado)
+        return CGFloat(videoTime) / CGFloat(totalSeconds) * 54
     }
+
+
     
     // tranforma o retorno do chatGTP em porcentagem par montar os graficos de feedback
     func convertPorcentageCohesionFeedback(message: Message?) -> [CGFloat] {
@@ -330,5 +333,23 @@ class FoldersViewModel: ObservableObject {
             print(porcentage)
         }
         return porcentages
+    }
+    
+    // faz a media de todos os feedbacks de coesao criados na pasta para preencher o cohesion na pasta
+    func avaregeCohesionFeedback() -> ((fluid: CGFloat, organization: CGFloat, conection: CGFloat)){
+        var totalFluid: CGFloat = 0
+        var totalOrganization: CGFloat = 0
+        var totalConection: CGFloat = 0
+        for treino in folder.treinos {
+            totalFluid += treino.feedback?.coherenceValues[0] ?? 0 // fluid
+            totalOrganization += treino.feedback?.coherenceValues[1] ?? 0 // organization
+            totalConection += treino.feedback?.coherenceValues[2] ?? 0 // conexion
+        }
+        
+        let avaregeFluid = totalFluid / CGFloat(folder.treinos.count)
+        let avaregeOrganization = totalOrganization / CGFloat(folder.treinos.count)
+        let avaregeConection = totalConection / CGFloat(folder.treinos.count)
+        
+        return (avaregeFluid,avaregeOrganization, avaregeConection)
     }
 }

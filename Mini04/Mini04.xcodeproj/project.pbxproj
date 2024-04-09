@@ -18,6 +18,7 @@
 		269DF63F2BB8E47B00B0C629 /* MyTrainingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF63E2BB8E47B00B0C629 /* MyTrainingsView.swift */; };
 		269DF6432BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6422BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift */; };
 		269DF6472BC3667500B0C629 /* CreateFolderModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6462BC3667500B0C629 /* CreateFolderModalView.swift */; };
+		269DF6492BC4904000B0C629 /* HumClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6482BC4904000B0C629 /* HumClassifier.mlmodel */; };
 		370655E22BB1F32100B22AB0 /* HandPoseDoVH.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */; };
 		370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */; };
 		370655E62BB5009F00B22AB0 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E52BB5009F00B22AB0 /* Extras.swift */; };
@@ -78,6 +79,7 @@
 		269DF63E2BB8E47B00B0C629 /* MyTrainingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTrainingsView.swift; sourceTree = "<group>"; };
 		269DF6422BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynonymnsFeedbackTrainingView.swift; sourceTree = "<group>"; };
 		269DF6462BC3667500B0C629 /* CreateFolderModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderModalView.swift; sourceTree = "<group>"; };
+		269DF6482BC4904000B0C629 /* HumClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = HumClassifier.mlmodel; path = ../../../../../Downloads/HumClassifier.mlmodel; sourceTree = "<group>"; };
 		370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandPoseDoVH.mlmodel; sourceTree = "<group>"; };
 		370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiderbarFolderComponent.swift; sourceTree = "<group>"; };
 		370655E52BB5009F00B22AB0 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
@@ -216,7 +218,7 @@
 			children = (
 				370E91EB2BA8C46400D39C27 /* HandPose1.mlmodel */,
 				370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */,
-				F1B51E012BBC3AA7000D0126 /* HumClassifier.mlmodel */,
+				269DF6482BC4904000B0C629 /* HumClassifier.mlmodel */,
 				370E91F72BA8D7E200D39C27 /* VideoModel.swift */,
 				370E91F32BA8D7BA00D39C27 /* TreinoModel.swift */,
 				2692A1F92BB25F4000EEF9AB /* SynonymModel.swift */,
@@ -357,6 +359,7 @@
 				370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */,
 				370E91F62BA8D7D200D39C27 /* TreinoViewModel.swift in Sources */,
 				263D73E82BA4C56F002190F4 /* SwiftDataView.swift in Sources */,
+				269DF6492BC4904000B0C629 /* HumClassifier.mlmodel in Sources */,
 				370E91FA2BA8D86D00D39C27 /* PastaView.swift in Sources */,
 				370E91F42BA8D7BA00D39C27 /* TreinoModel.swift in Sources */,
 				269DF63F2BB8E47B00B0C629 /* MyTrainingsView.swift in Sources */,
@@ -376,7 +379,6 @@
 				370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */,
 				377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */,
 				370E91E12BA8AFC400D39C27 /* CameraPreview.swift in Sources */,
-				F1B51E022BBC3AA7000D0126 /* HumClassifier.mlmodel in Sources */,
 				263D73E82BA4C56F002190F4 /* SwiftDataView.swift in Sources */,
 				370E91F82BA8D7E200D39C27 /* VideoModel.swift in Sources */,
 				263D73EA2BA4C56F002190F4 /* Item.swift in Sources */,

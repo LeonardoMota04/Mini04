@@ -62,7 +62,7 @@ struct trainingPresentationInfos: View {
         VStack {
             Text("Nome da pasta: \(folderVM.folder.nome)")
             Text("Objetivo do seu treino: \(folderVM.folder.objetivoApresentacao)")
-            Text("Tempo desejado: \(folderVM.folder.tempoDesejado)")
+            Text("Tempo desejado: \(folderVM.folder.formattedGoalTime())")
             .padding()
         }
         .toolbar {

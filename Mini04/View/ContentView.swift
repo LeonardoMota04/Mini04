@@ -21,7 +21,8 @@ struct ContentView: View {
     @State private var backgroundHighlitedFolder: UUID? = nil
     @State var disableTextfield = false
     @State private var columnVisibility = NavigationSplitViewVisibility.automatic
-
+    @State private var selectedPresentationID: UUID?
+    
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
     @Query var folders: [PastaModel]
@@ -42,6 +43,8 @@ struct ContentView: View {
                 //searchbar
                 HStack {
                     SearchBar(searchText: $searchText, isSearching: $isSearching, disableTextfield: $disableTextfield)
+                        .shadow(radius: 2)
+
                         //roda a funcao que buscar os folders filtrados toda vez ue textfiled muda de valor
                         .onChange(of: searchText) { oldValue, newValue in
                             searchVM.searchFolders(allFolders: folders, searchText: searchText)
@@ -59,12 +62,17 @@ struct ContentView: View {
                             ForEach(searchVM.filteredFolders) { folder in
                                 NavigationLink {
                                     if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                        PastaView(folderVM: folderVM)
+                                        PastaView(folderVM: folderVM, selectedFolderID: $selectedPresentationID)
                                     } else {
                                         Text("ViewModel não encontrada para esta pasta")
                                     }
                                 } label: {
-                                    SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
+                                    SiderbarFolderComponent(foldersDate: folder.dateOfPresentation,
+                                                            foldersName: folder.nome,
+                                                            foldersTrainingAmount: folder.treinos.count,
+                                                            foldersObjetiveTime: folder.tempoDesejado,
+                                                            foldersType: folder.objetivoApresentacao,
+                                                            backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
                                         .onHover { hovering in
                                             overText = hovering ? folder.id : nil
                                             backgroundHighlitedFolder = hovering ? folder.id : nil
@@ -92,13 +100,18 @@ struct ContentView: View {
                             ForEach(folders) { folder in
                                 NavigationLink {
                                     if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                        PastaView(folderVM: folderVM)
-                                            
+                                        PastaView(folderVM: folderVM, selectedFolderID: $selectedPresentationID)
+
                                     } else {
                                         Text("ViewModel não encontrada para esta pasta")
                                     }
                                 } label: {
-                                    SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
+                                    SiderbarFolderComponent(foldersDate: folder.dateOfPresentation,
+                                                            foldersName: folder.nome,
+                                                            foldersTrainingAmount: folder.treinos.count,
+                                                            foldersObjetiveTime: folder.tempoDesejado,
+                                                            foldersType: folder.objetivoApresentacao,
+                                                            backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
                                         .onHover { hovering in
                                             overText = hovering ? folder.id : nil
                                             backgroundHighlitedFolder = hovering ? folder.id : nil
@@ -106,6 +119,9 @@ struct ContentView: View {
                                         .contextMenu {
                                             Group {
                                                 Button {
+                                                    if let selectedPresentationID = selectedPresentationID, selectedPresentationID == folder.id {
+                                                        self.selectedPresentationID = nil
+                                                    }
                                                     withAnimation {
                                                         presentationVM.deleteFolder(folder)
                                                     }
@@ -118,11 +134,6 @@ struct ContentView: View {
                                                     Text("Editar")
                                                 }
                                                 Divider()
-                                                Button {
-                                                    print("menu apertado")
-                                                } label: {
-                                                    Text("Selecionar")
-                                                }
                                             }
                                         }
                                     
@@ -145,20 +156,19 @@ struct ContentView: View {
                 } label: {
                     HStack {
                         Image(systemName: "play.fill")
-                            .foregroundStyle(.black)
                         Text("Nova apresentação")
-                            .foregroundStyle(.black)
                     }
                     .padding(.horizontal, 40)
-                    .padding(.vertical, 10)
-                    .background(.white)
-                    .containerShape(RoundedRectangle(cornerRadius: 10))
-
-
+                    .padding(.vertical, 12)
+                    .background(Color.lightDarkerGreen)
+                    .containerShape(RoundedRectangle(cornerRadius: 14))
+                    .foregroundStyle(Color.lightWhite)
                 }
                 .buttonStyle(.plain)
+                .padding(.bottom)
 
             }
+            .background(Color.lightWhite)
             //remove aquela parada de fechar a searchbar
             .toolbar(removing: .sidebarToggle)
             .navigationSplitViewColumnWidth(min: 300, ideal: 300, max: 300)
@@ -197,6 +207,22 @@ struct ContentView: View {
                 }
             }
         })
+        // ao trocar o ID da pasta selecionada e ele for NIL é para apagar ela
+        .onChange(of: selectedPresentationID) { oldValue, newValue in
+            if newValue == nil {
+                if let folderID = oldValue {
+                    // Encontrar a pasta correspondente ao ID na fonte de dados
+                    if let folderIndex = folders.firstIndex(where: { $0.id == folderID }) {
+                        let folderToDelete = folders[folderIndex]
+                        
+                        // Excluir a pasta
+                        presentationVM.deleteFolder(folderToDelete)
+                        
+                    }
+                }
+            }
+        }
+
         .onChange(of: columnVisibility, initial: true) { oldVal, newVal in
             DispatchQueue.main.async {
                 if newVal == .detailOnly && !camVM.cameraGravando{
@@ -233,7 +259,6 @@ class SearchViewModel: ObservableObject {
 
 struct SearchBar: View {
     @Binding var searchText: String
-    
     @Binding var isSearching: Bool
     @Binding var disableTextfield: Bool
 
@@ -241,54 +266,38 @@ struct SearchBar: View {
         ZStack {
             HStack {
                 Image(systemName: "magnifyingglass")
-//                    .foregroundStyle(.gray)
-                    .foregroundStyle(.gray)
-
+                    .foregroundColor(.gray)
                     .padding(.leading, 4)
                 
-                //https://stackoverflow.com/questions/70828401/how-to-detect-when-a-textfield-becomes-active-in-swiftui
-                TextField("Pesquisar apresentação...", text: $searchText, onEditingChanged: { changed in
-                  if changed {
-                    // User began editing the text field
-                      isSearching = true
-                  }
-                  else {
-                    // User tapped the return key
-                      isSearching = false
-                  }
-                })
-                .disabled(disableTextfield)
-                .foregroundStyle(.black)
-                .tint(.gray)
+                TextField("Pesquisar apresentação...", text: $searchText)
+                    .disabled(disableTextfield)
+                    .foregroundColor(.black) // Define a cor do texto como preto
+                    .background(Color.white) // Define o estilo de fundo do TextField como branco
+                    .onChange(of: searchText) { _, newValue in
+                        isSearching = !searchText.isEmpty
+                    }
+                
                 if isSearching {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.gray)
+                        .foregroundColor(.gray)
                         .onTapGesture {
                             searchText = ""
                             isSearching = false
-                            //ativa e desativa o textfield pra sair a interação do usuário
                             disableTextfield = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 disableTextfield = false
                             }
-
                         }
                         .padding(.trailing, 4)
                 }
             }
             .padding(4)
-            .background(.white)
-            .containerShape(RoundedRectangle(cornerRadius: 5))
+            .background(Color.white)
+            .cornerRadius(5)
+            .shadow(radius: 4) // Adiciona uma sombra à barra de pesquisa
         }
-        .onAppear {
-            disableTextfield = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                disableTextfield = false
-            }
-        }
-        
     }
-    
 }
+
 
 
