@@ -289,7 +289,6 @@ struct PastaView: View {
                             currentScreenSize = tempScreenSize ?? NSSize.zero
                         }
                     })
-            
         }
         .background(Color.lightLighterGray)
         .onChange(of: folderVM.folder) { _, _ in
@@ -299,6 +298,8 @@ struct PastaView: View {
             // quando trocar de pasta, passa de novo o contexto
             folderVM.modelContext = modelContext
         }
+        .sheet(isPresented: $isModalPresented) {
+            FolderInfoModalView(isModalPresented: $isModalPresented)
         .toolbar() {
             ToolbarItem() {
                 Menu {
@@ -324,6 +325,7 @@ struct PastaView: View {
                 }
                 .menuIndicator(.hidden)          
             }
+
         }
     }
     // UPDATE Nome da pasta e seus treinos

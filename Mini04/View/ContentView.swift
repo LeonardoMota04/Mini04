@@ -266,7 +266,8 @@ struct SearchBar: View {
         ZStack {
             HStack {
                 Image(systemName: "magnifyingglass")
-                    .foregroundColor(.gray)
+
+                    .foregroundStyle(.gray)
                     .padding(.leading, 4)
                 
                 TextField("Pesquisar apresentação...", text: $searchText)

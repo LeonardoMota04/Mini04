@@ -11,7 +11,7 @@ enum RelativeSizes: CGFloat {
     case width380 = 0.3223
     case height130 = 0.14238
     case height260 = 0.28477
-    case height334 = 0.36582
+    case height334 = 0.34012219959266804
     case height350 = 0.38335
 }
 
@@ -599,7 +599,7 @@ struct BarProgress_Component: View {
                         .opacity(0.3)
                     RoundedRectangle(cornerRadius: 25)
                         .foregroundStyle(Color(lightColor))
-                        .frame(maxWidth: (progress/100) * maxProgress)
+                        .frame(maxWidth: progress != 0 ? progress/100 * maxProgress : 0)
                         .frame(height: 14)
                 }
                 Text("\(progress.formatted()) %")
@@ -635,7 +635,7 @@ struct ImproveApresentationView: View {
                             Text(subTitle)
                                 .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
                                 .foregroundStyle(.black)
-                                .padding(.bottom, 10)
+                                .padding(.bottom, 5)
                             if !isExtended {
                                 ImproveTextFeedbackComponet(callAction: callAction, bodyText: bodyText, widthSize: proxy.size.width)
                                     .padding(.top, 5)
@@ -656,7 +656,7 @@ struct ImproveApresentationView: View {
                 self.isExtended.toggle()
             }
         }
-        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height334.rawValue : heightFrame * RelativeSizes.height130.rawValue)
+        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height334.rawValue + 50: heightFrame * RelativeSizes.height130.rawValue)
     }
 }
 
@@ -664,7 +664,7 @@ struct ImproveApresentationView: View {
 struct ImproveTextFeedbackComponet: View {
     var callAction: String
     var bodyText: String
-    @State var widthSize: CGFloat
+     var widthSize: CGFloat
     var body: some View {
         HStack(alignment: .top) {
             Text(Image(systemName: "exclamationmark.triangle.fill"))
