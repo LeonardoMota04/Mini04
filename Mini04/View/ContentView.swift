@@ -22,162 +22,335 @@ struct ContentView: View {
     @State var disableTextfield = false
     @State private var columnVisibility = NavigationSplitViewVisibility.automatic
 
+    @State var isShowingModal = false
+    @State var selectedTrainingIndex: Int?
+    @State var filteredTrainings: [TreinoModel] = []
+    @State var apresentacaoreference: FoldersViewModel?
+    @State var offsetView1: CGFloat = -2000
+    @State var offsetView2: CGFloat = 0
+    @State var offsetView3: CGFloat = 2000
+
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
     @Query var folders: [PastaModel]
     
     var body: some View {
-        NavigationSplitView (columnVisibility: $columnVisibility){
-            VStack {
-                //titulo principal
-                HStack {
-                    Text("Minhas Apresentações")
-                        .foregroundStyle(.black)
-                        .font(.title)
-                        .bold()
-                    Spacer()
-                }
-                .padding(.horizontal, 12)
-
-                //searchbar
-                HStack {
-                    SearchBar(searchText: $searchText, isSearching: $isSearching, disableTextfield: $disableTextfield)
-                        //roda a funcao que buscar os folders filtrados toda vez ue textfiled muda de valor
-                        .onChange(of: searchText) { oldValue, newValue in
-                            searchVM.searchFolders(allFolders: folders, searchText: searchText)
-                        }
-                }
-                .padding(.vertical, 8)
-                .padding(.horizontal, 12)
-
-                
-                //se estiver pesquisando aparece outro foraeach
-                if isSearching {
-                    // se nao tiver vazio roda isso, se nao um texto "nenhum resultado"
-                    if !searchVM.filteredFolders.isEmpty {
-                        ScrollView {
-                            ForEach(searchVM.filteredFolders) { folder in
-                                NavigationLink {
-                                    if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                        PastaView(folderVM: folderVM)
-                                    } else {
-                                        Text("ViewModel não encontrada para esta pasta")
+        ZStack {
+//             quando clicar no botao abre uma zstack sobre toda a pastaview, ou seja, a "modal"
+                    if isShowingModal {
+                        HStack {
+                            Spacer()
+                            //botao de retornar uma view
+                            Button {
+                                withAnimation {
+                                    if selectedTrainingIndex! < filteredTrainings.count - 1 {
+                                        selectedTrainingIndex! += 1
                                     }
-                                } label: {
-                                    SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
-                                        .onHover { hovering in
-                                            overText = hovering ? folder.id : nil
-                                            backgroundHighlitedFolder = hovering ? folder.id : nil
-                                        }
-                                        .contextMenu {
-                                            Button {
-                                                print("menu apertado")
-                                            } label: {
-                                                Text("oiiii")
+                                }
+                            } label: {
+                                Image(systemName: "chevron.backward.circle.fill")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+
+                            }
+                            .disabled(selectedTrainingIndex! == filteredTrainings.count - 1 ? true : false)
+                            .buttonStyle(.plain)
+                            .padding()
+                            ZStack(alignment: .top) {
+//                                sombra
+                                Color.black
+                                    .frame(maxHeight: .infinity)
+                                    .frame(width: 958)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .offset(y: 25)
+                                    .offset(x: offsetView1)
+                                    .zIndex(0)
+                                    .blur(radius: 3)
+                                    .opacity(0.6)
+                                
+                                TreinoView(folderVM: apresentacaoreference!, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
+                                    .frame(maxHeight: .infinity)
+                                    .frame(width: 958)
+                                    .background(Color("light_LighterGray"))
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .offset(y: 25)
+                                    .offset(x: offsetView1)
+                                    .zIndex(1)
+                                    .onChange(of: selectedTrainingIndex) { oldValue, newValue in
+                                        guard let previewsIndex = oldValue else { return }
+                                        guard let afterIndex = newValue else { return }
+
+                                        if previewsIndex < afterIndex {
+                                            withAnimation(.easeInOut(duration: 0.5)) {
+                                                offsetView1 = 0
+                                            }
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                                offsetView1 = -2000
                                             }
                                         }
-                                }
-                                .buttonStyle(.plain)
+                                    }
+                                Color.black
+                                    .frame(maxHeight: .infinity)
+                                    .frame(width: 958)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .offset(y: 25)
+                                    .offset(x: offsetView2)
+                                    .zIndex(0)
+                                    .blur(radius: 3)
+                                    .opacity(0.6)
+
+                                TreinoView(folderVM: apresentacaoreference!, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
+                                    .frame(maxHeight: .infinity)
+                                    .frame(width: 958)
+                                    .background(Color("light_LighterGray"))
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .offset(y:25)
+                                    .offset(x: offsetView2)
+                                    .onChange(of: selectedTrainingIndex) { oldValue, newValue in
+                                        guard let previewsIndex = oldValue else { return }
+                                        guard let afterIndex = newValue else { return }
+                                        if previewsIndex < afterIndex {
+
+                                            withAnimation(.easeInOut(duration: 0.5)) {
+                                                offsetView2 = 2000
+                                            }
+
+                                            // Aguarde um tempo para que a animação seja concluída
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                                offsetView2 = 0
+                                            }
+                                        } else {
+                                            withAnimation(.easeInOut(duration: 0.5)) {
+                                                offsetView2 = -2000
+                                            }
+
+                                            // Aguarde um tempo para que a animação seja concluída
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                                offsetView2 = 0
+                                            }
+                                        }
+                                    }
+                                Color.black
+                                    .frame(maxHeight: .infinity)
+                                    .frame(width: 958)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .offset(y: 25)
+                                    .offset(x: offsetView3)
+                                    .zIndex(0)
+                                    .blur(radius: 3)
+                                    .opacity(0.6)
+                                TreinoView(folderVM: apresentacaoreference!, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
+                                    .frame(maxHeight: .infinity)
+                                    .frame(width: 958)
+                                    .background(Color("light_LighterGray"))
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .offset(y: 25)
+                                    .offset(x: offsetView3)
+                                    .zIndex(1)
+                                    .onChange(of: selectedTrainingIndex) { oldValue, newValue in
+                                        guard let previewsIndex = oldValue else { return }
+                                        guard let afterIndex = newValue else { return }
+
+                                        if previewsIndex > afterIndex {
+                                            withAnimation(.easeInOut(duration: 0.5)) {
+                                                offsetView3 = 0
+                                            }
+
+                                            // Aguarde um tempo para que a animação seja concluída
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                                offsetView3 = 2000
+                                            }
+                                        }
+                                    }
                             }
+                            // botao de passar uma view
+                            Button {
+                                withAnimation {
+                                    if selectedTrainingIndex! > 0 {
+                                        selectedTrainingIndex! -= 1
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "chevron.right.circle.fill")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                            }
+                            .buttonStyle(.plain)
+                            .disabled(selectedTrainingIndex == 0  ? true : false)
+                            .padding()
+                            Spacer()
+                        }
+                        .zIndex(1)
+                    }
+            
+            
+            
+            NavigationSplitView (columnVisibility: $columnVisibility){
+                VStack {
+                    //titulo principal
+                    HStack {
+                        Text("Minhas Apresentações")
+                            .foregroundStyle(.black)
+                            .font(.title)
+                            .bold()
+                        Spacer()
+                    }
+                    .padding(.horizontal, 12)
+                    
+                    //searchbar
+                    HStack {
+                        SearchBar(searchText: $searchText, isSearching: $isSearching, disableTextfield: $disableTextfield)
+                        //roda a funcao que buscar os folders filtrados toda vez ue textfiled muda de valor
+                            .onChange(of: searchText) { oldValue, newValue in
+                                searchVM.searchFolders(allFolders: folders, searchText: searchText)
+                            }
+                    }
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                    
+                    
+                    //se estiver pesquisando aparece outro foraeach
+                    if isSearching {
+                        // se nao tiver vazio roda isso, se nao um texto "nenhum resultado"
+                        if !searchVM.filteredFolders.isEmpty {
+                            ScrollView {
+                                ForEach(searchVM.filteredFolders) { folder in
+                                    NavigationLink {
+                                        if let folderVM = presentationVM.foldersViewModels[folder.id] {
+                                            PastaView(folderVM: folderVM, isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex, filteredTrainings: $filteredTrainings)
+                                                .onAppear(perform: {
+                                                    apresentacaoreference = folderVM
+                                                })
+
+                                        } else {
+                                            Text("ViewModel não encontrada para esta pasta")
+                                        }
+                                    } label: {
+                                        SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
+                                            .onHover { hovering in
+                                                overText = hovering ? folder.id : nil
+                                                backgroundHighlitedFolder = hovering ? folder.id : nil
+                                            }
+                                            .contextMenu {
+                                                Button {
+                                                    print("menu apertado")
+                                                } label: {
+                                                    Text("oiiii")
+                                                }
+                                            }
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                        } else {
+                            Text("Nenhum Resultado")
+                                .font(.title2)
+                                .bold()
                         }
                     } else {
-                        Text("Nenhum Resultado")
-                            .font(.title2)
-                            .bold()
-                    }
-                } else {
-                    //lista principal
-                    if !folders.isEmpty {
-                        ScrollView {
-                            ForEach(folders) { folder in
-                                NavigationLink {
-                                    if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                        PastaView(folderVM: folderVM)
-                                            
-                                    } else {
-                                        Text("ViewModel não encontrada para esta pasta")
-                                    }
-                                } label: {
-                                    SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
-                                        .onHover { hovering in
-                                            overText = hovering ? folder.id : nil
-                                            backgroundHighlitedFolder = hovering ? folder.id : nil
+                        //lista principal
+                        if !folders.isEmpty {
+                            ScrollView {
+                                ForEach(folders) { folder in
+                                    NavigationLink {
+                                        if let folderVM = presentationVM.foldersViewModels[folder.id] {
+                                            PastaView(folderVM: folderVM, isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex, filteredTrainings: $filteredTrainings)
+                                                .onAppear(perform: {
+                                                    apresentacaoreference = folderVM
+                                                })
+                                        } else {
+                                            Text("ViewModel não encontrada para esta pasta")
                                         }
-                                        .contextMenu {
-                                            Group {
-                                                Button {
-                                                    withAnimation {
-                                                        presentationVM.deleteFolder(folder)
+                                    } label: {
+                                        SiderbarFolderComponent(foldersDate: folder.data, foldersName: folder.nome, foldersTrainingAmount: folder.treinos.count, foldersObjetiveTime: folder.tempoDesejado, foldersType: folder.objetivoApresentacao, backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
+                                            .onHover { hovering in
+                                                overText = hovering ? folder.id : nil
+                                                backgroundHighlitedFolder = hovering ? folder.id : nil
+                                            }
+                                            .contextMenu {
+                                                Group {
+                                                    Button {
+                                                        withAnimation {
+                                                            presentationVM.deleteFolder(folder)
+                                                        }
+                                                    } label: {
+                                                        Text("Apagar")
                                                     }
-                                                } label: {
-                                                    Text("Apagar")
-                                                }
-                                                Button {
-                                                    print("menu apertado")
-                                                } label: {
-                                                    Text("Editar")
-                                                }
-                                                Divider()
-                                                Button {
-                                                    print("menu apertado")
-                                                } label: {
-                                                    Text("Selecionar")
+                                                    Button {
+                                                        print("menu apertado")
+                                                    } label: {
+                                                        Text("Editar")
+                                                    }
+                                                    Divider()
+                                                    Button {
+                                                        print("menu apertado")
+                                                    } label: {
+                                                        Text("Selecionar")
+                                                    }
                                                 }
                                             }
-                                        }
+                                        
+                                    }
+                                    .buttonStyle(.plain)
                                     
                                 }
-                                .buttonStyle(.plain)
-                                
                             }
+                        } else {
+                            Text("Nenhuma Apresentação")
+                                .font(.title2)
+                                .bold()
                         }
-                    } else {
-                        Text("Nenhuma Apresentação")
-                            .font(.title2)
-                            .bold()
+                    }
+                    
+                    Spacer()
+                    
+                    Button {
+                        isModalPresented.toggle()
+                    } label: {
+                        HStack {
+                            Image(systemName: "play.fill")
+                                .foregroundStyle(.black)
+                            Text("Nova apresentação")
+                                .foregroundStyle(.black)
+                        }
+                        .padding(.horizontal, 40)
+                        .padding(.vertical, 10)
+                        .background(.white)
+                        .containerShape(RoundedRectangle(cornerRadius: 10))
+                        
+                        
+                    }
+                    .buttonStyle(.plain)
+                    
+                }
+                //remove aquela parada de fechar a searchbar
+                .toolbar(removing: .sidebarToggle)
+                .navigationSplitViewColumnWidth(min: 300, ideal: 300, max: 300)
+                //remove aquele contorno azul quando esta usando algum elemento interagível
+                .focusable(false)
+                .background(.secondary)
+                //minha intencao era quando clicar em qualquer lugar que nao seja o textfield desativa ele, mas nao funcionou e vou deixar aqui
+                .onTapGesture {
+                    if !isSearching {
+                        disableTextfield = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            disableTextfield = false
+                        }
                     }
                 }
+                .navigationSplitViewStyle(.balanced)
+                .blur(radius: isShowingModal ? 3 : 0)
+                .disabled(isShowingModal ? true : false)
+                .onTapGesture {
+                    if isShowingModal {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            isShowingModal.toggle()
+                        }
+                    }
+                }
+            } detail: {
                 
-                Spacer()
-                
-                Button {
-                    isModalPresented.toggle()
-                } label: {
-                    HStack {
-                        Image(systemName: "play.fill")
-                            .foregroundStyle(.black)
-                        Text("Nova apresentação")
-                            .foregroundStyle(.black)
-                    }
-                    .padding(.horizontal, 40)
-                    .padding(.vertical, 10)
-                    .background(.white)
-                    .containerShape(RoundedRectangle(cornerRadius: 10))
-
-
-                }
-                .buttonStyle(.plain)
-
             }
-            //remove aquela parada de fechar a searchbar
-            .toolbar(removing: .sidebarToggle)
-            .navigationSplitViewColumnWidth(min: 300, ideal: 300, max: 300)
-            //remove aquele contorno azul quando esta usando algum elemento interagível
-            .focusable(false)
-            .background(.secondary)
-            //minha intencao era quando clicar em qualquer lugar que nao seja o textfield desativa ele, mas nao funcionou e vou deixar aqui
-            .onTapGesture {
-                if !isSearching {
-                    disableTextfield = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        disableTextfield = false
-                    }
-                }
-            }
-            .navigationSplitViewStyle(.balanced)
-
-        } detail: {
-
         }
         //abrir a sidebar sempre
         //https://stackoverflow.com/questions/77794673/disable-collapsing-sidebar-navigationsplitview

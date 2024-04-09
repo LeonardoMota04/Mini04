@@ -17,13 +17,10 @@ struct PastaView: View {
     
     // EDITAR NOME DA PASTA
     @State private var editedName: String = ""
-    @State private var isShowingModal = false
+    @Binding var isShowingModal: Bool
     
-    @State private var selectedTrainingIndex: Int?
-    @State var filteredTrainings: [TreinoModel] = []
-    @State var offsetView1: CGFloat = -2000
-    @State var offsetView2: CGFloat = 0
-    @State var offsetView3: CGFloat = 2000
+    @Binding var selectedTrainingIndex: Int?
+    @Binding var filteredTrainings: [TreinoModel]
     
     var screenResChanged = NotificationCenter.default.publisher(for: NSApplication.didChangeScreenParametersNotification)
     @State var oldScreenSize = NSSize.zero
@@ -34,136 +31,7 @@ struct PastaView: View {
         NavigationStack {
             GeometryReader { geo in
                 ZStack {
-                    // quando clicar no botao abre uma zstack sobre toda a pastaview, ou seja, a "modal"
-                    if isShowingModal {
-                        HStack {
-                            Spacer()
-                            //botao de retornar uma view
-                            Button {
-                                withAnimation {
-                                    if selectedTrainingIndex! < filteredTrainings.count - 1 {
-                                        selectedTrainingIndex! += 1
-                                    }
-                                }
-                            } label: {
-                                Image(systemName: "chevron.backward.circle.fill")
-                                    .resizable()
-                                    .frame(width: 50, height: 50)
-                                
-                            }
-                            .disabled(selectedTrainingIndex! == filteredTrainings.count - 1 ? true : false)
-                            .buttonStyle(.plain)
-                            .padding()
-                            ZStack(alignment: .top) {
-                                //sombra
-                                //                                Color.black
-                                //                                    .frame(maxHeight: .infinity)
-                                //                                    .frame(width: 800)
-                                //                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                //                                    .offset(y:25)
-                                //                                    .blur(radius: 3)
-                                
-                                //                            if let selectedTrainingIndex = selectedTrainingIndex, selectedTrainingIndex < filteredTrainings.count - 1 {
-                                TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
-                                    .frame(maxHeight: .infinity)
-                                    .frame(width: 958)
-                                    .background(Color("light_LighterGray"))
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    .offset(y: 25)
-                                    .offset(x: offsetView1)
-                                    .zIndex(1)
-                                    .onChange(of: selectedTrainingIndex) { oldValue, newValue in
-                                        guard let previewsIndex = oldValue else { return }
-                                        guard let afterIndex = newValue else { return }
-                                        
-                                        if previewsIndex < afterIndex {
-                                            withAnimation(.easeInOut(duration: 0.5)) {
-                                                offsetView1 = 0
-                                            }
-                                            // Aguarde um tempo para que a animação seja concluída
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                                offsetView1 = -2000
-                                            }
-                                        }
-                                        //
-                                    }
-                                
-                                TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
-                                    .frame(maxHeight: .infinity)
-                                    .frame(width: 958)
-                                    .background(Color("light_LighterGray"))
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    .offset(y:25)
-                                    .offset(x: offsetView2)
-                                    .onChange(of: selectedTrainingIndex) { oldValue, newValue in
-                                        guard let previewsIndex = oldValue else { return }
-                                        guard let afterIndex = newValue else { return }
-                                        if previewsIndex < afterIndex {
-                                            
-                                            withAnimation(.easeInOut(duration: 0.5)) {
-                                                offsetView2 = 2000
-                                            }
-                                            
-                                            // Aguarde um tempo para que a animação seja concluída
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                                offsetView2 = 0
-                                            }
-                                        } else {
-                                            withAnimation(.easeInOut(duration: 0.5)) {
-                                                offsetView2 = -2000
-                                            }
-                                            
-                                            // Aguarde um tempo para que a animação seja concluída
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                                offsetView2 = 0
-                                            }
-                                        }
-                                    }
-                                //                            if let selectedTrainingIndex = selectedTrainingIndex, selectedTrainingIndex > 0 {
-                                TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
-                                    .frame(maxHeight: .infinity)
-                                    .frame(width: 958)
-                                    .background(Color("light_LighterGray"))
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    .offset(y: 25)
-                                    .offset(x: offsetView3)
-                                    .zIndex(1)
-                                    .onChange(of: selectedTrainingIndex) { oldValue, newValue in
-                                        guard let previewsIndex = oldValue else { return }
-                                        guard let afterIndex = newValue else { return }
-                                        
-                                        if previewsIndex > afterIndex {
-                                            withAnimation(.easeInOut(duration: 0.5)) {
-                                                offsetView3 = 0
-                                            }
-                                            
-                                            // Aguarde um tempo para que a animação seja concluída
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                                offsetView3 = 2000
-                                            }
-                                        }
-                                        //                                    }
-                                    }
-                            }
-                            // botao de passar uma view
-                            Button {
-                                withAnimation {
-                                    if selectedTrainingIndex! > 0 {
-                                        selectedTrainingIndex! -= 1
-                                    }
-                                }
-                            } label: {
-                                Image(systemName: "chevron.right.circle.fill")
-                                    .resizable()
-                                    .frame(width: 50, height: 50)
-                            }
-                            .buttonStyle(.plain)
-                            .disabled(selectedTrainingIndex == 0  ? true : false)
-                            .padding()
-                            Spacer()
-                        }
-                        .zIndex(1)
-                    }
+
                     VStack(alignment:.leading) {
                         // infos da pasta
                         // NOME DA PASTA
