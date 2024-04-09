@@ -88,7 +88,6 @@ struct PastaView: View {
                                         }
                                         //
                                     }
-                                
                                 TreinoView(folderVM: folderVM, trainingVM: TreinoViewModel(treino: filteredTrainings[selectedTrainingIndex!]), isShowingModal: $isShowingModal)
                                     .frame(maxHeight: .infinity)
                                     .frame(width: 958)
@@ -203,17 +202,21 @@ struct PastaView: View {
                                 Color(.clear) // colocando algo tranparente para ficar ao lado da AvaregeTimeFeedBackView
                                     .frame(maxWidth: geo.size.width * 0.21, maxHeight: 10)
                                 // TODO: REAVALIAR ESSA LOGICA AQUI DA COESA NA *PASTA*
-                                if  (folderVM.folder.treinos.isEmpty || ((folderVM.folder.treinos.last?.feedback?.coherenceValues.isEmpty) != nil)) { //TODO: resolver essa logica na viewModel ou model - garatindo que nao vai crachar o app se o index nao existir
-                                    CohesionExtendView(fluidProgress: 0,
-                                                     organizationProgress: 0,
-                                                     connectionProgress: 0,
-                                                     widthFrame: geo.size.width, heightFrame: geo.size.height)
-                                } else {
-                                    CohesionExtendView(fluidProgress: folderVM.folder.treinos.last?.feedback?.coherenceValues[0] ?? 1,
-                                                       organizationProgress: folderVM.folder.treinos.last?.feedback?.coherenceValues[1] ?? 1,
-                                                       connectionProgress:  folderVM.folder.treinos.last?.feedback?.coherenceValues[2] ?? 1,
-                                                     widthFrame: geo.size.width, heightFrame: geo.size.height)
-                                }
+//                                if  (folderVM.folder.treinos.isEmpty || ((folderVM.folder.treinos.last?.feedback?.coherenceValues.isEmpty) != nil)) { //TODO: resolver essa logica na viewModel ou model - garatindo que nao vai crachar o app se o index nao existir
+//                                    CohesionExtendView(fluidProgress: 0,
+//                                                     organizationProgress: 0,
+//                                                     connectionProgress: 0,
+//                                                     widthFrame: geo.size.width, heightFrame: geo.size.height)
+//                                } else {
+//                                    CohesionExtendView(fluidProgress: folderVM.folder.treinos.last?.feedback?.coherenceValues[0] ?? 1,
+//                                                       organizationProgress: folderVM.folder.treinos.last?.feedback?.coherenceValues[1] ?? 1,
+//                                                       connectionProgress:  folderVM.folder.treinos.last?.feedback?.coherenceValues[2] ?? 1,
+//                                                     widthFrame: geo.size.width, heightFrame: geo.size.height)
+//                                }
+                                CohesionExtendView(fluidProgress: folderVM.avaregeCohesionFeedback().fluid,
+                                                   organizationProgress: folderVM.avaregeCohesionFeedback().organization,
+                                                                  connectionProgress: folderVM.avaregeCohesionFeedback().conection,
+                                                                  widthFrame: geo.size.width, heightFrame: geo.size.height)
                                 ObjectiveApresentationView(widthFrame: geo.size.width, heightFrame: geo.size.height)
                             }
                             .padding(.top, geo.size.height * 0.1423 + 5) // padding para organizar os elementos pois estao em cima um do outro
@@ -296,6 +299,31 @@ struct PastaView: View {
         }
         .sheet(isPresented: $isModalPresented) {
             FolderInfoModalView(isModalPresented: $isModalPresented)
+        }
+        .toolbar() {
+            ToolbarItem() {
+                Menu {
+                    Button {
+                        
+                    } label: {
+                        Text("Editar Apresentação")
+                    }
+                    Button {
+                        
+                    } label: {
+                        Text("Excluir Apresentação")
+                    }
+                    Divider()
+                    // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
+                    NavigationLink {
+                        RecordingVideoView(folderVM: folderVM)
+                    } label: {
+                        Text("Adicionar novo treino")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle.fill")
+                }
+            }
         }
     }
     // UPDATE Nome da pasta e seus treinos
