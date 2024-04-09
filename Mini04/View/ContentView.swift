@@ -21,7 +21,8 @@ struct ContentView: View {
     @State private var backgroundHighlitedFolder: UUID? = nil
     @State var disableTextfield = false
     @State private var columnVisibility = NavigationSplitViewVisibility.automatic
-
+    @State private var selectedPresentationID: UUID?
+    
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
     @Query var folders: [PastaModel]
@@ -59,7 +60,7 @@ struct ContentView: View {
                             ForEach(searchVM.filteredFolders) { folder in
                                 NavigationLink {
                                     if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                        PastaView(folderVM: folderVM)
+                                        PastaView(folderVM: folderVM, selectedFolderID: $selectedPresentationID)
                                     } else {
                                         Text("ViewModel não encontrada para esta pasta")
                                     }
@@ -97,8 +98,8 @@ struct ContentView: View {
                             ForEach(folders) { folder in
                                 NavigationLink {
                                     if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                        PastaView(folderVM: folderVM)
-                                            
+                                        PastaView(folderVM: folderVM, selectedFolderID: $selectedPresentationID)
+
                                     } else {
                                         Text("ViewModel não encontrada para esta pasta")
                                     }
@@ -116,6 +117,9 @@ struct ContentView: View {
                                         .contextMenu {
                                             Group {
                                                 Button {
+                                                    if let selectedPresentationID = selectedPresentationID, selectedPresentationID == folder.id {
+                                                        self.selectedPresentationID = nil
+                                                    }
                                                     withAnimation {
                                                         presentationVM.deleteFolder(folder)
                                                     }
@@ -129,9 +133,8 @@ struct ContentView: View {
                                                 }
                                                 Divider()
                                                 Button {
-                                                    print("menu apertado")
                                                 } label: {
-                                                    Text("Selecionar")
+                                                    Text("To na pasta tal")
                                                 }
                                             }
                                         }

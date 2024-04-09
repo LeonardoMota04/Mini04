@@ -9,12 +9,18 @@ import SwiftUI
 import SwiftData
 
 struct PastaView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    
     // VM
     @ObservedObject var folderVM: FoldersViewModel
     @State private var isModalPresented = true // Modal sempre será apresentado ao entrar na view
     
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
+    
+    // SABER QUAL PASTA ESTAMOS
+    @Binding var selectedFolderID: UUID?
     
     // EDITAR NOME DA PASTA
     @State private var editedName: String = ""
@@ -258,7 +264,14 @@ struct PastaView: View {
                 }
             }
             .padding()
+            .onChange(of: selectedFolderID) { _, newValue in
+                if newValue == nil {
+                    dismiss()
+                }
+            }
             .onAppear {
+                selectedFolderID = folderVM.folder.id
+                
                 // resizeble
                 currentScreenSize = (NSScreen.main?.visibleFrame.size)!
                 oldScreenSize = currentScreenSize
