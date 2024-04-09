@@ -9,12 +9,16 @@ import SwiftUI
 import SwiftData
 
 struct PastaView: View {
+    @Environment(\.dismiss) private var dismiss
+
     // VM
     @ObservedObject var folderVM: FoldersViewModel
-    @State private var isModalPresented = true // Modal sempre será apresentado ao entrar na view
     
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
+    
+    // SABER QUAL PASTA ESTAMOS
+    @Binding var selectedFolderID: UUID?
     
     // EDITAR NOME DA PASTA
     @State private var editedName: String = ""
@@ -227,23 +231,17 @@ struct PastaView: View {
                             }
                         }
                         .padding(EdgeInsets(top: 40, leading: 0, bottom: 55, trailing: 0))
-                        // MARK: FeedBacks -
                         
-                        Spacer()
                         
-                        if folderVM.folder.treinos.isEmpty {
-                            Text("Adicione um treino para começar")
+                        HStack {
+                            Spacer()
+                            if folderVM.folder.treinos.isEmpty {
+                                ContentUnavailableView("Adicione um treino para começar", systemImage: "folder.fill.badge.questionmark")
+                            }
+                            Spacer()
                         }
-                        
+                        .padding(.bottom, 80)
                         Spacer()
-                        
-                        // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
-                        NavigationLink {
-                            RecordingVideoView(folderVM: folderVM)
-                        } label: {
-                            Text("Novo Treino")
-                        }
-                        // exibe todos os treinos
                     }
                     .padding(.horizontal, 55)
                     .blur(radius: isShowingModal ? 3 : 0)
@@ -258,7 +256,14 @@ struct PastaView: View {
                 }
             }
             .padding()
+            .onChange(of: selectedFolderID) { _, newValue in
+                if newValue == nil {
+                    dismiss()
+                }
+            }
             .onAppear {
+                selectedFolderID = folderVM.folder.id
+                
                 // resizeble
                 currentScreenSize = (NSScreen.main?.visibleFrame.size)!
                 oldScreenSize = currentScreenSize
@@ -284,37 +289,8 @@ struct PastaView: View {
                             currentScreenSize = tempScreenSize ?? NSSize.zero
                         }
                     })
-            .sheet(isPresented: $isModalPresented) {
-                FolderInfoModalView(isModalPresented: $isModalPresented)
-            }
-            .toolbar() {
-                ToolbarItem() {
-                    Menu {
-                        Button {
-                            
-                        } label: {
-                            Text("Editar Apresentação")
-                        }
-                        Button {
-                            
-                        } label: {
-                            Text("Excluir Apresentação")
-                        }
-                        Divider()
-                        // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
-                        Button {
-                           
-                        } label: {
-                            Text("Adicionar novo treino")
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis.circle.fill")
-                    }
-                }
-            }
-            //editedName = folderVM.folder.nome
-        //    folderVM.calculateAvarageTime() // TODO: arrumar isso e ver isso
         }
+        .background(Color.lightLighterGray)
         .onChange(of: folderVM.folder) { _, _ in
             // quando adicionar um novo treino atualiza o valor do tempo medio dos treinos
             folderVM.calculateAvarageTime()
@@ -324,6 +300,32 @@ struct PastaView: View {
         }
         .sheet(isPresented: $isModalPresented) {
             FolderInfoModalView(isModalPresented: $isModalPresented)
+        .toolbar() {
+            ToolbarItem() {
+                Menu {
+                    Button {
+                        
+                    } label: {
+                        Text("Editar Apresentação")
+                    }
+                    Button {
+                        selectedFolderID = nil
+                    } label: {
+                        Text("Excluir Apresentação")
+                    }
+                    Divider()
+                    // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
+                    NavigationLink {
+                        RecordingVideoView(folderVM: folderVM)
+                    } label: {
+                        Text("Adicionar novo treino")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle.fill")
+                }
+                .menuIndicator(.hidden)          
+            }
+
         }
     }
     // UPDATE Nome da pasta e seus treinos
@@ -341,24 +343,4 @@ struct PastaView: View {
         }
     }
     
-}
-
-// MARK: - MODAL DE INFORMACOES
-struct FolderInfoModalView: View {
-    @Binding var isModalPresented: Bool
-    var body: some View {
-        VStack {
-            Text("Instruções:")
-                .font(.title)
-                .padding()
-            
-            Text("pipipipi")
-                .padding()
-            
-            Button("Fechar") {
-                isModalPresented = false
-            }
-            .padding()
-        }
-    }
 }

@@ -72,7 +72,7 @@ class FoldersViewModel: ObservableObject {
     
     // MARK: - CRUD
     // CREATE
-    func createNewTraining(videoURL: URL, videoScript: String, videoTime: TimeInterval, videoTopics: [String], topicsDuration: [TimeInterval]) {
+    func createNewTraining(videoURL: URL, videoScript: String, videoTime: TimeInterval, videoTopics: [String], topicsDuration: [TimeInterval], cutSpeeches: [String], speechStart: [TimeInterval]) {
         self.showLoadingView = true
         guard let modelContext = modelContext else { return }
         DispatchQueue.main.async {
@@ -83,7 +83,9 @@ class FoldersViewModel: ObservableObject {
                                                                 script: videoScript,
                                                                 videoTime: videoTime,
                                                                 videoTopics: videoTopics,
-                                                                topicsDuration: topicsDuration),
+                                                                topicsDuration: topicsDuration,
+                                                                cutSpeeches: cutSpeeches,
+                                                                speechStart: speechStart),
                                               feedback: feedback)
                 
                 do {

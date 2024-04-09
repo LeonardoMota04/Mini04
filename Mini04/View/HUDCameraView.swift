@@ -53,7 +53,9 @@ struct HUDCameraView: View {
                                        videoScript: cameraVC.auxSpeech,
                                        videoTime: cameraVC.getVideoDuration(from: newVideoURL),
                                        videoTopics: cameraVC.speechTopicText.components(separatedBy: "//"),
-                                       topicsDuration: cameraVC.videoTopicDuration)
+                                       topicsDuration: cameraVC.videoTopicDuration,
+                                       cutSpeeches: cameraVC.speeches,
+                                       speechStart: cameraVC.startedSpeechTimes)
         }
         .onReceive(cameraVC.$finalModelDetection, perform: { result in
             if result == "0" && !cameraVC.isRecording{

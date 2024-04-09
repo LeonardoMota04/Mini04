@@ -18,7 +18,6 @@
 		269DF63F2BB8E47B00B0C629 /* MyTrainingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF63E2BB8E47B00B0C629 /* MyTrainingsView.swift */; };
 		269DF6432BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6422BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift */; };
 		269DF6472BC3667500B0C629 /* CreateFolderModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6462BC3667500B0C629 /* CreateFolderModalView.swift */; };
-		269DF6492BC4904000B0C629 /* HumClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 269DF6482BC4904000B0C629 /* HumClassifier.mlmodel */; };
 		370655E22BB1F32100B22AB0 /* HandPoseDoVH.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */; };
 		370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */; };
 		370655E62BB5009F00B22AB0 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655E52BB5009F00B22AB0 /* Extras.swift */; };
@@ -50,6 +49,9 @@
 		F19632262BAA07340086D159 /* NetworkCallsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19632252BAA07340086D159 /* NetworkCallsTests.swift */; };
 		F196322D2BAA07F10086D159 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F196322C2BAA07F10086D159 /* TestData.swift */; };
 		F1B51E002BBC3A7F000D0126 /* HumPredictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B51DFF2BBC3A7F000D0126 /* HumPredictor.swift */; };
+		F1DEAE6F2BC487E100D1BB1C /* TranscricaoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DEAE6E2BC487E100D1BB1C /* TranscricaoViewComponent.swift */; };
+		F1DEAE752BC58B6D00D1BB1C /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = F1DEAE742BC58B6D00D1BB1C /* SwiftSoup */; };
+		F1DEAE772BC58B9100D1BB1C /* HumClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F1DEAE762BC58B9100D1BB1C /* HumClassifier.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,7 +79,6 @@
 		269DF63E2BB8E47B00B0C629 /* MyTrainingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTrainingsView.swift; sourceTree = "<group>"; };
 		269DF6422BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynonymnsFeedbackTrainingView.swift; sourceTree = "<group>"; };
 		269DF6462BC3667500B0C629 /* CreateFolderModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderModalView.swift; sourceTree = "<group>"; };
-		269DF6482BC4904000B0C629 /* HumClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = HumClassifier.mlmodel; path = ../../../../../Downloads/HumClassifier.mlmodel; sourceTree = "<group>"; };
 		370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandPoseDoVH.mlmodel; sourceTree = "<group>"; };
 		370655E32BB33E1B00B22AB0 /* SiderbarFolderComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiderbarFolderComponent.swift; sourceTree = "<group>"; };
 		370655E52BB5009F00B22AB0 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
@@ -108,6 +109,8 @@
 		F19632252BAA07340086D159 /* NetworkCallsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCallsTests.swift; sourceTree = "<group>"; };
 		F196322C2BAA07F10086D159 /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		F1B51DFF2BBC3A7F000D0126 /* HumPredictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumPredictor.swift; sourceTree = "<group>"; };
+		F1DEAE6E2BC487E100D1BB1C /* TranscricaoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscricaoViewComponent.swift; sourceTree = "<group>"; };
+		F1DEAE762BC58B9100D1BB1C /* HumClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = HumClassifier.mlmodel; path = ../../../Academy/2024/HumClassifier.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +207,7 @@
 				269DF63E2BB8E47B00B0C629 /* MyTrainingsView.swift */,
 				269DF6422BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift */,
 				269DF6462BC3667500B0C629 /* CreateFolderModalView.swift */,
+				F1DEAE6E2BC487E100D1BB1C /* TranscricaoViewComponent.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -213,7 +217,7 @@
 			children = (
 				370E91EB2BA8C46400D39C27 /* HandPose1.mlmodel */,
 				370655E12BB1F32100B22AB0 /* HandPoseDoVH.mlmodel */,
-				269DF6482BC4904000B0C629 /* HumClassifier.mlmodel */,
+				F1DEAE762BC58B9100D1BB1C /* HumClassifier.mlmodel */,
 				370E91F72BA8D7E200D39C27 /* VideoModel.swift */,
 				370E91F32BA8D7BA00D39C27 /* TreinoModel.swift */,
 				2692A1F92BB25F4000EEF9AB /* SynonymModel.swift */,
@@ -344,6 +348,7 @@
 			files = (
 				370E91EA2BA8C43B00D39C27 /* HandGestureController.swift in Sources */,
 				F19632182BA8DE5A0086D159 /* OpenAIService.swift in Sources */,
+				F1DEAE772BC58B9100D1BB1C /* HumClassifier.mlmodel in Sources */,
 				269DF6432BBF2A5900B0C629 /* SynonymnsFeedbackTrainingView.swift in Sources */,
 				BA5E1A202BB3724700B9528B /* ContentView.swift in Sources */,
 				F19632162BA8DE130086D159 /* ChatGPTModels.swift in Sources */,
@@ -354,13 +359,13 @@
 				370E91FC2BA8D8FD00D39C27 /* TreinoView.swift in Sources */,
 				370E91F62BA8D7D200D39C27 /* TreinoViewModel.swift in Sources */,
 				263D73E82BA4C56F002190F4 /* SwiftDataView.swift in Sources */,
-				269DF6492BC4904000B0C629 /* HumClassifier.mlmodel in Sources */,
 				370E91FA2BA8D86D00D39C27 /* PastaView.swift in Sources */,
 				370E91F42BA8D7BA00D39C27 /* TreinoModel.swift in Sources */,
 				269DF63F2BB8E47B00B0C629 /* MyTrainingsView.swift in Sources */,
 				269DF6472BC3667500B0C629 /* CreateFolderModalView.swift in Sources */,
 				370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */,
 				370E91EE2BA8D78100D39C27 /* ApresentacaoModel.swift in Sources */,
+				F1DEAE6F2BC487E100D1BB1C /* TranscricaoViewComponent.swift in Sources */,
 				370655E22BB1F32100B22AB0 /* HandPoseDoVH.mlmodel in Sources */,
 				BA8571092BAB4FE6000FF83B /* SpeechManager.swift in Sources */,
 				370655E62BB5009F00B22AB0 /* Extras.swift in Sources */,

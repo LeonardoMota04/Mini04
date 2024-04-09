@@ -58,6 +58,12 @@ class CameraViewModel: NSObject, ObservableObject {
     // Video Player
     var videoPlayer: AVPlayer?
     
+    // Transcrições
+    var speeches: [String] = [] // Guardará os speeches
+    var startedSpeechTimes: [TimeInterval] = [] // Guardará o tempo de cada speech
+    var wordsArray: [String] = [] // Guardará todas as palavras do speech separadas
+    var allWordsTime: [TimeInterval] = [] // Guardará o tempo de todas as palavras faladas
+    
     override init() {
         super.init()
         self.handPoseModelController = HandGestureController()
@@ -254,8 +260,9 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     
     func startRecording() {
         isRecording = true
-
-
+        
+        var hasFinishedCountdown = false
+        
         // Contagem antes de iniciar a gravar
         // Timer para contagem regressiva de 3 segundos
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
@@ -271,37 +278,51 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
                 videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
                 
                 timer.invalidate()
-            }
-        }
-        
-        // Inciando o SpeechToText
-        do {
-            try self.speechManager.startRecording { text, error in
-                // verificando se o script falado nao esta vazio
-                guard let text = text else {
-                    print("String SpeechToText vazia/nil")
-                    return
+                
+                hasFinishedCountdown = true
+                
+                if hasFinishedCountdown {
+                    self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { time in
+                        self.currentTime += 1
+                        print("Tempo atual de vídeo: \(self.currentTime)")
+                    })
+                    
+                    // Inciando o SpeechToText
+                    do {
+                        try self.speechManager.startRecording { text, error in
+                            // verificando se o script falado nao esta vazio
+                            guard let text = text else {
+                                print("String SpeechToText vazia/nil")
+                                return
+                            }
+                            self.speechText = text
+                            print(text)
+                            
+                            // Função das transcrições
+                            self.getFirstWordTime(speech: self.speechText)
+                            
+                        }
+                    } catch {
+                        print(error)
+                    }
                 }
-                self.speechText = text
-                print(text)
-
             }
-        } catch {
-            print(error)
         }
-        
-        // iniciando o timer para saber o momento de cada topico
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { time in
-            self.currentTime += 1
-        })
     }
     
     func stopRecording() {
+        
+        // Transcrição
+        separateStringsFromSpeech(speech: speechText) // Separa as strings de 10 em 10 palavras
+        checkIfThereIsAnyWordsLeft()                  // checa se existem palavras restantes que não formaram um speech de 10 palavras
+        eliminateSimilarTimes()                       // Elimina tempos duplos caso o speech corrija a primeira palavra de algum speech
+        wordsArray.removeAll()                        // Remove todos os elementos de wordsArray para a próxima transcrição
+        
         isRecording = false
         // variavel para armazenar o scrip (quando da stop ele deixa a string "" e fica impossivel salva-la)
         auxSpeech = speechText
         speechManager.stopRecording()
-
+        
         guard videoFileOutput.isRecording else {
             print("Nenhuma gravação em andamento.")
             return
@@ -330,6 +351,111 @@ extension CameraViewModel: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 }
 
+// MARK: - Tudo relacionado à criação de transcrições está na extension abaixo
+
+extension CameraViewModel {
+    
+    // Função que elimina tempos duplicados por correções do SpeechToText
+    func eliminateSimilarTimes() {
+        
+        if speeches.count != startedSpeechTimes.count {
+            // Ordena os tempos em ordem crescente
+            startedSpeechTimes.sort()
+            
+            // Inicializa variáveis para armazenar os índices dos tempos a serem removidos
+            var indicesToRemove: [Int] = []
+            
+            // Itera sobre os tempos para encontrar e marcar os tempos extras
+            for i in 0..<(startedSpeechTimes.count - 1) {
+                let time1 = startedSpeechTimes[i]
+                let time2 = startedSpeechTimes[i + 1]
+                let timeDifference = abs(time2 - time1)
+                
+                // Verifica se a diferença entre os tempos é no máximo 2 segundos
+                if timeDifference <= 1.5 || time1 == time2 {
+                    // Marca o índice do próximo tempo igual para remoção
+                    indicesToRemove.append(i + 1)
+                }
+            }
+            
+            // Remove todos os tempos extras da array startedSpeechTimes pelos índices marcados
+            startedSpeechTimes = startedSpeechTimes.enumerated().filter { !indicesToRemove.contains($0.offset) }.map { $0.element }
+            
+            print("Número de speeches: \(speeches.count)\nNúmero de tempos: \(startedSpeechTimes.count)")
+        }
+        
+    }
+    
+    // MARK: Função para pegar o tempo da primeira palavra de cada discurso
+    func getFirstWordTime(speech: String) {
+        
+        var wordsArray = speech.components(separatedBy: " ") // Cria um array de string com cada palavra do discurso sendo uma string
+        
+        // Caso seja a primeira palavra do discurso, pega seu tempo
+        if wordsArray.count == 1 || wordsArray.count % 10 == 1 {
+            if currentTime == 0 {
+                startedSpeechTimes.append(currentTime)
+            } else {
+                startedSpeechTimes.append(currentTime - 1)
+            }
+        }
+    }
+    
+    // MARK: Funções chamadas APÓS já ter o speech completo
+    // Checa se o número de palavras totais do discurso é igual ao número de palavras presentes na transcrição, para identificar se sobraram palavras
+    func checkIfThereIsAnyWordsLeft() {
+        
+        var partialSpeechesCount: Int = 0 // Número de palavras que foram guardadas (de 10 em 10) do discurso. Ex.: 46 palavras ao total no discurso, essa variável guardaria 40
+        
+        for string in speeches {
+            partialSpeechesCount += string.components(separatedBy: " ").count // Número total de palavras nos speeches
+        }
+        print("Número de palavras no discurso inteiro: \(wordsArray.count)\nNúmero de palavras adicionadas até agora nos speeches: \(partialSpeechesCount)")
+        
+        // Cria uma nova string com essa "sobra", subtraindo o número de palavras das strings de 10 do número total de palavras do speech
+        if wordsArray.count != partialSpeechesCount {
+            
+            wordsArray.remove(atOffsets: IndexSet(integersIn: 0..<partialSpeechesCount))
+            let finalSpeech = wordsArray.joined(separator: " ")
+            self.speeches.append(finalSpeech)
+            
+        }
+    }
+    
+    // Forma as strings de 10 palavras APÓS ter o speech completo.
+    func separateStringsFromSpeech(speech: String) {
+        
+        wordsArray = speech.components(separatedBy: " ")
+        
+        var strings: [String] = []
+        var currentString: [String] = []
+        
+        // Caso onde são ditas menos de 10 palavras
+        if wordsArray.count < 10 {
+            
+            let currentStringText = wordsArray.joined(separator: " ")
+            strings.append(currentStringText)
+            
+            // Casos onde há mais de 10 palavras
+        } else {
+            
+            for word in wordsArray {
+                currentString.append(word)
+                
+                if currentString.count == 10 {
+                    
+                    let currentStringText = currentString.joined(separator: " ")
+                    strings.append(currentStringText)
+                    
+                    currentString = []
+                }
+            }
+        }
+        
+        speeches.append(contentsOf: strings)
+        
+    }
+}
 
 struct CameraRepresentable: NSViewRepresentable {
     @EnvironmentObject var camVM: CameraViewModel

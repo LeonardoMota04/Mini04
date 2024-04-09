@@ -18,13 +18,18 @@ class VideoModel: Identifiable {
     var videoTopics: [String]
     var topicsDuration: [TimeInterval]
     
-    init(id: UUID = UUID(), videoURL: URL, script: String, videoTime: TimeInterval, videoTopics: [String], topicsDuration: [TimeInterval]) {
+    var cutSpeeches: [String]
+    var speechStart: [TimeInterval]    // Para a transcrição, pegar o tempo onde ele começou a falar
+    
+    init(id: UUID = UUID(), videoURL: URL, script: String, videoTime: TimeInterval, videoTopics: [String], topicsDuration: [TimeInterval], cutSpeeches: [String], speechStart: [TimeInterval]) {
         self.id = id
         self.videoURL = videoURL
         self.script = script
         self.videoTime = videoTime
         self.videoTopics = videoTopics
         self.topicsDuration = topicsDuration
+        self.cutSpeeches = cutSpeeches
+        self.speechStart = speechStart
     }
     
     // Formata duração do treino para: "10:55"

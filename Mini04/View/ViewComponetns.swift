@@ -207,6 +207,8 @@ struct WordRepetitionView: View {
         let uniqueWords = Set(allRepeatedWords)
         
         RoundedRectangle(cornerRadius: 16)
+            .stroke(Color("light_Blue"), lineWidth: 2)
+            .fill(.white)
             .overlay {
                 HStack {
                     VStack(alignment: .leading) {
@@ -265,12 +267,12 @@ struct WordRepetitionView: View {
                     Spacer() // hstack
                 }
             }
-            .frame(width: widthFrame * RelativeSizes.width380.rawValue, height: isExpanded ? heightFrame *  RelativeSizes.height334.rawValue : heightFrame * RelativeSizes.height130.rawValue)
-            .onHover { over in
-                withAnimation(.spring(duration: 0.3)) {
-                    isExpanded = over
+            .onTapGesture {
+                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                    self.isExpanded.toggle()
                 }
             }
+            .frame(width: widthFrame * RelativeSizes.width380.rawValue, height: isExpanded ? heightFrame *  RelativeSizes.height334.rawValue : heightFrame * RelativeSizes.height130.rawValue)
     }
 }
 
@@ -515,7 +517,7 @@ struct CohesionExtendView: View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color("light_Blue"), lineWidth: 2)
-                .fill(Color("light_White"))
+                .fill(.white)
                 .overlay {
                     VStack(alignment: .leading) {
                         HStack(spacing: 0) {
@@ -622,7 +624,7 @@ struct ImproveApresentationView: View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color("light_Blue"), lineWidth: 2)
-                .fill(Color("light_White"))
+                .fill(.white)
                 .overlay {
                     HStack {
                         VStack(alignment: .leading) {
@@ -691,7 +693,7 @@ struct ObjectiveApresentationView: View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color("light_Blue"), lineWidth: 2)
-                .fill(Color("light_White"))
+                .fill(.white)
                 .overlay {
                     HStack {
                         VStack(alignment: .leading) {
