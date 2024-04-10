@@ -136,27 +136,6 @@ struct ContentView: View {
                                             overText = hovering ? folder.id : nil
                                             backgroundHighlitedFolder = hovering ? folder.id : nil
                                         }
-                                        .contextMenu {
-                                            Group {
-                                                Button {
-                                                    if let selectedPresentationID = selectedPresentationID, selectedPresentationID == folder.id {
-                                                        self.selectedPresentationID = nil
-                                                    }
-                                                    withAnimation {
-                                                        presentationVM.deleteFolder(folder)
-                                                    }
-                                                } label: {
-                                                    Text("Apagar")
-                                                }
-                                                Button {
-                                                    print("menu apertado")
-                                                } label: {
-                                                    Text("Editar")
-                                                }
-                                                Divider()
-                                            }
-                                        }
-                                        
                                     }
                                     .buttonStyle(.plain)
                                     
@@ -216,10 +195,11 @@ struct ContentView: View {
                     }
                 }
             } detail: {
-                
+                Color.lightLighterGray
             }
             
         }
+        .preferredColorScheme(.light)
         //abrir a sidebar sempre
         //https://stackoverflow.com/questions/77794673/disable-collapsing-sidebar-navigationsplitview
         .onChange(of: camVM.cameraGravando, { oldValue, newValue in

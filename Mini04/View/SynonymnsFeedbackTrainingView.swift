@@ -58,7 +58,7 @@ struct SynonymsFrameBoardView: View {
                
                HStack(spacing: 15) { // hstack para palavras repetidas
                    // MARK: - PALAVRAS REPETIDAS LISTADAS (MAIS REPETIDA PARA MENOS)
-                   ForEach(filteredWords, id: \.self) { repeatedWord in
+                   ForEach(filteredWords.prefix(8), id: \.self) { repeatedWord in
                        Text(repeatedWord.word)
                            .bold(selectedWord == repeatedWord.word ? true : false)
                            .foregroundStyle(selectedWord == repeatedWord.word ? (Color.lightOrange) : (Color.lightLighterOrange))

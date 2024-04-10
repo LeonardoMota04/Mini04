@@ -360,6 +360,9 @@ extension CameraViewModel {
             var indicesToRemove: [Int] = []
             
             // Itera sobre os tempos para encontrar e marcar os tempos extras
+            
+            guard !wordsArray.isEmpty && !startedSpeechTimes.isEmpty else { return }
+            
             for i in 0..<(startedSpeechTimes.count - 1) {
                 let time1 = startedSpeechTimes[i]
                 let time2 = startedSpeechTimes[i + 1]

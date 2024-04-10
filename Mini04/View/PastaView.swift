@@ -157,6 +157,7 @@ struct PastaView: View {
                 }
             }
             
+            
             .onChange(of: selectedFolderID) { _, newValue in
                 if newValue == nil {
                     dismiss()
