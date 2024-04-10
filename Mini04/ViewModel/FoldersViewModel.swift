@@ -77,7 +77,6 @@ class FoldersViewModel: ObservableObject {
         guard let modelContext = modelContext else { return }
         DispatchQueue.main.async {
             self.processFeedbacks(videoScript: videoScript) { [self] feedback in
-                feedback.coherenceValues = [90, 50, 40]
                 let newTraining = TreinoModel(name: "Treino \(folder.treinos.count + 1)",
                                               video: VideoModel(videoURL: videoURL,
                                                                 script: videoScript,
@@ -130,30 +129,15 @@ class FoldersViewModel: ObservableObject {
             }
         }
         group.notify(queue: .main) {
-            //        self.sendMessage(content: """
-            //                                              Considerando que as 3 principais características de uma apresentação coesa são: Fluidez do Discurso, Organização Lógica e Conexão entre Ideias. Me dê somente as porcentagens (sem texto explicativo, apenas as porcentagens) de cada  parâmetro (considerando que cada um vale 100% individualmente) analise a seguinte apresentação: Você sabia que 63.3 bilhões de dólares são perdidos anualmente por doenças ocupacionais como o burnout? É um problema tão grande atualmente que, no Japão, existe até uma palavra específica para descrever morte por estresse intenso no trabalho: Karoshi. Pensando nisso,  nós desenvolvemos o Be Cool!, uma solução digital que busca ajudar na organização das suas tarefas profissionais de uma maneira balanceada.
-            //
-            //                                              No Be Cool você cria uma meta de trabalho e, de acordo com cada tarefa planejada, sugerimos um tempo especial para suas atividades de lazer, porque ter esse tipo de equilíbrio na sua rotina é uma parte essencial para uma vida mais saudável.
-            //
-            //                                              Após a criação da sua meta de trabalho o Bico, nosso mascote, te ajuda a visualizar em quais atividades focar no momento - desincentivando a procrastinação ou o trabalho excessivo, já que nenhum extremo é saudável a longo prazo.
-            //
-            //                                              Quando você completa sua meta, o Be Cool salva essa memória na sua aba de conquistas e te convida a fazer uma reflexão sobre seu desempenho. Para pessoas que tem sintomas de burnout, é muito importante tirar um momento para reconhecer suas vitórias e analisar seu humor, o que pode ajudar a identificar mais cedo os sinais de alerta dessa síndrome.
-            //
-            //                                              O mais legal do Be Cool é que sua aplicação não fica só restringida ao meio profissional, já que, de acordo com os nossos estudos, ele também pode e deve ser usado durante a carreira acadêmica que, como qualquer outra, demanda um cuidado especial!
-            //
-            //                                              Pensando em todo potêncial do app, estamos trabalhando em melhorias para deixar a experiência ainda melhor! Em breve chegarão novas funcionalidades com um deisgn totalmente revisado e ainda mais intuitivo.
-            //
-            //                                              Por isso, baixe agora e fique de olho em nossas atualizações! Use o Be Cool e viva uma vida mais balanceada.
-            //                                            """) { coherenceBrute in
-//            let retornoGPT:Message = Message(role: "assistant", content: "Fluidez do Discurso: 90%\nOrganização Lógica: 95%\nConexão entre Ideias: 100%")
-//            let coherence = self.convertPorcentageCohesionFeedback(message: retornoGPT)
-            let feedback = FeedbackModel(coherence: 0, repeatedWords: repeatedWordFeedbacks, coherenceValues: [90, 70, 65])
-            completion(feedback)
+            self.sendMessage(content: "Considerando que as 3 principais características de uma apresentação coesa são: Fluidez do Discurso, Organização Lógica e Conexão entre Ideias. Me dê somente as porcentagens (sem texto explicativo, apenas as porcentagens) de cada  parâmetro (considerando que cada um vale 100% individualmente) analise a seguinte apresentação: \(videoScript)") { coherenceBrute in
+                //            let retornoGPT:Message = Message(role: "assistant", content: "Fluidez do Discurso: 90%\nOrganização Lógica: 95%\nConexão entre Ideias: 100%")
+                //            let coherence = self.convertPorcentageCohesionFeedback(message: retornoGPT)
+                let feedback = FeedbackModel(coherence: 0, repeatedWords: repeatedWordFeedbacks, coherenceValues: self.convertPorcentageCohesionFeedback(message: coherenceBrute))
+                completion(feedback)
+            }
         }
-        //    } // chaves do completion do send message
+    
     }
-    
-    
     // Função para buscar os sinônimos de uma palavra
     func fetchSynonyms(for word: String, completion: @escaping (RepeatedWordsModel?) -> Void) {
         NetworkManager.fetchData(for: word) { result in
@@ -352,4 +336,42 @@ class FoldersViewModel: ObservableObject {
         
         return (avaregeFluid,avaregeOrganization, avaregeConection)
     }
+    
+    func setObjetiveApresentation(objetiveApresentation: String) -> (phrases: [String], images: [String]) {
+         switch objetiveApresentation{
+         case "Apresentação de Eventos":
+             return (["Informar sobre os detalhes do evento, como data, local e agenda.",
+                      "Envolver a audiência na proposta de valor do evento.",
+                      "Aumentar a participação e o engajamento dos participantes.",
+                      "Comunicar de forma clara e atraente."], ["wand.and.stars", "suitcase.fill", "person.2.fill", "megaphone.fill"])
+         case "Apresentação de Vendas":
+             return (["Destacar os benefícios do produto ou serviço.",
+                      "Despertar o interesse do cliente.",
+                      "Incentivar ação, como uma compra ou inscrição.",
+                      "Comunicar de forma persuasiva e clara."], ["wand.and.stars", "suitcase.fill", "person.2.fill", "megaphone.fill"])
+         case "Apresentação de Pitch":
+             return (["Transmitir de forma convincente a ideia de negócio ou projeto.",
+                      "Destacar o problema a ser resolvido e a solução proposta.",
+                      "Apresentar o potencial de mercado e retorno do investimento.",
+                      "Atrair investidores ou parceiros."], ["wand.and.stars", "suitcase.fill", "person.2.fill", "megaphone.fill"])
+         case "Apresentação Informativa:":
+             return (["Fornecer informações relevantes e úteis sobre um tema específico.",
+                      "Garantir compreensão e assimilação do conteúdo pela audiência.",
+                      "Utilizar uma linguagem acessível e exemplos claros.",
+                      "Transmitir conhecimento de forma objetiva e direta."], ["wand.and.stars", "suitcase.fill", "person.2.fill", "megaphone.fill"])
+             
+         case "Apresentação Acadêmica":
+             return (["Apresentar pesquisa original ou tese.",
+                      "Defender argumentos de maneira estruturada e coesa.",
+                      "Compartilhar conhecimento dentro do contexto educacional.",
+                      "Persuadir e informar o público acadêmico de maneira clara e objetiva."], ["wand.and.stars", "suitcase.fill", "person.2.fill", "megaphone.fill"])
+         case "Apresentação de Projetos":
+             return (["Comunicar claramente os objetivos e escopo do projeto.",
+                      "Apresentar o cronograma e recursos disponíveis.",
+                      "Obter apoio da audiência, seja para financiamento ou alinhamento de equipe.",
+                      "Garantir entendimento completo dos aspectos técnicos e práticos do projeto.",],["wand.and.stars", "suitcase.fill", "person.2.fill", "megaphone.fill"])
+         default:
+             return ([], [])
+         }
+     }
 }
