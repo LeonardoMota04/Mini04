@@ -43,6 +43,8 @@ struct Mini04App: App {
                 .frame(minWidth: (screenSize?.width ?? 800) * (2/3), minHeight: (screenSize?.height ?? 600) * (2/3)) // Define o tamanho mínimo da janela
 
         }
+        
+//        .windowStyle(HiddenTitleBarWindowStyle())
         .modelContainer(modelContainer)
         //.modelContainer(sharedModelContainer)
     }
