@@ -17,7 +17,6 @@ struct EditingFolderModalView: View {
     @State private var newPresentation_Date: Date
     @State private var newPresentation_Duration: Int
     @State private var newPresentation_Goal: String
-    
 
     // associando as antigas informacoes
     init(folderVM: FoldersViewModel, isModalPresented: Binding<Bool>) {
@@ -30,7 +29,7 @@ struct EditingFolderModalView: View {
 
         self._isModalPresented = isModalPresented
     }
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text("Editar Apresentação")
@@ -55,7 +54,7 @@ struct EditingFolderModalView: View {
 
             HStack {
                 Spacer()
-                Button {
+                Button(action: {
                     withAnimation {
                         // se o nome foi alterado
                         if newPresentation_Name != folderVM.folder.nome {
@@ -75,10 +74,10 @@ struct EditingFolderModalView: View {
                         }
                         isModalPresented = false
                     }
-                } label: {
+                }) {
                     RoundedRectangle(cornerRadius: 16)
                         .frame(width: 140, height: 50)
-                        .foregroundColor(.lightDarkerGreen)
+                        .foregroundStyle(.lightDarkerGreen)
                         .overlay {
                             Text("Salvar Edição")
                                 .font(.title3)
@@ -87,6 +86,13 @@ struct EditingFolderModalView: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.white)
+                // desativado caso tudo esteja igual ainda
+                .disabled(
+                    (newPresentation_Name == folderVM.folder.nome) &&
+                    (newPresentation_Date == folderVM.folder.dateOfPresentation) &&
+                    (newPresentation_Duration == folderVM.folder.tempoDesejado) &&
+                    (newPresentation_Goal == folderVM.folder.objetivoApresentacao)
+                )
                 Spacer()
             }
 
@@ -97,3 +103,4 @@ struct EditingFolderModalView: View {
         .preferredColorScheme(.light)
     }
 }
+
