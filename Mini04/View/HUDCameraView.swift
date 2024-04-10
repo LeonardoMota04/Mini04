@@ -69,6 +69,8 @@ struct HUDCameraView: View {
                     cameraVC.finalModelDetection = ""
 
                 }
+            case "topicar":
+                cameraVC.createTopics()
             default:
                 break
             }

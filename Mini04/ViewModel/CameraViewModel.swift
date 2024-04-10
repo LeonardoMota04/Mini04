@@ -25,12 +25,7 @@ class CameraViewModel: NSObject, ObservableObject {
     @Published var isRecording = false
     
     @Published var handPoseModelController: HandGestureController?
-    @Published var detectedGestureModel1: String = "" {
-        // Quando detectar a mudanca de valor (uma mao na tela) ele chama a funcao de topicos
-        didSet {
-            self.createTopics(handPoseResult: detectedGestureModel1)
-        }
-    }
+    @Published var detectedGestureModel1: String = "" 
     //variável que recebe o resultado do model se for constante durante um tempo
     @Published var finalModelDetection = ""
 
@@ -163,27 +158,26 @@ class CameraViewModel: NSObject, ObservableObject {
     }
     
     // função para colocar o // no scrpit e criar topico
-    func createTopics(handPoseResult: String) {
-        if handPoseResult == "0" {
-            if speechTopicText.isEmpty {
-                speechTopicText = speechText + " //"
+    func createTopics() {
+        if speechTopicText.isEmpty {
+            speechTopicText = speechText + " //"
+            auxSpeech = speechText
+            // adicionando o tempo do topico
+            self.topicTime.append(self.currentTime)
+            
+        }  else {
+            // caso o texto nao seja o mesmo para evitar repeticoes
+            if auxSpeech != speechText {
+                let newSpeechText = substractionString(speechText, auxSpeech)
+                // adiciona as novas palavras e atualiza o texto atual na variavel auxiliar
+                speechTopicText += " //" + (newSpeechText ?? "")
                 auxSpeech = speechText
                 // adicionando o tempo do topico
                 self.topicTime.append(self.currentTime)
                 
-            }  else {
-                // caso o texto nao seja o mesmo para evitar repeticoes
-                if auxSpeech != speechText {
-                    let newSpeechText = substractionString(speechText, auxSpeech)
-                    // adiciona as novas palavras e atualiza o texto atual na variavel auxiliar
-                    speechTopicText += " //" + (newSpeechText ?? "")
-                    auxSpeech = speechText
-                    // adicionando o tempo do topico
-                    self.topicTime.append(self.currentTime)
-                    
-                }
             }
         }
+        
     }
     
     // PEGA TEXTO PÓS TOPICO
