@@ -78,6 +78,7 @@ struct trainingPresentationInfos: View {
                                 .foregroundStyle(.gray)
                         }
                         .buttonStyle(.plain)
+                        .focusable(false)
                         .padding()
                         
                         Spacer()
@@ -158,6 +159,7 @@ struct trainingPresentationInfos: View {
                             }
                     }
                     .buttonStyle(.plain)
+                    .focusable(false)
                     .foregroundStyle(.white)
                     Spacer()
                 }

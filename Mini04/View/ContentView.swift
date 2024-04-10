@@ -195,7 +195,10 @@ struct ContentView: View {
                     }
                 }
             } detail: {
-                Color.lightLighterGray
+                ZStack {
+                    Color.lightLighterGray
+                    
+                }
             }
             
         }
