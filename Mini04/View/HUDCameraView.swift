@@ -19,13 +19,51 @@ struct HUDCameraView: View {
     @State var isSaveButtonDisabled = true
     
     @State var isRecordingButtonTapped = false
+    @State var isrecTapped = false
     
+    @State var isCountingDown = false
+    @State private var countdownSeconds = 3
+    @State var timer: Timer? // Adicione um timer opcional
+    @Binding var isShowingModal: Bool
     var body: some View {
         NavigationStack {
             ZStack {
+                HStack {
+                    //crie um temporizador 00:00:00
+                    
+                    Spacer()
+                    
+                    Button {
+                        isShowingModal.toggle()
+                    } label: {
+                        Image(systemName: "questionmark.circle.fill")
+                            .foregroundStyle(Color.lightWhite)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 16)
+                }
+                
                 Button {
                     if !cameraVC.videoFileOutput.isRecording {
-                        cameraVC.startRecording()
+                        isrecTapped = true
+                        isCountingDown = true
+                        countdownSeconds = 3 // Reinicia o contador para 3 segundos
+                        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                            if countdownSeconds > 0 {
+                                countdownSeconds -= 1 // Decrementa o contador a cada segundo
+                            } else {
+                                timer?.invalidate() // Invalida o timer quando o contador chega a 0
+                                timer = nil
+                                isrecTapped = false
+                                cameraVC.startRecording()
+                                isCountingDown = false
+                            }
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
+                            isrecTapped = false
+                            cameraVC.startRecording()
+                            isCountingDown = false
+                        })
                     } else {
                         cameraVC.stopRecording() // para de gravar video
                         cameraVC.finalModelDetection = ""
@@ -38,11 +76,11 @@ struct HUDCameraView: View {
                                 RoundedRectangle(cornerRadius: 10)
                                     .stroke(lineWidth: 2)
                                     .foregroundStyle(Color.lightOrange)
-                                Image(systemName: "square.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundStyle(Color.lightOrange)
-                                    .padding(4)
+                                    Image(systemName: "square.fill")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .foregroundStyle(Color.lightOrange)
+                                        .padding(10)
                             }
                             .frame(width: 50, height: 50)
 
@@ -53,17 +91,25 @@ struct HUDCameraView: View {
                                 RoundedRectangle(cornerRadius: 10)
                                     .stroke(lineWidth: 2)
                                     .foregroundStyle(Color.lightOrange)
-                                Image(systemName: "play.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundStyle(Color.lightOrange)
-                                    .padding(4)
-
+                                if isCountingDown {
+                                    Text(String(countdownSeconds))
+                                        .foregroundStyle(Color.lightOrange)
+                                        .font(.title)
+                                        .bold()
+                                } else {
+                                    
+                                    Image(systemName: "play.fill")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .foregroundStyle(Color.lightOrange)
+                                        .padding(10)
+                                }
                             }
                             .frame(width: 50, height: 50)
                         }
                     }
                 }
+                .disabled(isrecTapped ? true : false)
 //                .disabled(isRecordingButtonTapped ? false : true)
                 .buttonStyle(.borderless)
             }
@@ -89,7 +135,23 @@ struct HUDCameraView: View {
             switch (result) {
             case "iniciar":
                 if !cameraVC.videoFileOutput.isRecording {
-                    cameraVC.startRecording()
+                    isrecTapped = true
+                    isCountingDown = true
+                    countdownSeconds = 3 // Reinicia o contador para 3 segundos
+                    timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                        if countdownSeconds > 0 {
+                            countdownSeconds -= 1 // Decrementa o contador a cada segundo
+                        } else {
+                            timer?.invalidate() // Invalida o timer quando o contador chega a 0
+                            timer = nil
+                            cameraVC.startRecording()
+                        }
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
+                        cameraVC.startRecording()
+                        isrecTapped = false
+                        isCountingDown = false
+                    })
                 }
             case "encerrar":
                 if cameraVC.videoFileOutput.isRecording {
