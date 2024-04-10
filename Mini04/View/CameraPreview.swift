@@ -19,12 +19,6 @@ struct CameraPreview : View {
                     CameraRepresentable(size: size)
                     //pverlay em cima da mao
                     CameraOverlayView(size: size)
-                    if cameraVC.countdownNumber > 0 {
-                        Text("\(cameraVC.countdownNumber)")
-                            .font(.largeTitle)
-                            .bold()
-                            .scaleEffect(2)
-                    }
                 }
             } else {
                 ProgressView()

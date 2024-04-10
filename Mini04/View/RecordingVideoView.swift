@@ -22,7 +22,7 @@ struct RecordingVideoView: View {
                 VStack {
                     CameraPreview()
                     
-                    HUDCameraView(folderVM: folderVM, isPreviewShowing: $isPreviewShowing)
+                    HUDCameraView(folderVM: folderVM, isPreviewShowing: $isPreviewShowing, isShowingModal: $isShowingModal)
                         .frame(maxWidth: reader.size.width)
                         .frame(height: reader.size.height*0.1)
                 }
@@ -34,6 +34,7 @@ struct RecordingVideoView: View {
                 trainingPresentationInfos(folderVM: folderVM, isShowingModal: $isShowingModal)
             }
         }
+        .background(Color.black)
         .onChange(of: folderVM.showLoadingView) { oldeValue, newValue in // Atualiza showLoadingView com base em folderVM.showLoadingView
             withAnimation() {
                 self.showLoadingView = newValue
