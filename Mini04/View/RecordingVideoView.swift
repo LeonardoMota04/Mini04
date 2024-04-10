@@ -116,7 +116,7 @@ struct trainingPresentationInfos: View {
                     .padding(.horizontal, 30)
                     .padding(.vertical, 48)
                     
-                // MARK: Conhecer gestos
+                    // MARK: Conhecer gestos
                 } else {
                     HStack {
                         thumbsUpView()
@@ -135,7 +135,14 @@ struct trainingPresentationInfos: View {
                     .padding(.vertical, 48)
                 }
                 
-
+            }
+            .padding(.horizontal, 20)
+            .preferredColorScheme(.light)
+            
+            VStack {
+                
+                Spacer()
+                
                 HStack {
                     Spacer()
                     Button {
@@ -161,10 +168,9 @@ struct trainingPresentationInfos: View {
                     .foregroundStyle(.white)
                     Spacer()
                 }
-                
+                .padding(.bottom, size.height / 10)
             }
-            .padding(.horizontal, 20)
-            .preferredColorScheme(.light)
+           
         }
         .frame(width: 730, height: 520)
         .background(Color.lightLighterGray)
