@@ -218,6 +218,7 @@ struct ContentView: View {
             } detail: {
                 
             }
+            
         }
         //abrir a sidebar sempre
         //https://stackoverflow.com/questions/77794673/disable-collapsing-sidebar-navigationsplitview

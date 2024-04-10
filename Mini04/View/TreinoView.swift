@@ -175,7 +175,7 @@ struct TreinoView: View {
                 }
                 .onAppear {
                     editedName = trainingVM.treino.nome
-                    print(trainingVM.treino.video?.videoTopics)
+//                    print(trainingVM.treino.video?.videoTopics)
                 }
             }
         }

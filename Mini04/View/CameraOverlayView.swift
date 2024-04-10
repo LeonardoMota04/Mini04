@@ -90,21 +90,19 @@ struct CameraOverlayView: View {
                     // No código onde você incrementa o progresso
                     if modelDetection == lastDetectedModel {
                         consecutiveDetectionCount += 1
-                        withAnimation {
-                            progress += progressIncrement
-                        }
+                        progress = min(progress + progressIncrement, 1.0) // Garante que o progresso não ultrapasse 1.0
                     } else {
                         // Se não for igual, resetamos o contador e atualizamos o último modelo detectado
-                        consecutiveDetectionCount = 0
-                        progress = 0
-                        lastDetectedModel = modelDetection
+                        consecutiveDetectionCount = 1 // Reinicia a contagem para 1
+                        progress = progressIncrement // Reinicia o progresso para o incremento inicial
+                        lastDetectedModel = modelDetection // Atualiza o último modelo detectado
                     }
-                    
-                    // Verifica se o contador atingiu 50 detecções consecutivas
-                    if consecutiveDetectionCount >= 20 {
+
+                    if consecutiveDetectionCount >= totalConsecutiveDetections {
                         // Coloque o código que você quer executar aqui
                         camVM.finalModelDetection = modelDetection
                         // Aumenta o valor da variável progress em 2
+                        progress = 1.0 // Define o progresso como completo (1.0)
                         
                         pauseOverlay = true
 
@@ -114,17 +112,18 @@ struct CameraOverlayView: View {
                         }
 
                         withAnimation(.easeOut(duration: 0.1)) {
-                            progress = 0
+                            progress = 0 // Reinicia o progresso após o preenchimento completo
                         }
-                        
-                        consecutiveDetectionCount = 0
-                        lastDetectedModel = nil
+
+                        consecutiveDetectionCount = 0 // Reinicia a contagem de detecções consecutivas
+                        lastDetectedModel = nil // Reseta o último modelo detectado
                     } else if consecutiveDetectionCount == 0 {
                         // Se o contador for zerado, também zera a variável progress
                         withAnimation(.easeOut(duration: 0.1)) {
-                            progress = 0
+                            progress = 0 // Reinicia o progresso se não houver detecções consecutivas
                         }
                     }
+
                 } else {
                     withAnimation(.easeOut(duration: 0.1)) {
                         isHandTrackingActive = false
