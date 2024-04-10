@@ -114,7 +114,9 @@ struct TrainingCellsView: View {
                 .buttonStyle(PlainButtonStyle())
                 .contextMenu {
                     Button("Apagar") {
-                        folderVM.deleteTraining(training)
+                        withAnimation {
+                            folderVM.deleteTraining(training)
+                        }
                     }
                 }
             }
