@@ -18,7 +18,7 @@ struct HUDCameraView: View {
     @Binding var isPreviewShowing: Bool
     @State var isSaveButtonDisabled = true
     
-    
+    @State var isRecordingButtonTapped = false
     
     var body: some View {
         NavigationStack {
@@ -32,11 +32,39 @@ struct HUDCameraView: View {
 
                     }
                 } label: {
-                    ZStack {
-                        Circle()
-                            .foregroundStyle(cameraVC.videoFileOutput.isRecording ? .gray : .red)
+                    if cameraVC.videoFileOutput.isRecording {
+                        withAnimation {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(lineWidth: 2)
+                                    .foregroundStyle(Color.lightOrange)
+                                Image(systemName: "square.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundStyle(Color.lightOrange)
+                                    .padding(4)
+                            }
+                            .frame(width: 50, height: 50)
+
+                        }
+                    } else {
+                        withAnimation {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(lineWidth: 2)
+                                    .foregroundStyle(Color.lightOrange)
+                                Image(systemName: "play.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundStyle(Color.lightOrange)
+                                    .padding(4)
+
+                            }
+                            .frame(width: 50, height: 50)
+                        }
                     }
                 }
+//                .disabled(isRecordingButtonTapped ? false : true)
                 .buttonStyle(.borderless)
             }
         }
@@ -58,11 +86,31 @@ struct HUDCameraView: View {
                                        speechStart: cameraVC.startedSpeechTimes)
         }
         .onReceive(cameraVC.$finalModelDetection, perform: { result in
-            if result == "0" && !cameraVC.isRecording{
-                
-                cameraVC.startRecording()
+            switch (result) {
+            case "iniciar":
+                if !cameraVC.videoFileOutput.isRecording {
+                    cameraVC.startRecording()
+                }
+            case "encerrar":
+                if cameraVC.videoFileOutput.isRecording {
+                    cameraVC.stopRecording()
+                    cameraVC.finalModelDetection = ""
+
+                }
+            case "topicar":
+                cameraVC.createTopics()
+            default:
+                break
             }
+            
         })
+        .onAppear {
+            isRecordingButtonTapped = true
+        }
+        .onDisappear {
+            isRecordingButtonTapped = true
+
+        }
     }
 }
 

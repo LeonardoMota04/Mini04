@@ -23,56 +23,74 @@ struct ContentView: View {
     @State private var columnVisibility = NavigationSplitViewVisibility.automatic
     @State private var selectedPresentationID: UUID?
     
+    //variável que abre a modal de treino por cima do app todo
+    @State var isShowingModal = false
+    //referencia do indice do bauglho
+    @State var selectedTrainingIndex: Int?
+    @State var filteredTrainings: [TreinoModel] = []
+    //cria uma referencia de foldervm pra isntanciar o treinoview em contentview
+    @State var apresentacaoreference: FoldersViewModel?
+    
+    
     // PERSISTENCIA
     @Environment(\.modelContext) private var modelContext
     @Query var folders: [PastaModel]
     
     var body: some View {
-        NavigationSplitView (columnVisibility: $columnVisibility){
-            VStack {
-                //titulo principal
-                HStack {
-                    Text("Minhas Apresentações")
-                        .foregroundStyle(.black)
-                        .font(.title)
-                        .bold()
-                    Spacer()
-                }
-                .padding(.horizontal, 12)
-
-                //searchbar
-                HStack {
-                    SearchBar(searchText: $searchText, isSearching: $isSearching, disableTextfield: $disableTextfield)
-                        .shadow(radius: 2)
-
+        ZStack {
+            if isShowingModal {
+                ModalTreinoView(isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex, filteredTrainings: $filteredTrainings, apresentacaoreference: $apresentacaoreference)
+            }
+            
+            
+            NavigationSplitView (columnVisibility: $columnVisibility){
+                VStack {
+                    //titulo principal
+                    HStack {
+                        Text("Minhas Apresentações")
+                            .foregroundStyle(.black)
+                            .font(.title)
+                            .bold()
+                        Spacer()
+                    }
+                    .padding(.horizontal, 12)
+                    
+                    //searchbar
+                    HStack {
+                        SearchBar(searchText: $searchText, isSearching: $isSearching, disableTextfield: $disableTextfield)
+                            .shadow(radius: 2)
+                        
                         //roda a funcao que buscar os folders filtrados toda vez ue textfiled muda de valor
-                        .onChange(of: searchText) { oldValue, newValue in
-                            searchVM.searchFolders(allFolders: folders, searchText: searchText)
-                        }
-                }
-                .padding(.vertical, 8)
-                .padding(.horizontal, 12)
-
-                
-                //se estiver pesquisando aparece outro foraeach
-                if isSearching {
-                    // se nao tiver vazio roda isso, se nao um texto "nenhum resultado"
-                    if !searchVM.filteredFolders.isEmpty {
-                        ScrollView {
-                            ForEach(searchVM.filteredFolders) { folder in
-                                NavigationLink {
-                                    if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                        PastaView(folderVM: folderVM, selectedFolderID: $selectedPresentationID)
-                                    } else {
-                                        Text("ViewModel não encontrada para esta pasta")
-                                    }
-                                } label: {
-                                    SiderbarFolderComponent(foldersDate: folder.dateOfPresentation,
-                                                            foldersName: folder.nome,
-                                                            foldersTrainingAmount: folder.treinos.count,
-                                                            foldersObjetiveTime: folder.tempoDesejado,
-                                                            foldersType: folder.objetivoApresentacao,
-                                                            backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
+                            .onChange(of: searchText) { oldValue, newValue in
+                                searchVM.searchFolders(allFolders: folders, searchText: searchText)
+                            }
+                    }
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                    
+                    
+                    //se estiver pesquisando aparece outro foraeach
+                    if isSearching {
+                        // se nao tiver vazio roda isso, se nao um texto "nenhum resultado"
+                        if !searchVM.filteredFolders.isEmpty {
+                            ScrollView {
+                                ForEach(searchVM.filteredFolders) { folder in
+                                    NavigationLink {
+                                        if let folderVM = presentationVM.foldersViewModels[folder.id] {
+                                            PastaView(folderVM: folderVM, selectedFolderID: $selectedPresentationID, isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex, filteredTrainings: $filteredTrainings)
+                                                .onAppear(perform: {
+                                                    apresentacaoreference = folderVM
+                                                })
+                                        } else {
+                                            Text("ViewModel não encontrada para esta pasta")
+                                        }
+                                    } label: {
+                                        SiderbarFolderComponent(foldersDate: folder.dateOfPresentation,
+                                                                foldersName: folder.nome,
+                                                                foldersTrainingAmount: folder.treinos.count,
+                                                                foldersObjetiveTime: folder.tempoDesejado,
+                                                                foldersType: folder.objetivoApresentacao,
+                                                                backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
                                         .onHover { hovering in
                                             overText = hovering ? folder.id : nil
                                             backgroundHighlitedFolder = hovering ? folder.id : nil
@@ -84,115 +102,111 @@ struct ContentView: View {
                                                 Text("oiiii")
                                             }
                                         }
+                                    }
+                                    .buttonStyle(.plain)
                                 }
-                                .buttonStyle(.plain)
                             }
+                        } else {
+                            Text("Nenhum Resultado")
+                                .font(.title2)
+                                .bold()
                         }
                     } else {
-                        Text("Nenhum Resultado")
-                            .font(.title2)
-                            .bold()
-                    }
-                } else {
-                    //lista principal
-                    if !folders.isEmpty {
-                        ScrollView {
-                            ForEach(folders) { folder in
-                                NavigationLink {
-                                    if let folderVM = presentationVM.foldersViewModels[folder.id] {
-                                        PastaView(folderVM: folderVM, selectedFolderID: $selectedPresentationID)
-
-                                    } else {
-                                        Text("ViewModel não encontrada para esta pasta")
-                                    }
-                                } label: {
-                                    SiderbarFolderComponent(foldersDate: folder.dateOfPresentation,
-                                                            foldersName: folder.nome,
-                                                            foldersTrainingAmount: folder.treinos.count,
-                                                            foldersObjetiveTime: folder.tempoDesejado,
-                                                            foldersType: folder.objetivoApresentacao,
-                                                            backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
+                        //lista principal
+                        if !folders.isEmpty {
+                            ScrollView {
+                                ForEach(folders) { folder in
+                                    NavigationLink {
+                                        if let folderVM = presentationVM.foldersViewModels[folder.id] {
+                                            PastaView(folderVM: folderVM, selectedFolderID: $selectedPresentationID, isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex, filteredTrainings: $filteredTrainings)
+                                                .onAppear(perform: {
+                                                    apresentacaoreference = folderVM
+                                                })
+                                        } else {
+                                            Text("ViewModel não encontrada para esta pasta")
+                                        }
+                                    } label: {
+                                        SiderbarFolderComponent(foldersDate: folder.dateOfPresentation,
+                                                                foldersName: folder.nome,
+                                                                foldersTrainingAmount: folder.treinos.count,
+                                                                foldersObjetiveTime: folder.tempoDesejado,
+                                                                foldersType: folder.objetivoApresentacao,
+                                                                backgroundHighlited: .constant(backgroundHighlitedFolder == folder.id))
                                         .onHover { hovering in
                                             overText = hovering ? folder.id : nil
                                             backgroundHighlitedFolder = hovering ? folder.id : nil
                                         }
-                                        .contextMenu {
-                                            Group {
-                                                Button {
-                                                    if let selectedPresentationID = selectedPresentationID, selectedPresentationID == folder.id {
-                                                        self.selectedPresentationID = nil
-                                                    }
-                                                    withAnimation {
-                                                        presentationVM.deleteFolder(folder)
-                                                    }
-                                                } label: {
-                                                    Text("Apagar")
-                                                }
-                                                Button {
-                                                    print("menu apertado")
-                                                } label: {
-                                                    Text("Editar")
-                                                }
-                                                Divider()
-                                            }
-                                        }
+                                    }
+                                    .buttonStyle(.plain)
                                     
                                 }
-                                .buttonStyle(.plain)
-                                
                             }
+                        } else {
+                            Text("Nenhuma Apresentação")
+                                .font(.title2)
+                                .bold()
                         }
-                    } else {
-                        Text("Nenhuma Apresentação")
-                            .font(.title2)
-                            .bold()
+                    }
+                    
+                    Spacer()
+                    
+                    Button {
+                        isModalPresented.toggle()
+                    } label: {
+                        HStack {
+                            Image(systemName: "play.fill")
+                            Text("Nova apresentação")
+                        }
+                        .padding(.horizontal, 40)
+                        .padding(.vertical, 12)
+                        .background(Color.lightDarkerGreen)
+                        .containerShape(RoundedRectangle(cornerRadius: 14))
+                        .foregroundStyle(Color.lightWhite)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.bottom)
+                    
+                }
+                .background(Color.lightWhite)
+                //remove aquela parada de fechar a searchbar
+                .toolbar(removing: .sidebarToggle)
+                .navigationSplitViewColumnWidth(min: 300, ideal: 300, max: 300)
+                //remove aquele contorno azul quando esta usando algum elemento interagível
+                .focusable(false)
+                .background(.secondary)
+                //minha intencao era quando clicar em qualquer lugar que nao seja o textfield desativa ele, mas nao funcionou e vou deixar aqui
+                .onTapGesture {
+                    if !isSearching {
+                        disableTextfield = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            disableTextfield = false
+                        }
                     }
                 }
-                
-                Spacer()
-                
-                Button {
-                    isModalPresented.toggle()
-                } label: {
-                    HStack {
-                        Image(systemName: "play.fill")
-                        Text("Nova apresentação")
+                .navigationSplitViewStyle(.balanced)
+                .navigationSplitViewStyle(.balanced)
+                .blur(radius: isShowingModal ? 3 : 0)
+                .disabled(isShowingModal ? true : false)
+                .onTapGesture {
+                    if isShowingModal {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            isShowingModal.toggle()
+                        }
                     }
-                    .padding(.horizontal, 40)
-                    .padding(.vertical, 12)
-                    .background(Color.lightDarkerGreen)
-                    .containerShape(RoundedRectangle(cornerRadius: 14))
-                    .foregroundStyle(Color.lightWhite)
                 }
-                .buttonStyle(.plain)
-                .padding(.bottom)
-
+            } detail: {
+                ZStack {
+                    Color.lightLighterGray
+                    
+                }
             }
-            .background(Color.lightWhite)
-            //remove aquela parada de fechar a searchbar
-            .toolbar(removing: .sidebarToggle)
-            .navigationSplitViewColumnWidth(min: 300, ideal: 300, max: 300)
-            //remove aquele contorno azul quando esta usando algum elemento interagível
-            .focusable(false)
-            .background(.secondary)
-            //minha intencao era quando clicar em qualquer lugar que nao seja o textfield desativa ele, mas nao funcionou e vou deixar aqui
-            .onTapGesture {
-                if !isSearching {
-                    disableTextfield = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        disableTextfield = false
-                    }
-                }
-            }
-            .navigationSplitViewStyle(.balanced)
-
-        } detail: {
-
+            
         }
+        .preferredColorScheme(.light)
         //abrir a sidebar sempre
         //https://stackoverflow.com/questions/77794673/disable-collapsing-sidebar-navigationsplitview
         .onChange(of: camVM.cameraGravando, { oldValue, newValue in
-                //                camVM.previewLayer.session?.isRunning
+            //                camVM.previewLayer.session?.isRunning
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 if newValue {
                     withAnimation(.easeInOut(duration: 0.2)) {
@@ -222,17 +236,17 @@ struct ContentView: View {
                 }
             }
         }
-
+        
         .onChange(of: columnVisibility, initial: true) { oldVal, newVal in
             DispatchQueue.main.async {
                 if newVal == .detailOnly && !camVM.cameraGravando{
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            columnVisibility = .all
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        columnVisibility = .all
                     }
                 }
             }
         }
-
+        
         .onAppear {
             presentationVM.modelContext = modelContext
             presentationVM.fetchFolders()
@@ -261,12 +275,12 @@ struct SearchBar: View {
     @Binding var searchText: String
     @Binding var isSearching: Bool
     @Binding var disableTextfield: Bool
-
+    
     var body: some View {
         ZStack {
             HStack {
                 Image(systemName: "magnifyingglass")
-
+                
                     .foregroundStyle(.gray)
                     .padding(.leading, 4)
                 
@@ -299,6 +313,3 @@ struct SearchBar: View {
         }
     }
 }
-
-
-

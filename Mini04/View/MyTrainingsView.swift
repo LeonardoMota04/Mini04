@@ -35,6 +35,7 @@ struct MyTrainingsView: View {
                     .shadow(radius: 2)
             }
             TrainingCellsView(folderVM: folderVM, filteredTrainings: $filteredTrainings, selectedFilter: selectedFilter, selectedFavoriteOption: $selectedFavoriteOption, isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex)
+                
 
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -53,20 +54,19 @@ struct TrainingCellsView: View {
     @Binding var selectedTrainingIndex: Int?
 
     var body: some View {
+        HStack {
+            Text("Nº do Treino")
+                Spacer()
+            Text("Feito em")
+                Spacer()
+            Image(systemName: "timer")
+            Text("Duração")
+                Spacer()
+        }
+        .font(.footnote)
+        .padding(.leading, 40)
+        .padding(.bottom, 10)
         ScrollView {
-            HStack {
-                Text("Nº do Treino")
-                    Spacer()
-                Text("Feito em")
-                    Spacer()
-                Image(systemName: "timer")
-                Text("Duração")
-                    Spacer()
-            }
-            .font(.footnote)
-            .padding(.leading, 40)
-            .padding(.bottom, 10)
-            
             ForEach(Array(filteredTrainings.enumerated()), id: \.element.id) { (index, training) in
                 Button {
                     //                    selectedTraining = training
@@ -90,7 +90,7 @@ struct TrainingCellsView: View {
                         Spacer()
                         
                         // Duração do treino
-                        Text((training.video?.formattedTime())!)
+                        Text((training.video?.formattedTime()) ?? "")
                             .foregroundStyle(Color("light_DarkerGreen"))
                         Spacer()
                         
@@ -114,7 +114,9 @@ struct TrainingCellsView: View {
                 .buttonStyle(PlainButtonStyle())
                 .contextMenu {
                     Button("Apagar") {
-                        folderVM.deleteTraining(training)
+                        withAnimation {
+                            folderVM.deleteTraining(training)
+                        }
                     }
                 }
             }
