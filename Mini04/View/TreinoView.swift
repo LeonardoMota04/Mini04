@@ -63,12 +63,13 @@ struct TreinoView: View {
                             } label: {
                                 RoundedRectangle(cornerRadius: 8)
                                     .frame(width: 38, height: 38)
-                                    .foregroundStyle(.orange)
+                                    .foregroundStyle(Color("light_LighterOrange"))
                                     .overlay {
                                         Image(systemName: "trash.fill")
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 18)
+                                            .foregroundStyle(Color("light_Orange"))
                                     }
                             }
                             .buttonStyle(.plain)

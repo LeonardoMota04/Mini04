@@ -22,7 +22,7 @@ struct RecordingVideoView: View {
                 VStack {
                     CameraPreview()
                     
-                    HUDCameraView(folderVM: folderVM, isPreviewShowing: $isPreviewShowing)
+                    HUDCameraView(folderVM: folderVM, isPreviewShowing: $isPreviewShowing, isShowingModal: $isShowingModal)
                         .frame(maxWidth: reader.size.width)
                         .frame(height: reader.size.height*0.1)
                 }
@@ -34,6 +34,7 @@ struct RecordingVideoView: View {
                 trainingPresentationInfos(folderVM: folderVM, isShowingModal: $isShowingModal)
             }
         }
+        .background(Color.black)
         .onChange(of: folderVM.showLoadingView) { oldeValue, newValue in // Atualiza showLoadingView com base em folderVM.showLoadingView
             withAnimation() {
                 self.showLoadingView = newValue
@@ -117,7 +118,7 @@ struct trainingPresentationInfos: View {
                     .padding(.horizontal, 30)
                     .padding(.vertical, 48)
                     
-                // MARK: Conhecer gestos
+                    // MARK: Conhecer gestos
                 } else {
                     HStack {
                         thumbsUpView()
@@ -136,7 +137,14 @@ struct trainingPresentationInfos: View {
                     .padding(.vertical, 48)
                 }
                 
-
+            }
+            .padding(.horizontal, 20)
+            .preferredColorScheme(.light)
+            
+            VStack {
+                
+                Spacer()
+                
                 HStack {
                     Spacer()
                     Button {
@@ -163,10 +171,9 @@ struct trainingPresentationInfos: View {
                     .foregroundStyle(.white)
                     Spacer()
                 }
-                
+                .padding(.bottom, size.height / 10)
             }
-            .padding(.horizontal, 20)
-            .preferredColorScheme(.light)
+           
         }
         .frame(width: 730, height: 520)
         .background(Color.lightLighterGray)
