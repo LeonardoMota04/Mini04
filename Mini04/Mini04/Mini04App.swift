@@ -37,8 +37,8 @@ struct Mini04App: App {
     
     var body: some Scene {
         WindowGroup {
-            ChatView()
-            //ContentView()
+            //ChatView()
+            ContentView()
                 .environmentObject(camVM)
                 //utiliza do 2/3 do tamanho da tela pra dimensionar o aplicativo ou 800x600px
                 .frame(minWidth: (screenSize?.width ?? 800) * (2/3), minHeight: (screenSize?.height ?? 600) * (2/3)) // Define o tamanho mínimo da janela
