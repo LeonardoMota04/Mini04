@@ -44,7 +44,7 @@ struct HUDCameraView: View {
                 }
                 
                 Button {
-                    if !cameraVC.videoFileOutput.isRecording {
+                    if !cameraVC.isRecording {
                         isrecTapped = true
                         isCountingDown = true
                         countdownSeconds = 3 // Reinicia o contador para 3 segundos
@@ -71,7 +71,7 @@ struct HUDCameraView: View {
 
                     }
                 } label: {
-                    if cameraVC.videoFileOutput.isRecording {
+                    if cameraVC.isRecording {
                         withAnimation {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 10)
@@ -135,7 +135,7 @@ struct HUDCameraView: View {
         .onReceive(cameraVC.$finalModelDetection, perform: { result in
             switch (result) {
             case "iniciar":
-                if !cameraVC.videoFileOutput.isRecording {
+                if !cameraVC.isRecording {
                     isrecTapped = true
                     isCountingDown = true
                     countdownSeconds = 3 // Reinicia o contador para 3 segundos
@@ -155,7 +155,7 @@ struct HUDCameraView: View {
                     })
                 }
             case "encerrar":
-                if cameraVC.videoFileOutput.isRecording {
+                if cameraVC.isRecording {
                     cameraVC.stopRecording()
                     cameraVC.finalModelDetection = ""
 

@@ -251,6 +251,8 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     }
     
     func startRecording(completion: @escaping () -> Void) {
+        isRecording = true
+        print("startrecording chamado")
         // Reiniciando as variáveis
         deinitVariables()
         print("começou a gravar")
@@ -281,7 +283,9 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
 
     
     func stopRecording() {
-        
+        isRecording = false
+        print("stopRecording chamado")
+
         // Transcrição
         separateStringsFromSpeech(speech: speechText) // Separa as strings de 10 em 10 palavras
         checkIfThereIsAnyWordsLeft()                  // checa se existem palavras restantes que não formaram um speech de 10 palavras
@@ -298,7 +302,6 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
             return
         }
         videoFileOutput.stopRecording()
-        
         // parando o timer e reiniciando ele
         timer?.invalidate()
         timer = nil

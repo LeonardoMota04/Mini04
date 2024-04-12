@@ -538,17 +538,16 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 3A253HAV36;
+				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Orato;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = br.com.orato;
-				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Precisamos acessar sua câmera para gravar seu treino. Não temos acesso a seus treinos.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = 1.0;
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Precisamos acessar seu microfone para você gravar mensagens de áudio ou vídeos. Suas gravações são privadas e só suas.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Precisamos acessar seu microfone para você gravar mensagens de áudio ou vídeos. Suas gravações são privadas e só suas.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -573,17 +572,16 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 3A253HAV36;
+				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Orato;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = br.com.orato;
-				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Precisamos acessar sua câmera para gravar seu treino. Não temos acesso a seus treinos.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = 1.0;
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Precisamos acessar seu microfone para você gravar mensagens de áudio ou vídeos. Suas gravações são privadas e só suas.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Precisamos acessar seu microfone para você gravar mensagens de áudio ou vídeos. Suas gravações são privadas e só suas.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

@@ -132,19 +132,24 @@ struct PastaView: View {
             }
             
             .toolbar() {
+                ToolbarItem {
+                    NavigationLink { RecordingVideoView(folderVM: folderVM) } label: { Text("Adicionar novo treino") }
+                        
+                    
+                }
                 ToolbarItem() {
                     Menu {
                         Button { isShowingEditingModal = true } label: { Text("Editar Apresentação") }
                         Button { isShowingAlert = true } label: { Text("Excluir Apresentação") }
                         Divider()
                         // ABRIR PARA COMEÇAR A GRAVAR UM TREINO PASSANDO A PASTA QUE ESTAMOS
-                        NavigationLink { RecordingVideoView(folderVM: folderVM) } label: { Text("Adicionar novo treino") }
                     } label: {
                         Image(systemName: "ellipsis.circle.fill")
                     }
                     .menuIndicator(.hidden)
                 }
             }
+            .disabled(isShowingModal)
             
             
             .onChange(of: selectedFolderID) { _, newValue in

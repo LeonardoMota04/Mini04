@@ -37,7 +37,6 @@ struct Mini04App: App {
     
     var body: some Scene {
         WindowGroup {
-            //ChatView()
             ContentView()
                 .environmentObject(camVM)
                 //utiliza do 2/3 do tamanho da tela pra dimensionar o aplicativo ou 800x600px

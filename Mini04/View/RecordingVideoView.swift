@@ -46,7 +46,15 @@ struct RecordingVideoView: View {
             }
         }
         .background(Color.lightLighterGray)
+        .navigationBarBackButtonHidden(true)
+//        .onAppear {
+//            camVM.videoFileOutput.stopRecording()
+//        }
+//        .onDisappear {
+//            camVM.stopRecording()
+//        }
     }
+
     //        .overlay(content: {
     //            if let url = camVM.urltemp, isPreviewShowing {
     //                FinalPreview(url: url)

@@ -129,13 +129,13 @@ class FoldersViewModel: ObservableObject {
             }
         }
         group.notify(queue: .main) {
-            self.sendMessage(content: "Considerando que as 3 principais características de uma apresentação coesa são: Fluidez do Discurso, Organização Lógica e Conexão entre Ideias. Me dê somente as porcentagens (sem texto explicativo, apenas as porcentagens) de cada  parâmetro (considerando que cada um vale 100% individualmente) analise a seguinte apresentação: \(videoScript)") { coherenceBrute in
-                //            let retornoGPT:Message = Message(role: "assistant", content: "Fluidez do Discurso: 90%\nOrganização Lógica: 95%\nConexão entre Ideias: 100%")
-                //            let coherence = self.convertPorcentageCohesionFeedback(message: retornoGPT)
-                let feedback = FeedbackModel(coherence: 0, repeatedWords: repeatedWordFeedbacks, coherenceValues: self.convertPorcentageCohesionFeedback(message: coherenceBrute))
+       //     self.sendMessage(content: "Considerando que as 3 principais características de uma apresentação coesa são: Fluidez do Discurso, Organização Lógica e Conexão entre Ideias. Me dê somente as porcentagens (sem texto explicativo, apenas as porcentagens) de cada  parâmetro (considerando que cada um vale 100% individualmente) analise a seguinte apresentação: \(videoScript)") { coherenceBrute in
+                            let retornoGPT:Message = Message(role: "assistant", content: "Fluidez do Discurso: 90%\nOrganização Lógica: 95%\nConexão entre Ideias: 100%")
+                           //let coherence = self.convertPorcentageCohesionFeedback(message: retornoGPT)
+                let feedback = FeedbackModel(coherence: 0, repeatedWords: repeatedWordFeedbacks, coherenceValues: self.convertPorcentageCohesionFeedback(message: retornoGPT))
                 completion(feedback)
             }
-        }
+    //    }
     
     }
     // Função para buscar os sinônimos de uma palavra
