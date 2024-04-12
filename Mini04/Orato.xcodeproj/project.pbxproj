@@ -45,7 +45,6 @@
 		F1721D8E2BC6FF4F00D08639 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = F1721D8D2BC6FF4F00D08639 /* SwiftSoup */; };
 		F19632162BA8DE130086D159 /* ChatGPTModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19632152BA8DE130086D159 /* ChatGPTModels.swift */; };
 		F19632182BA8DE5A0086D159 /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19632172BA8DE5A0086D159 /* OpenAIService.swift */; };
-		F196321A2BA8E1670086D159 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19632192BA8E1670086D159 /* Constants.swift */; };
 		F196321C2BA9C3810086D159 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F196321B2BA9C3810086D159 /* ChatViewModel.swift */; };
 		F196321E2BA9C3C80086D159 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F196321D2BA9C3C80086D159 /* ChatView.swift */; };
 		F19632262BAA07340086D159 /* NetworkCallsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19632252BAA07340086D159 /* NetworkCallsTests.swift */; };
@@ -104,7 +103,6 @@
 		BA8571082BAB4FE6000FF83B /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
 		F19632152BA8DE130086D159 /* ChatGPTModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGPTModels.swift; sourceTree = "<group>"; };
 		F19632172BA8DE5A0086D159 /* OpenAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIService.swift; sourceTree = "<group>"; };
-		F19632192BA8E1670086D159 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F196321B2BA9C3810086D159 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		F196321D2BA9C3C80086D159 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		F19632232BAA07330086D159 /* NetworkCallsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NetworkCallsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -227,7 +225,6 @@
 				370E91ED2BA8D78100D39C27 /* ApresentacaoModel.swift */,
 				F19632152BA8DE130086D159 /* ChatGPTModels.swift */,
 				F19632172BA8DE5A0086D159 /* OpenAIService.swift */,
-				F19632192BA8E1670086D159 /* Constants.swift */,
 				F1B51DFF2BBC3A7F000D0126 /* HumPredictor.swift */,
 			);
 			path = Model;
@@ -376,7 +373,6 @@
 				2692A1FA2BB25F4000EEF9AB /* SynonymModel.swift in Sources */,
 				269DF6512BC5D76100B0C629 /* HumClassifier.mlmodel in Sources */,
 				370E91DF2BA8AFAE00D39C27 /* CameraViewModel.swift in Sources */,
-				F196321A2BA8E1670086D159 /* Constants.swift in Sources */,
 				370655E42BB33E1B00B22AB0 /* SiderbarFolderComponent.swift in Sources */,
 				37E608F52BC5D56900B96B4A /* ModalTreinoView.swift in Sources */,
 				377643DE2BA7AA2F0011C2BA /* RecordingVideoView.swift in Sources */,
@@ -542,7 +538,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
+				DEVELOPMENT_TEAM = 3A253HAV36;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -577,7 +573,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mini04/Preview Content\"";
-				DEVELOPMENT_TEAM = 5GYXF2FP9Y;
+				DEVELOPMENT_TEAM = 3A253HAV36;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

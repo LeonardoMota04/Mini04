@@ -32,7 +32,7 @@ class OpenAIService {
         var urlRequest = URLRequest(url: endpointURL)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.setValue("Bearer \(Constants.openAIApiKey)", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("Bearer \(ProcessInfo.processInfo.environment["OPENAI_API_KEY"] ?? "")", forHTTPHeaderField: "Authorization")
         urlRequest.httpBody = bodyData
         
         // Sends the request async and treats the response
