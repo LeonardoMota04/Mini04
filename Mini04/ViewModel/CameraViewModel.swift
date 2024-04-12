@@ -250,16 +250,17 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
         }
     }
     
-    func startRecording() {
-        // reiniciando as variaveis
+    func startRecording(completion: @escaping () -> Void) {
+        // Reiniciando as variáveis
         deinitVariables()
         print("começou a gravar")
         let tempURL = NSTemporaryDirectory() + "\(Date()).mov"
         videoFileOutput.startRecording(to: URL(filePath: tempURL), recordingDelegate: self)
-        // Inciando o SpeechToText
+        
+        // Iniciando o SpeechToText
         do {
             try self.speechManager.startRecording { text, error in
-                // verificando se o script falado nao esta vazio
+                // Verificando se o script falado não está vazio
                 guard let text = text else {
                     print("String SpeechToText vazia/nil")
                     return
@@ -270,11 +271,14 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
                 // Função das transcrições
                 self.getFirstWordTime(speech: self.speechText)
                 
+                // Chame a conclusão após o término da gravação e do processamento do texto
+                completion()
             }
         } catch {
             print(error)
         }
     }
+
     
     func stopRecording() {
         

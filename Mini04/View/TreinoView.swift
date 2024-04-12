@@ -130,11 +130,11 @@ struct TreinoView: View {
                                             .stroke(Color("light_Orange"), lineWidth: 1)
                                             .fill(.white)
                                             .frame(width: 442, height: 184)
-                                            .overlay {
-                                                Text("Em breve")
-                                                    .font(.title)
-                                                    .foregroundStyle(Color("light_Orange"))
-                                            }
+//                                            .overlay {
+//                                                Text("Em breve")
+//                                                    .font(.title)
+//                                                    .foregroundStyle(Color("light_Orange"))
+//                                            }
                                         TimeCircularFeedback(
                                             title: trainingVM.treino.video?.formattedTime() ?? "",
                                             subtitle: "Tempo Total",

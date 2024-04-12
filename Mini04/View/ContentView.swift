@@ -189,9 +189,9 @@ struct ContentView: View {
                 .disabled(isShowingModal ? true : false)
                 .onTapGesture {
                     if isShowingModal {
-                        withAnimation(.easeInOut(duration: 0.2)) {
+//                        withAnimation(.easeInOut(duration: 0.2)) {
                             isShowingModal.toggle()
-                        }
+//                        }
                     }
                 }
             } detail: {

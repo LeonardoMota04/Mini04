@@ -55,13 +55,14 @@ struct HUDCameraView: View {
                                 timer?.invalidate() // Invalida o timer quando o contador chega a 0
                                 timer = nil
                                 isrecTapped = false
-                                cameraVC.startRecording()
+                                cameraVC.startRecording {}
                                 isCountingDown = false
                             }
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
-                            isrecTapped = false
-                            cameraVC.startRecording()
+                            cameraVC.startRecording {
+                                isrecTapped = false
+                            }
                             isCountingDown = false
                         })
                     } else {
@@ -144,11 +145,11 @@ struct HUDCameraView: View {
                         } else {
                             timer?.invalidate() // Invalida o timer quando o contador chega a 0
                             timer = nil
-                            cameraVC.startRecording()
+                            cameraVC.startRecording{}
                         }
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
-                        cameraVC.startRecording()
+                        cameraVC.startRecording{}
                         isrecTapped = false
                         isCountingDown = false
                     })

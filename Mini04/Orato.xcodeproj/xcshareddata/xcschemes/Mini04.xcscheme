@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "263D73E12BA4C56F002190F4"
-               BuildableName = "Mini04.app"
-               BlueprintName = "Mini04"
-               ReferencedContainer = "container:Mini04.xcodeproj">
+               BuildableName = "Orato.app"
+               BlueprintName = "Orato"
+               ReferencedContainer = "container:Orato.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -37,7 +37,7 @@
                BlueprintIdentifier = "F19632222BAA07330086D159"
                BuildableName = "NetworkCallsTests.xctest"
                BlueprintName = "NetworkCallsTests"
-               ReferencedContainer = "container:Mini04.xcodeproj">
+               ReferencedContainer = "container:Orato.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,9 +57,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "263D73E12BA4C56F002190F4"
-            BuildableName = "Mini04.app"
-            BlueprintName = "Mini04"
-            ReferencedContainer = "container:Mini04.xcodeproj">
+            BuildableName = "Orato.app"
+            BlueprintName = "Orato"
+            ReferencedContainer = "container:Orato.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -74,9 +74,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "263D73E12BA4C56F002190F4"
-            BuildableName = "Mini04.app"
-            BlueprintName = "Mini04"
-            ReferencedContainer = "container:Mini04.xcodeproj">
+            BuildableName = "Orato.app"
+            BlueprintName = "Orato"
+            ReferencedContainer = "container:Orato.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
