@@ -69,12 +69,11 @@ class CameraViewModel: NSObject, ObservableObject {
     
     // MARK: - Start/Stop Session
     
-    func startSession(completion: @escaping () -> Void) {
+    func startSession() {
         sessionQueue.async {
             guard !self.captureSession.isRunning else { return }
             self.captureSession.startRunning()
             print("sessão iniciada")
-            completion()
 
         }
     }
@@ -457,5 +456,60 @@ struct CameraRepresentable: NSViewRepresentable {
     func updateNSView(_ nsView: NSView, context: Context) {
         // Atualizações de visualização, se necessário
         self.camVM.previewLayer.frame = NSRect(x: 0, y: 0, width: size.width, height: size.height)
+    }
+}
+
+
+// MARK: Permissions
+extension CameraViewModel {
+    func checkPermissions(completion: @escaping (Bool) -> Void) {
+        let audioStatus = AVCaptureDevice.authorizationStatus(for: .audio)
+        let videoStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        
+        switch audioStatus {
+        case .authorized:
+            handleVideoPermission(status: videoStatus, completion: completion)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .audio) { [weak self] audioGranted in
+                DispatchQueue.main.async {
+                    if audioGranted {
+                        self?.handleVideoPermission(status: videoStatus, completion: completion)
+                    } else {
+                        completion(false) // Audio permission not granted
+                    }
+                }
+            }
+        case .denied, .restricted:
+            completion(false) // Audio permission denied or restricted
+        @unknown default:
+            completion(false)
+        }
+    }
+    
+    private func handleVideoPermission(status: AVAuthorizationStatus, completion: @escaping (Bool) -> Void) {
+        switch status {
+        case .authorized:
+            configureSession {
+                self.startSession()
+            }
+            completion(true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] videoGranted in
+                DispatchQueue.main.async {
+                    if videoGranted {
+                        self?.configureSession {
+                            self?.startSession()
+                        }
+                        completion(true)
+                    } else {
+                        completion(false) // Video permission not granted
+                    }
+                }
+            }
+        case .denied, .restricted:
+            completion(false) // Video permission denied or restricted
+        @unknown default:
+            completion(false)
+        }
     }
 }

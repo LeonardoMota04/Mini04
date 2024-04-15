@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RecordingVideoView: View {
     @EnvironmentObject var camVM: CameraViewModel
-    @State private var isShowingModal: Bool = true  // modal informacoes da apresentacao (NOME, OBJETIVO, TEMPO)
+    @State private var isShowingModal: Bool = false  // modal informacoes da apresentacao (NOME, OBJETIVO, TEMPO)
     @ObservedObject var folderVM: FoldersViewModel // pasta que estamos gravando
     
     @Environment(\.presentationMode) var presentationMode
@@ -46,7 +46,7 @@ struct RecordingVideoView: View {
             }
         }
         .background(Color.lightLighterGray)
-        .navigationBarBackButtonHidden(true)
+//        .navigationBarBackButtonHidden(true)
 //        .onAppear {
 //            camVM.videoFileOutput.stopRecording()
 //        }

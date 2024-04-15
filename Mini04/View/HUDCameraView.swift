@@ -131,6 +131,8 @@ struct HUDCameraView: View {
                                        topicsDuration: cameraVC.videoTopicDuration,
                                        cutSpeeches: cameraVC.speeches,
                                        speechStart: cameraVC.startedSpeechTimes)
+            self.presentationMode.wrappedValue.dismiss()
+
         }
         .onReceive(cameraVC.$finalModelDetection, perform: { result in
             switch (result) {
