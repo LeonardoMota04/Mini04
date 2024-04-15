@@ -84,6 +84,7 @@ class SpeechManager: ObservableObject {
     }
     
     func stopRecording() {
+        audioEngine.outputNode.removeTap(onBus: 0)
         audioEngine.stop()
         recognitionRequest?.endAudio()
         recognitionRequest = nil
@@ -92,6 +93,7 @@ class SpeechManager: ObservableObject {
             recognitionTask.cancel()
             self.recognitionTask = nil
         }
+
     }
     
     func requestPermission() {
