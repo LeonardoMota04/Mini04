@@ -750,7 +750,7 @@ struct ObjectiveApresentationView: View {
                 self.isExtended.toggle()
             }
         }
-        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height350.rawValue : heightFrame * RelativeSizes.height130.rawValue)
+        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? .calculateHeightPercentageFullScreen(componentHeight: 480, heightScreenSize: heightFrame) : heightFrame * RelativeSizes.height130.rawValue)
     }
 }
 

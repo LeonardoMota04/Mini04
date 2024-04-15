@@ -283,7 +283,7 @@ class FoldersViewModel: ObservableObject {
         if message?.role == "assistant" {
             // Separando o retorno da API em uma array para pegar o valor de cada %
             guard let separeteValues = message?.content.split(separator: "\n")
-            else { print("Erro no result GPT - Joao sabe onde")
+            else { print("Erro no result GPT - convertProcetageCohesionFeedback")
                 return []}
             
             for newMessage in separeteValues {
@@ -374,4 +374,32 @@ class FoldersViewModel: ObservableObject {
              return ([], [])
          }
      }
+    
+    // divide a string para conseguir colocar o texto em bold
+    func divideImproveFeedback(videoScript: String, objectiveApresentation: String) {
+        self.sendMessage(content: """
+                                    Preciso que analise um texto e mande um feedback de forma clara e amigável de pontos para melhorar no script, caso o script esteja bom de o feedback de que está bom, caso tenha pontos bons e ruins, de tanto o feedback positivo quanto o negativo. Não de feedbacks inúteis caso não tenha algum feedback negativo para passar.
+                                    Em outro paragrafo analise se a apresentação cumpre com os objetivos do tipo de apresentação desejado. Dê feedbacks de forma clara e amigável também, caso seja negativo fale e de sugestões, caso positivo fale e elogie, caso possua pontos positivos e negativos de feedback dos dois. Não de feedbacks inúteis caso não tenha algum feedback negativo para passar.
+                                    Escreva com no máximo 200 caracteres cada um dos parágrafos . Não se refira como script, e sim como apresentação
+                                    Escreva os dois feedbacks (analise do texto e relação com o tipo de apresentação) no seguinte formato - call action: feedback
+                                    A call action sendo uma frase de ação para o usuário entender o que fazer e o feedback o texto mais explicativo, como no exemplo a seguir:  Utilize técnicas de engajamento: Explore recursos visuais, como gráficos, imagens ou vídeos, para aumentar o engajamento da audiência e tornar a apresentação mais memorável.
+
+                                    Script a analisar: \(videoScript)
+                                    
+                                    Objetivo da Apresentação: \(objetiveApresentation)
+                                    """) { feebacks in
+            // separa os dois feedbacks que o chamado da API retorna
+            let separetedFeedback = feebacks?.content.components(separatedBy: "\n")
+            guard let separetedFeedback = separetedFeedback else { return }
+            // separa a call action do contetudo do texto
+            var callActions: [String] = []
+            var descriptions: [String] = []
+            for feedback in separetedFeedback {
+                var separeteText = feedback.components(separatedBy: ":")
+                callActions.append(separeteText.first ?? "")
+                descriptions.append(separeteText.last ?? "")
+            }
+                
+        }
+    }
 }
