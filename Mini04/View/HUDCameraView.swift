@@ -170,7 +170,7 @@ struct HUDCameraView: View {
             
         })
         .onAppear {
-            isRecordingButtonTapped = true
+            isRecordingButtonTapped = false
         }
         .onDisappear {
             isRecordingButtonTapped = true
