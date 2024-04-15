@@ -223,7 +223,7 @@ struct WordRepetitionView: View {
                                     .foregroundStyle(.black)
                                 Spacer()
                                 Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                                    .foregroundColor(.black)
+                                    .foregroundColor(Color("light_Blue"))
                                     .font(.title2)
                                     .padding(.trailing, 4) // Espaçamento entre o texto e a seta
                             }
@@ -475,11 +475,11 @@ struct CohesionFeedback: View {
                             .frame(maxWidth: 306)
                             .padding(.top, 2)
                         
-                        BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange")
+                        BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange", heightFrame: heightFrame, widthFrame: widthFrame)
                             .padding(.top, 10)
                         Group {
-                            BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange")
-                            BarProgress_Component(title: titleFeedback03, progress: connectionProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange")
+                            BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange", heightFrame: heightFrame, widthFrame: widthFrame)
+                            BarProgress_Component(title: titleFeedback03, progress: connectionProgress, maxProgress: 238, lightColor: "light_Orange", boldColor: "light_Orange", heightFrame: heightFrame, widthFrame: widthFrame)
                         }
                         .padding(.top, 5)
                         Text(footnoteText)
@@ -532,11 +532,10 @@ struct CohesionExtendView: View {
                                 .bold()
                                 .foregroundStyle(.black)
                             Spacer()
-                            Image(systemName: "chevron.down")
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundStyle(.black)
-                                .frame(maxWidth: proxy.size.width * 0.04)
+                            Image(systemName: isExtended ? "chevron.up" : "chevron.down")
+                                .foregroundColor(Color("light_Blue"))
+                                .font(.title2)
+                                .padding(.trailing, 4) // Espaçamento entre o texto e a seta
                         }
                         Text(bodyText)
                             .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
@@ -546,11 +545,11 @@ struct CohesionExtendView: View {
                             .frame(maxWidth: 306)
                             .padding(.top, 2)
                         if isExtended {
-                            BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238, lightColor: "light_Blue", boldColor: "light_DarkerGreen")
+                            BarProgress_Component(title: titleFeedback01, progress: fluidProgress, maxProgress: 238, lightColor: "light_Blue", boldColor: "light_DarkerGreen", heightFrame: heightFrame, widthFrame: widthFrame)
                                 .padding(.top, 10)
                             Group {
-                                BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238, lightColor: "light_Blue", boldColor: "light_DarkerGreen")
-                                BarProgress_Component(title: titleFeedback03, progress: connectionProgress, maxProgress: 238, lightColor: "light_Blue", boldColor: "light_DarkerGreen")
+                                BarProgress_Component(title: titleFeedback02, progress: organizationProgress, maxProgress: 238, lightColor: "light_Blue", boldColor: "light_DarkerGreen", heightFrame: heightFrame, widthFrame: widthFrame)
+                                BarProgress_Component(title: titleFeedback03, progress: connectionProgress, maxProgress: 238, lightColor: "light_Blue", boldColor: "light_DarkerGreen", heightFrame: heightFrame, widthFrame: widthFrame)
                             }
                             .padding(.top, 5)
                             Text(footnoteText)
@@ -569,7 +568,7 @@ struct CohesionExtendView: View {
                     .padding()
                 }
         }
-        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height350.rawValue : heightFrame * RelativeSizes.height130.rawValue)
+        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? .calculateHeightPercentageFullScreen(componentHeight: 400, heightScreenSize: heightFrame) : heightFrame * RelativeSizes.height130.rawValue)
         .onTapGesture {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                 self.isExtended.toggle()
@@ -584,6 +583,8 @@ struct BarProgress_Component: View {
     var maxProgress: CGFloat
     var lightColor: String
     var boldColor: String
+    var heightFrame: CGFloat
+    var widthFrame: CGFloat
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
@@ -594,15 +595,16 @@ struct BarProgress_Component: View {
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 25)
                         .frame(maxWidth: maxProgress)
-                        .frame(height: 14)
+                        .frame(height: .calculateHeightPercentageFullScreen(componentHeight: 14, heightScreenSize: heightFrame))
                         .foregroundStyle(.gray)
                         .opacity(0.3)
                     RoundedRectangle(cornerRadius: 25)
                         .foregroundStyle(Color(lightColor))
                         .frame(maxWidth: progress != 0 ? progress/100 * maxProgress : 0)
-                        .frame(height: 14)
+                        .frame(height: .calculateHeightPercentageFullScreen(componentHeight: 14, heightScreenSize: heightFrame))
+
                 }
-                Text("\(progress.formatted()) %")
+                Text(String(format: " %.0f", progress) + " %")
                     .font(.caption)
                     .foregroundStyle(Color(lightColor))
             }
@@ -626,12 +628,19 @@ struct ImproveApresentationView: View {
                 .stroke(Color("light_Blue"), lineWidth: 2)
                 .fill(.white)
                 .overlay {
-                    HStack {
+                    HStack() {
                         VStack(alignment: .leading) {
-                            Text(title)
-                                .font(.system(size: proxy.size.width * RelativeFontSizes.width380size17.rawValue))
-                                .foregroundStyle(Color("light_DarkerGreen"))
-                                .bold()
+                            HStack {
+                                Text(title)
+                                    .font(.system(size: proxy.size.width * RelativeFontSizes.width380size17.rawValue))
+                                    .foregroundStyle(Color("light_DarkerGreen"))
+                                    .bold()
+                                Spacer()
+                                Image(systemName: isExtended ? "chevron.up" : "chevron.down")
+                                    .foregroundColor(Color("light_Blue"))
+                                    .font(.title2)
+                                    .padding(.trailing, 4) // Espaçamento entre o texto e a seta
+                            }
                             Text(subTitle)
                                 .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
                                 .foregroundStyle(.black)
@@ -708,6 +717,11 @@ struct ObjectiveApresentationView: View {
                                     .font(.system(size: proxy.size.width * RelativeFontSizes.width380size17.rawValue))
                                     .foregroundStyle(Color("light_DarkerGreen"))
                                     .bold()
+                                Spacer()
+                                Image(systemName: isExtended ? "chevron.up" : "chevron.down")
+                                    .foregroundColor(Color("light_Blue"))
+                                    .font(.title2)
+                                    .padding(.trailing, 4) // Espaçamento entre o texto e a seta
                             }
                             Text(subTitle)
                                 .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
@@ -750,7 +764,7 @@ struct ObjectiveApresentationView: View {
                 self.isExtended.toggle()
             }
         }
-        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? heightFrame * RelativeSizes.height350.rawValue : heightFrame * RelativeSizes.height130.rawValue)
+        .frame(maxWidth: widthFrame * RelativeSizes.width380.rawValue, maxHeight: isExtended ? .calculateHeightPercentageFullScreen(componentHeight: 450, heightScreenSize: heightFrame) : heightFrame * RelativeSizes.height130.rawValue)
     }
 }
 
@@ -809,9 +823,16 @@ struct AvaregeTimeFeedbackView: View {
                 .overlay {
                     HStack {
                         VStack(alignment: .leading) {
-                            Text("\(avaregeTime) Tempo médio")
-                                .font(.system(size: proxy.size.width * 0.0723))
-                                .bold()
+                            HStack {
+                                Text("\(avaregeTime) Tempo médio")
+                                    .font(.system(size: proxy.size.width * 0.0723))
+                                    .bold()
+                                Spacer()
+                                Image(systemName: isExtended ? "chevron.up" : "chevron.down")
+                                    .foregroundColor(Color("light_Blue"))
+                                    .font(.title2)
+                                    .padding(.trailing, 4) // Espaçamento entre o texto e a seta
+                            }
                                 .foregroundStyle(.black)
                             Text("próximo do desejado. ")
                                 .font(.system(size: proxy.size.width * 0.0553))
@@ -823,6 +844,7 @@ struct AvaregeTimeFeedbackView: View {
                                 .foregroundStyle(.black)
                                 .opacity(0.5)
                                 .padding(.top)
+                            
                             HStack {
                                 if treinos.isEmpty {
                                     Spacer()
