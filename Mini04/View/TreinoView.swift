@@ -126,15 +126,7 @@ struct TreinoView: View {
                                 // 3 FEEDBACKS JUNTOS
                                 HStack(alignment: .center) {
                                     VStack {
-                                        RoundedRectangle(cornerRadius: 16, style: /*@START_MENU_TOKEN@*/.continuous/*@END_MENU_TOKEN@*/)
-                                            .stroke(Color("light_Orange"), lineWidth: 1)
-                                            .fill(.white)
-                                            .frame(width: 442, height: 184)
-//                                            .overlay {
-//                                                Text("Em breve")
-//                                                    .font(.title)
-//                                                    .foregroundStyle(Color("light_Orange"))
-//                                            }
+                                   SpeakPauseFeedBackView()
                                         TimeCircularFeedback(
                                             title: trainingVM.treino.video?.formattedTime() ?? "",
                                             subtitle: "Tempo Total",
