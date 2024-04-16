@@ -462,11 +462,6 @@ struct CohesionFeedback: View {
                                 .bold()
                                 .foregroundStyle(.black)
                             Spacer()
-                            Image(systemName: "chevron.down")
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundStyle(.black)
-                                .frame(maxWidth: proxy.size.width * 0.04)
                         }
                         Text(bodyText)
                             .multilineTextAlignment(.leading)
