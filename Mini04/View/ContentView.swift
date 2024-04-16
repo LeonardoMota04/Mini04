@@ -38,11 +38,10 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
+            // MARK: - VIEW DOS TREINOS
             if isShowingModal {
                 ModalTreinoView(isShowingModal: $isShowingModal, selectedTrainingIndex: $selectedTrainingIndex, filteredTrainings: $filteredTrainings, apresentacaoreference: $apresentacaoreference)
             }
-            
-            
             NavigationSplitView (columnVisibility: $columnVisibility){
                 VStack {
                     //titulo principal

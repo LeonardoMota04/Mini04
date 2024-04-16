@@ -1010,15 +1010,16 @@ struct SpeakPauseModal: View {
                 }
                 Spacer()
             }
+            .focusable(false)
             .padding(.top, 15)
             .buttonStyle(.plain)
             Spacer()
             VStack {
-                Text("Feature BLoquada")
+                Text("Feature Bloqueada")
                     .font(.title)
                     .foregroundStyle(.black)
                     .bold()
-                Text("Muito em breve o Orato será ainda melhor e completo!\nEstá funcionalidade permitirá novos feedbacks de fala e voz.")
+                Text("Muito em breve o Orato será ainda melhor e completo!\nEsta funcionalidade permitirá novos feedbacks de fala e voz.")
                     .multilineTextAlignment(.center)
                     .padding(.top, 10)
             }
