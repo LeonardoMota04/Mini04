@@ -129,14 +129,13 @@ class FoldersViewModel: ObservableObject {
             }
         }
         group.notify(queue: .main) {
-       //     self.sendMessage(content: "Considerando que as 3 principais características de uma apresentação coesa são: Fluidez do Discurso, Organização Lógica e Conexão entre Ideias. Me dê somente as porcentagens (sem texto explicativo, apenas as porcentagens) de cada  parâmetro (considerando que cada um vale 100% individualmente) analise a seguinte apresentação: \(videoScript)") { coherenceBrute in
-                            let retornoGPT:Message = Message(role: "assistant", content: "Fluidez do Discurso: 90%\nOrganização Lógica: 95%\nConexão entre Ideias: 100%")
+            self.sendMessage(content: "Considerando que as 3 principais características de uma apresentação coesa são: Fluidez do Discurso, Organização Lógica e Conexão entre Ideias. Me dê somente as porcentagens (sem texto explicativo, apenas as porcentagens) de cada  parâmetro (considerando que cada um vale 100% individualmente) analise a seguinte apresentação: \(videoScript)") { [self] coherenceBrute in
+                           // let retornoGPT:Message = Message(role: "assistant", content: "Fluidez do Discurso: 90%\nOrganização Lógica: 95%\nConexão entre Ideias: 100%")
                            //let coherence = self.convertPorcentageCohesionFeedback(message: retornoGPT)
-                let feedback = FeedbackModel(coherence: 0, repeatedWords: repeatedWordFeedbacks, coherenceValues: self.convertPorcentageCohesionFeedback(message: retornoGPT))
+                let feedback = FeedbackModel(coherence: 0, repeatedWords: repeatedWordFeedbacks, coherenceValues: convertPorcentageCohesionFeedback(message: coherenceBrute).cohesionAllValues, cohesionValues: CohesionValues(fluid: convertPorcentageCohesionFeedback(message: coherenceBrute).fluid, organization: convertPorcentageCohesionFeedback(message: coherenceBrute).organization, connection: convertPorcentageCohesionFeedback(message: coherenceBrute).connection))
                 completion(feedback)
             }
-    //    }
-    
+        }
     }
     // Função para buscar os sinônimos de uma palavra
     func fetchSynonyms(for word: String, completion: @escaping (RepeatedWordsModel?) -> Void) {
@@ -277,14 +276,14 @@ class FoldersViewModel: ObservableObject {
 
     
     // tranforma o retorno do chatGTP em porcentagem par montar os graficos de feedback
-    func convertPorcentageCohesionFeedback(message: Message?) -> [CGFloat] {
+    func convertPorcentageCohesionFeedback(message: Message?) -> (cohesionAllValues: [CGFloat], fluid: CGFloat, organization: CGFloat, connection: CGFloat) {
         // porcentagens do feecback de coesa
         var porcentages: [CGFloat] = []
         if message?.role == "assistant" {
             // Separando o retorno da API em uma array para pegar o valor de cada %
             guard let separeteValues = message?.content.split(separator: "\n")
             else { print("Erro no result GPT - Joao sabe onde")
-                return []}
+                return ([], 0, 0, 0)}
             
             for newMessage in separeteValues {
                 // Dividir a mensagem pelo caractere ':'
@@ -301,11 +300,16 @@ class FoldersViewModel: ObservableObject {
                         } else {
                             // verificando os titulos para conseguir colocar a porcentagem no local correto
                             if titleComponet.contains("Fluidez") {
-                                porcentages[0] = CGFloat(floatPorcentage)
+                                if porcentages.indices.contains(0) {
+                                    porcentages[0] = CGFloat(floatPorcentage)
+                                }
                             } else if titleComponet.contains("Organização") {
-                                porcentages[1] = CGFloat(floatPorcentage)
+                                if porcentages.indices.contains(1) {
+                                    porcentages[1] = CGFloat(floatPorcentage)
+                                }
                             } else if titleComponet.contains("Conexão") {
-                                porcentages[2] = CGFloat(floatPorcentage)
+                                if porcentages.indices.contains(2) {
+                                    porcentages[2] = CGFloat(floatPorcentage) }
                             }
                         }
                     }
@@ -316,7 +320,7 @@ class FoldersViewModel: ObservableObject {
         for porcentage in porcentages {
             print(porcentage)
         }
-        return porcentages
+        return (porcentages, porcentages[0], porcentages[1], porcentages[2])
     }
     
     // faz a media de todos os feedbacks de coesao criados na pasta para preencher o cohesion na pasta
@@ -325,9 +329,9 @@ class FoldersViewModel: ObservableObject {
         var totalOrganization: CGFloat = 0
         var totalConection: CGFloat = 0
         for treino in folder.treinos {
-            totalFluid += treino.feedback?.coherenceValues[0] ?? 0 // fluid
-            totalOrganization += treino.feedback?.coherenceValues[1] ?? 0 // organization
-            totalConection += treino.feedback?.coherenceValues[2] ?? 0 // conexion
+            totalFluid += treino.feedback?.cohesionValues.fluid ?? 0// fluid
+            totalOrganization += treino.feedback?.cohesionValues.organization ?? 0// organization
+            totalConection += treino.feedback?.cohesionValues.connection ?? 0 // conexion
         }
         
         let avaregeFluid = totalFluid / CGFloat(folder.treinos.count)

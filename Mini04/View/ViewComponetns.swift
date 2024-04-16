@@ -595,13 +595,13 @@ struct BarProgress_Component: View {
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 25)
                         .frame(maxWidth: maxProgress)
-                        .frame(height: .calculateHeightPercentageFullScreen(componentHeight: 14, heightScreenSize: heightFrame))
+                        .frame(height: lightColor == "light_Orange" ? 14 : .calculateHeightPercentageFullScreen(componentHeight: 14, heightScreenSize: heightFrame))
                         .foregroundStyle(.gray)
                         .opacity(0.3)
                     RoundedRectangle(cornerRadius: 25)
                         .foregroundStyle(Color(lightColor))
                         .frame(maxWidth: progress != 0 ? progress/100 * maxProgress : 0)
-                        .frame(height: .calculateHeightPercentageFullScreen(componentHeight: 14, heightScreenSize: heightFrame))
+                        .frame(height: lightColor == "light_Orange" ? 14 : .calculateHeightPercentageFullScreen(componentHeight: 14, heightScreenSize: heightFrame))
 
                 }
                 Text(String(format: " %.0f", progress) + " %")
@@ -939,6 +939,99 @@ struct AvaregeFeedbackGrafics: View {
     }
 }
 
+struct SpeakPauseFeedBackView: View {
+    @State var isShow: Bool = false
+    var body: some View {
+        GeometryReader { proxy in
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color("light_Orange"), lineWidth: 2)
+                .fill(Color("light_White"))
+                .overlay {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Bloqueado")
+                                .font(.title)
+                                .foregroundStyle(.black)
+                                .bold()
+                            Text("Novas features estão por vir")
+                                .foregroundStyle(.black)
+                                .opacity(0.6)
+                                .padding(.top, 1)
+                            Spacer()
+                            Button {
+                                isShow.toggle()
+                            } label: {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .frame(width: 120, height: 45)
+                                    .foregroundStyle(Color("light_Orange"))
+                                    .overlay {
+                                        Text("Saiba mais")
+                                            .foregroundStyle(.white)
+                                    }
+                                    
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.bottom, 5)
+                        }
+                        .padding(.leading, 5)
+                        Spacer()
+                        Image(systemName: "lock.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(.gray)
+                            .frame(width: 50)
+                            .padding(.trailing)
+                    }
+                    .padding()
+                }
+        }
+        .frame(width: 442, height: 184)
+        .sheet(isPresented: $isShow) {
+            SpeakPauseModal(isShow: $isShow)
+        }
+    }
+}
+
+struct SpeakPauseModal: View {
+    @Binding var isShow: Bool
+    var body: some View {
+        VStack() {
+            HStack {
+                Button {
+                    isShow.toggle()
+                } label: {
+                    Image(systemName: "xmark")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.black)
+                        .opacity(0.6)
+                        .bold()
+                        .frame(width: 10)
+                }
+                Spacer()
+            }
+            .padding(.top, 15)
+            .buttonStyle(.plain)
+            Spacer()
+            VStack {
+                Text("Feature BLoquada")
+                    .font(.title)
+                    .foregroundStyle(.black)
+                    .bold()
+                Text("Muito em breve o Orato será ainda melhor e completo!\nEstá funcionalidade permitirá novos feedbacks de fala e voz.")
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 10)
+            }
+            .padding(.bottom)
+            Spacer()
+            
+        }
+        .padding(.horizontal, 20)
+        .frame(width: 430, height: 220)
+        .background(Color.lightLighterGray)
+        .preferredColorScheme(.light)
+    }
+}
 //#Preview {
 //    TimeFeedBackView(avaregeTime: "10:", wishTime: 8, treinos: [])
 //}
@@ -950,4 +1043,8 @@ struct AvaregeFeedbackGrafics: View {
 //#Preview {
 //    AvaregeTimeFeedbackView(avaregeTime: "00:66", wishTime: 10, treinos: [TreinoModel(),TreinoModel(),TreinoModel(), TreinoModel()], widthFrame: 1179.0, heightFrame: 913)
 //}
+
+#Preview {
+    SpeakPauseModal(isShow: .constant(true))
+}
 

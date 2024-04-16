@@ -48,11 +48,13 @@ class FeedbackModel {
     var coerencia: Int
     var repeatedWords: [RepeatedWordsModel] = [] // palavras repetidas com seus sinonimos
     var coherenceValues: [CGFloat] = [] // porcentagens da coesao
+    var cohesionValues: CohesionValues
 
-    init(coherence: Int, repeatedWords: [RepeatedWordsModel], coherenceValues: [CGFloat]) {
+    init(coherence: Int, repeatedWords: [RepeatedWordsModel], coherenceValues: [CGFloat], cohesionValues: CohesionValues) {
         self.coerencia = coherence
         self.repeatedWords = repeatedWords
         self.coherenceValues = coherenceValues
+        self.cohesionValues = cohesionValues
     }
 }
 
@@ -72,3 +74,18 @@ class RepeatedWordsModel {
         self.synonymContexts = synonymContexts
     }
 }
+
+// valores das % dos 3 valores do feedback de coesao
+@Model
+class CohesionValues {
+    var fluid: CGFloat
+    var organization: CGFloat
+    var connection: CGFloat
+    
+    init(fluid: CGFloat, organization: CGFloat, connection: CGFloat) {
+        self.fluid = fluid
+        self.organization = organization
+        self.connection = connection
+    }
+}
+
