@@ -85,7 +85,7 @@ struct PastaView: View {
                         }
                         .padding(.top, geo.size.height * 0.1423 + 7) // padding para organizar os elementos pois estao em cima um do outro
                         HStack(alignment: .top){
-                            AvaregeTimeFeedbackView(avaregeTime: folderVM.formatedAvareTime, wishTimeText: folderVM.folder.formattedGoalTime(), wishTime: folderVM.folder.tempoDesejado, treinos: folderVM.folder.treinos, widthFrame: geo.size.width, heightFrame: geo.size.height)
+                            AvaregeTimeFeedbackView( avaregeTimeText: folderVM.formatedAvareTime ,avaregeTime: folderVM.folder.avaregeTime, wishTimeText: folderVM.folder.formattedGoalTime(), wishTime: folderVM.folder.tempoDesejado, treinos: folderVM.folder.treinos, widthFrame: geo.size.width, heightFrame: geo.size.height)
                             WordRepetitionView(folderVM: folderVM, widthFrame: geo.size.width, heightFrame: geo.size.height)
                             ImproveApresentationView(widthFrame: geo.size.width, heightFrame: geo.size.height)
                         }

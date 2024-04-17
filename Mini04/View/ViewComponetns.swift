@@ -381,6 +381,7 @@ struct CircularProgress: View {
 
 struct TimeCircularFeedback: View {
     var title: String
+    var bodyTextNegative: String = "Certifique-se de ajustar a duração da apresentação, pois o tempo não está próximo do desejado, garantindo que cada parte receba a atenção adequada."
     var subtitle: String
     var objetiveTime: String
     var bodyText: String
@@ -416,7 +417,7 @@ struct TimeCircularFeedback: View {
                                     .opacity(0.7)
                                     .padding(.top, 10)
                             }
-                            Text(bodyText)
+                            Text((totalProgress - progress) <= 20 ? bodyText : bodyTextNegative)
                             // .font(.caption)
                                 .multilineTextAlignment(.leading)
                                 .lineLimit(.bitWidth)
@@ -433,6 +434,7 @@ struct TimeCircularFeedback: View {
 
 struct CohesionFeedback: View {
     var bodyText: String = "Sua apresentação fluiu de forma natural, com uma organização lógica e transições suaves entre os tópicos apresentados."
+    var bodyTextNegative: String = "Melhorias na fluidez, organização e conexão de ideias podem elevar o engajamento e compreensão da apresentação."
     var titleFeedback01: String = "Fluidez do Discurso"
     var titleFeedback02: String = "Organização Lógica"
     var titleFeedback03: String = "Conexão entre Tópicos"
@@ -441,6 +443,7 @@ struct CohesionFeedback: View {
     var connectionProgress: CGFloat
     var footnoteText: String = "Isso mantem o público envolvido e facilita a compreensão das ideias apresentadas. "
     var feedbackFootNote: String = "Ótimo trabalho!"
+    var feedbackFootNoteNegative: String = "Continue com o trabalho!"
     var widthFrame: CGFloat
     var heightFrame: CGFloat
     var body: some View {
@@ -463,7 +466,7 @@ struct CohesionFeedback: View {
                                 .foregroundStyle(.black)
                             Spacer()
                         }
-                        Text(bodyText)
+                        Text(fluidProgress > 50 ? bodyText : bodyTextNegative)
                             .multilineTextAlignment(.leading)
                             .foregroundStyle(.black)
                             .opacity(0.5)
@@ -483,7 +486,7 @@ struct CohesionFeedback: View {
                             .padding(.top, 10)
                         
                         Spacer()
-                        Text(feedbackFootNote)
+                        Text(fluidProgress > 50 ? feedbackFootNote : feedbackFootNoteNegative)
                             .foregroundStyle(.black)
                             .opacity(0.5)
                             .bold()
@@ -497,6 +500,7 @@ struct CohesionFeedback: View {
 
 struct CohesionExtendView: View {
     var bodyText: String = "Sua apresentação fluiu de forma natural, com uma organização lógica e transições suaves entre os tópicos apresentados."
+    var bodyTextNegative: String = "Melhorias na fluidez, organização e conexão de ideias podem elevar o engajamento e compreensão da apresentação."
     var titleFeedback01: String = "Fluidez do Discurso"
     var titleFeedback02: String = "Organização Lógica"
     var titleFeedback03: String = "Conexão entre Tópicos"
@@ -505,6 +509,7 @@ struct CohesionExtendView: View {
     var connectionProgress: CGFloat
     var footnoteText: String = "Isso mantem o público envolvido e facilita a compreensão das ideias apresentadas. "
     var feedbackFootNote: String = "Ótimo trabalho!"
+    var feedbackFootNoteNegative: String = "Continue com o trabalho!"
     var widthFrame: CGFloat
     var heightFrame: CGFloat
     @State var isExtended: Bool = false
@@ -532,7 +537,7 @@ struct CohesionExtendView: View {
                                 .font(.title2)
                                 .padding(.trailing, 4) // Espaçamento entre o texto e a seta
                         }
-                        Text(bodyText)
+                        Text(fluidProgress > 50 ? bodyText : bodyTextNegative)
                             .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
                             .multilineTextAlignment(.leading)
                             .foregroundStyle(.black)
@@ -554,7 +559,7 @@ struct CohesionExtendView: View {
                                 .padding(.top, 10)
                             
                             Spacer()
-                            Text(feedbackFootNote)
+                            Text(fluidProgress > 50 ? feedbackFootNote : feedbackFootNoteNegative)
                                 .font(.system(size: proxy.size.width * RelativeFontSizes.width380size13.rawValue))
                                 .foregroundStyle(Color("light_DarkerGreen"))
                                 .bold()
@@ -802,7 +807,8 @@ struct LoadingView: View {
 }
 
 struct AvaregeTimeFeedbackView: View {
-     var avaregeTime: String
+    var avaregeTimeText: String
+    var avaregeTime: Double
     var wishTimeText: String
     var wishTime: Int
     var treinos: [TreinoModel]
@@ -819,7 +825,7 @@ struct AvaregeTimeFeedbackView: View {
                     HStack {
                         VStack(alignment: .leading) {
                             HStack {
-                                Text("\(avaregeTime) Tempo médio")
+                                Text("\(avaregeTimeText) Tempo médio")
                                     .font(.system(size: proxy.size.width * 0.0723))
                                     .bold()
                                 Spacer()
@@ -829,7 +835,7 @@ struct AvaregeTimeFeedbackView: View {
                                     .padding(.trailing, 4) // Espaçamento entre o texto e a seta
                             }
                                 .foregroundStyle(.black)
-                            Text("próximo do desejado. ")
+                            Text(isCloseTo(number: Double(avaregeTime), target: Double(wishTime), tolerance: 25) ? "próximo do desejado. " : "não proximo do desejado")
                                 .font(.system(size: proxy.size.width * 0.0553))
                                 .multilineTextAlignment(.leading)
                                 .foregroundStyle(.black)
@@ -904,6 +910,10 @@ struct AvaregeTimeFeedbackView: View {
             }
         }
         .frame(maxWidth: widthFrame * 0.21, maxHeight: isExtended ? .calculateHeightPercentageFullScreen(componentHeight: 699, heightScreenSize: heightFrame) : heightFrame * 0.296 )
+    }
+    
+    func isCloseTo(number: Double, target: Double, tolerance: Double) -> Bool {
+        return abs(number - target) <= tolerance
     }
 }
 
